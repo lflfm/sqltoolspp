@@ -1,0 +1,41 @@
+SCC = This is a Source Code Control file
+
+[bcb4.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[bcb5.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[bcb6.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[gcc-shared.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[gcc.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[generic.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[sunpro.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[vc6-stlport.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[vc6.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA
+
+[vc7.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/build", QULAAAAA

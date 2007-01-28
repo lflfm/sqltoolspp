@@ -1,0 +1,25 @@
+SCC = This is a Source Code Control file
+
+[bc55.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/example/jgrep", PVLAAAAA
+
+[bcb4.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/example/jgrep", PVLAAAAA
+
+[bcb5.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/example/jgrep", PVLAAAAA
+
+[gcc.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/example/jgrep", PVLAAAAA
+
+[vc6-stlport.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/example/jgrep", PVLAAAAA
+
+[vc6.mak]
+SCC_Aux_Path = "F:\__VSS__"
+SCC_Project_Name = "$/OpenEditor/3DPARTY/BOOST/libs/regex/example/jgrep", PVLAAAAA
