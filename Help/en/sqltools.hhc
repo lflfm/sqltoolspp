@@ -1,0 +1,664 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="ExWindow Styles" value="0x800225">
+	<param name="Window Styles" value="0x800225">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="hid_introduction.html">
+		<param name="ImageNumber" value="11">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Command Line">
+		<param name="Local" value="hid_commandline.html">
+		<param name="ImageNumber" value="11">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Menus">
+		<param name="Local" value="hid_menus.html">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="File Menu">
+			<param name="Local" value="menus\hid_file.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; New">
+				<param name="Local" value="menus\hid_file_new.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Open">
+				<param name="Local" value="menus\hid_file_open.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Reload">
+				<param name="Local" value="menus\hid_file_reload.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Close">
+				<param name="Local" value="menus\hid_file_close.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Close All">
+				<param name="Local" value="menus\hid_file_closeall.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Save">
+				<param name="Local" value="menus\hid_file_save.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Save As">
+				<param name="Local" value="menus\hid_file_saveas.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Save All">
+				<param name="Local" value="menus\hid_file_saveall.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Show File Location">
+				<param name="Local" value="menus\hid_file_showfilelocation.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Properties...">
+				<param name="Local" value="menus\hid_file_properties.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Page Setup">
+				<param name="Local" value="menus\hid_file_pagesetup.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Print Setup">
+				<param name="Local" value="menus\hid_file_printsetup.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Print Preview">
+				<param name="Local" value="menus\hid_file_printpreview.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Print...">
+				<param name="Local" value="menus\hid_file_print.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="File -&gt; Send Mail">
+				<param name="Local" value="menus\hid_file_sendmail.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Edit Menu">
+			<param name="Local" value="menus\hid_edit.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Undo">
+				<param name="Local" value="menus\hid_edit_undo.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Redo">
+				<param name="Local" value="menus\hid_edit_redo.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Cut">
+				<param name="Local" value="menus\hid_edit_cut.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Copy">
+				<param name="Local" value="menus\hid_edit_copy.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Paste">
+				<param name="Local" value="menus\hid_edit_paste.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Cut &amp; Append">
+				<param name="Local" value="menus\hid_edit_cutandappend.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Cut Bookmarked Lines">
+				<param name="Local" value="menus\hid_edit_cutbookmarkedlines.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Copy &amp; Append">
+				<param name="Local" value="menus\hid_edit_copyappend.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Copy Bookmarked Lines">
+				<param name="Local" value="menus\hid_edit_copybookmarkedlines.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Delete">
+				<param name="Local" value="menus\hid_edit_deleteline.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Delete to End of Word">
+				<param name="Local" value="menus\hid_edit_deletetoendofword.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Delete Word Back">
+				<param name="Local" value="menus\hid_edit_deletewordback.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Delete Line">
+				<param name="Local" value="menus\hid_edit_deleteline.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Delete Bookmarked Lines">
+				<param name="Local" value="menus\hid_edit_deletebookmarkedlines.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Select Word">
+				<param name="Local" value="menus\hid_edit_selectword.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Select Line">
+				<param name="Local" value="menus\hid_edit_selectline.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Select All">
+				<param name="Local" value="menus\hid_edit_selectall.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Scroll Up">
+				<param name="Local" value="menus\hid_edit_scrollup.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Scroll To Center">
+				<param name="Local" value="menus\hid_edit_scrolltocenter.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Edit -&gt; Scroll Down">
+				<param name="Local" value="menus\hid_edit_scrolldown.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="View Menu">
+			<param name="Local" value="menus\hid_view.html">
+			<param name="URL" value="menus\hid_view.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; File Toolbar">
+				<param name="Local" value="menus\hid_view_filetoolbar.html">
+				<param name="URL" value="menus\hid_view_filetoolbar.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; SQL Toolbar">
+				<param name="Local" value="menus\hid_view_sqltoolbar.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; Connection Toolbar">
+				<param name="Local" value="menus\hid_view_connectiontoolbar.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; Object Viewer">
+				<param name="Local" value="menus\hid_view_objectviewer.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; Objects List">
+				<param name="Local" value="menus\hid_view_objectslist.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; Find in Files Output">
+				<param name="Local" value="menus\hid_view_findinfilesoutput.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; File Panel">
+				<param name="Local" value="menus\hid_view_filepanel.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; Workbook">
+				<param name="Local" value="menus\hid_view_workbook.html">
+				<param name="URL" value="menus\hid_view_workbook.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="View -&gt; Status Bar">
+				<param name="Local" value="menus\hid_view_statusbar.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Search Menu">
+			<param name="Local" value="menus\hid_search.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Find...">
+				<param name="Local" value="menus\hid_search_find.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Replace">
+				<param name="Local" value="menus\hid_search_replace.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Find Next">
+				<param name="Local" value="menus\hid_search_findnext.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Find Previous">
+				<param name="Local" value="menus\hid_search_findprevious.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Go To...">
+				<param name="Local" value="menus\hid_search_goto.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Toggle Bookmark">
+				<param name="Local" value="menus\hid_search_togglebookmark.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Next Bookmark">
+				<param name="Local" value="menus\hid_search_nextbookmark.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Previous Bookmark">
+				<param name="Local" value="menus\hid_search_previousbookmark.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Remove all Bookmarks">
+				<param name="Local" value="menus\hid_search_removeallbookmarks.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Set Random Bookmark">
+				<param name="Local" value="menus\hid_search_setrandombookmark.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Get Random Bookmark">
+				<param name="Local" value="menus\hid_search_getrandombookmark.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Find Match">
+				<param name="Local" value="menus\hid_search_findmatch.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Find Match &amp; Select">
+				<param name="Local" value="menus\hid_search_findmatchselect.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Search -&gt; Find In Files...">
+				<param name="Local" value="menus\hid_search_findinfiles.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Text Menu">
+			<param name="Local" value="menus\hid_text.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Stream Selection">
+				<param name="Local" value="menus\hid_text_streamselection.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Column Selection">
+				<param name="Local" value="menus\hid_text_columnselection.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Toggle Selection Mode">
+				<param name="Local" value="menus\hid_text_toggleselectionmode.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Sort">
+				<param name="Local" value="menus\hid_text_sort.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Indent Selection">
+				<param name="Local" value="menus\hid_text_indentselection.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Undent Selection">
+				<param name="Local" value="menus\hid_text_undentselection.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Untabify Selection">
+				<param name="Local" value="menus\hid_text_untabifyselection.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Tabify Selection (All)">
+				<param name="Local" value="menus\hid_text_tabifyselectionall.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Tabify Selection (Leading)">
+				<param name="Local" value="menus\hid_text_tabifyselectionleading.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Normalize Keyword">
+				<param name="Local" value="menus\hid_text_normalizekeyword.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Lowercase">
+				<param name="Local" value="menus\hid_text_lowercase.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Uppercase">
+				<param name="Local" value="menus\hid_text_uppercase.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Capitalize">
+				<param name="Local" value="menus\hid_text_capitalize.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Invert case">
+				<param name="Local" value="menus\hid_text_invertcase.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Comment Line">
+				<param name="Local" value="menus\hid_text_commentline.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Uncomment Line">
+				<param name="Local" value="menus\hid_text_uncommentline.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Expand Template">
+				<param name="Local" value="menus\hid_text_expandtemplate.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Datetime Stamp">
+				<param name="Local" value="menus\hid_text_datetimestamp.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Visible Spaces">
+				<param name="Local" value="menus\hid_text_visiblespaces.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Line Numbers">
+				<param name="Local" value="menus\hid_text_linenumbers.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Ruler">
+				<param name="Local" value="menus\hid_text_ruler.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Text -&gt; Column Markers">
+				<param name="Local" value="menus\hid_text_columnmarkers.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Grid Menu">
+			<param name="Local" value="menus\hid_grid.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Session Menu">
+			<param name="Local" value="menus\hid_session.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Session -&gt; Connect">
+				<param name="Local" value="menus\hid_session_connect.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Session -&gt; Disconnect">
+				<param name="Local" value="menus\hid_session_disconnect.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Session -&gt; Commit">
+				<param name="Local" value="menus\hid_session_commit.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Session -&gt; Rollback">
+				<param name="Local" value="menus\hid_session_rollback.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Session -&gt; Enable Dbms Output">
+				<param name="Local" value="menus\hid_session_enabledbmsoutput.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Session -&gt; Enable Session Statistics">
+				<param name="Local" value="menus\hid_session_enablesessionstatistics.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Script Menu">
+			<param name="Local" value="menus\hid_script.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Execute">
+				<param name="Local" value="menus\hid_script_execute.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Execute Current">
+				<param name="Local" value="menus\hid_script_executecurrent.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Execute And Step">
+				<param name="Local" value="menus\hid_script_executecurrentandstep.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Next Error">
+				<param name="Local" value="menus\hid_script_nexterror.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Previous Error">
+				<param name="Local" value="menus\hid_script_previouserror.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Get History And Step Back">
+				<param name="Local" value="menus\hid_script_gethistoryandstepback.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Step Forward And Get History">
+				<param name="Local" value="menus\hid_script_stepforwardandgethistory.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Find Object">
+				<param name="Local" value="menus\hid_script_findobject.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Load DDL Script">
+				<param name="Local" value="menus\hid_script_loadddlscript.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Explain Plan">
+				<param name="Local" value="menus\hid_script_explainplan.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Script -&gt; Enable Substitution Variables">
+				<param name="Local" value="menus\hid_script_enablesubstitutionvariables.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Tools Menu">
+			<param name="Local" value="menus\hid_tools.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Tools -&gt; Extract Schema DDL">
+				<param name="Local" value="menus\hid_tools_extractschemaddl.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Tools -&gt; Table Transformation Helper">
+				<param name="Local" value="menus\hid_tools_tabletransfomatophelper.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Tools -&gt; Settings...">
+				<param name="Local" value="menus\hid_tools_settings.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Window Menu">
+			<param name="Local" value="menus\hid_window.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Help Menu">
+			<param name="Local" value="menus\hid_help.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Help -&gt; Help Topics">
+				<param name="Local" value="menus\hid_help_helptopics.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Help -&gt; SQL Short Reference">
+				<param name="Local" value="menus\hid_help_sqlshortreference.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Help -&gt; SQLTools on the Web">
+				<param name="Local" value="menus\hid_help_sqltoolsontheweb.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Help -&gt; About Box">
+				<param name="Local" value="menus\hid_help_about.html">
+				<param name="URL" value="hid_help_about.html">
+				<param name="ImageNumber" value="27">
+				</OBJECT>
+		</UL>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ToolBars">
+		<param name="Local" value="hid_toolbars.html">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="File Toolbar">
+			<param name="Local" value="toolbars/hid_filetoolbar.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="SQL Toolbar">
+			<param name="Local" value="toolbars/hid_sqltoolbar.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Connection Toolbar">
+			<param name="Local" value="toolbars/hid_connecttoolbar.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+	</UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Tools">
+		<param name="ImageNumber" value="1">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Object List">
+			<param name="Local" value="tools\hid_alltools_objectslist.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Bookmark">
+			<param name="Local" value="tools/hid_alltools_bookmark.html">
+			<param name="ImageNumber" value="11">
+			</OBJECT>
+	</UL>
+</UL>
+</BODY></HTML>

@@ -1,0 +1,185 @@
+% This document is under the terms of the GPL Licence.
+%
+% Create DVI:
+% platex sqltools_tutorial_pl.tex
+% Show DVI:
+% yap sqltools_tutorial_pl.dvi
+% Create PDF:
+% dvipdfm sqltools_tutorial_pl.dvi
+%
+
+\documentclass[a4paper,titlepage]{article}
+\hoffset = -2cm
+\voffset = -2cm
+\addtolength{\textwidth}{4cm}
+\addtolength{\textheight}{4cm}
+\usepackage[MeX]{polski}
+\usepackage[cp1250]{inputenc}
+
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.jpg,.jpeg,.gif}
+
+\author{Drzewiecki Tomasz}
+\title{SQLTools w piêciu krokach\\ver. 0.1}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Logowanie}
+W³¹czmy program. Widzimy okno logowania siê do bazy danych.\\
+\includegraphics[bb=0 0 696 370,width=\textwidth]{00login00}
+Po lewej stronie mamy listê wyboru z ostatnimi logowaniami siê do ró¿nych baz danych. Na rysunku widzimy listê uporz¹dkowan¹ wg czasu ostatniego u¿ycia po³¹czenia. Mo¿emy posortowaæ wartoœci w liœcie po dowolnej z kolumn.
+
+Aby siê zalogowaæ do bazy w odpowiednie pola wpisujemy u¿ytkownika, has³o oraz wybieramy z listy nazwê bazy, a dok³adniej jego SID (pole TNS). 
+
+A co , gdy w dostêpnych œcie¿kach nie mamy poprawnego (lub ¿adnego) pliku \emph{tnsnames.ora} ? Mo¿emy wpisaæ parametry rêcznie. Zaznaczamy opcjê \emph{Bypass tnsnames.ora} i podajemy nazwê komputera udostêpniaj¹cego bazê oraz typowy port 1521.\\
+\includegraphics[bb=0 0 695 369,width=\textwidth]{00login01}
+
+Podczas prób pod³¹czania bardzo u¿yteczny jest przycisk \emph{Test connection} (testuj po³¹czenie), widoczny na powy¿szym rysunku. Umo¿liwia on proste sprawdzenie istnienia instancji i poprawnoœci wpisanego has³a, bez logowania siê do bazy.
+
+Gdy musimy wykonaæ czynnoœci administracyjne niezbêdne jest zalogowanie siê jako SYSDBA lub SYSOPER. Umo¿liwia to lista wyboru \emph{Mode}.\\
+\begin{center}
+\includegraphics[bb=0 0 247 116,scale=.7]{00login02}
+\end{center}
+
+Po poprawnym zalogowaniu siê do bazy na pasku narzêdziowym widzimy obecne po³¹czenie oraz przyciski pozwalaj¹ce siê roz³¹czyæ lub bezpoœrednio po³¹czyæ z inn¹ instancj¹ lub jako inny u¿ytkownik.\\
+\begin{center}
+\includegraphics[bb=0 0 296 26,scale=.7]{00login03}
+\end{center}
+
+%\newpage
+\section{G³ówne okno}
+
+Widzimy teraz g³ówne okno programu.\\
+\includegraphics[bb=0 0 734 537,width=\textwidth]{01main00}
+
+W edytorze mo¿emy wydawaæ wiêkszoœæ komend znanych z programu SQLPlus, jak i edytowaæ oraz zatwierdzaæ pakiety, procedury, czy triggery.
+W dolnym oknie mamy dostêp do wyników zapytania. Zróbmy prosty eksperyment. Wpiszmy w edytorze:
+\begin{center}
+SELECT 5+10 FROM DUAL;\\
+\end{center}
+Naciœnijmy \textbf{F5}. Na dole widzimy wynik!\\
+\begin{center}
+\includegraphics[bb=0 0 196 179,scale=.7]{01main01}
+\end{center}
+
+Spróbujmy coœ trudniejszego.
+\begin{center}
+SELECT * FROM user\_tables;
+\end{center}
+
+Podczas pisania tekstu, jeœli piszemy ma³ymi literami zauwa¿ymy, ¿e z naszym tekstem coœ siê dzieje. Jest ³adnie formatowany. Odpowiada za to opcja z menu: \emph{Tools $\to$ Application/Editor Settings $\to$ Normalize keywords}. Jeœli mamy ju¿ gotowy kawa³ek kodu, aby go 'upiêkszyæ' mo¿emy wydaæ komendê z menu: \emph{Text $\to$ Normalize Keyword}.
+
+Wykonajmy powy¿sze zapytanie klawiszem \textbf{F5}. W zale¿noœci od iloœci dostêpnych tabel zobaczymy kilka(naœcie) wierszy wyniku.\\
+\begin{center}
+\includegraphics[bb=0 0 441 337,scale=.7]{01main02}
+\end{center}
+W dolnej linii statusu jest informacja, ¿e w czasie 0.481s pobrano tylko 100 pierwszych wierszy. Ustawienie to mo¿na zmieniæ w menu: \emph{Tools $\to$ Session/DDL/Grid Settings $\to$ Data Grid $\to$ Row prefetch}.
+
+Wybierzmy opcjê z menu: \emph{Session $\to$ Enable Session Statistics}. Wykonajmy jeszcze raz to samo zapytanie. PrzejdŸmy na drug¹ zak³adkê \emph{Statistics}.\\
+\includegraphics[bb=0 0 734 445,width=\textwidth]{01main03}
+
+Na tej zak³adce widzimy statystyki ostatnio wykonanego zapytania. Kursor myszy na rysunku jest ustawiony na bardzo przydatnym przycisku – blokowaniu automatycznego przechodzenia pomiêdzy zak³adkami. Domyœlnie po wykonaniu kolejny raz zapytania otworzy nam siê zak³adka \emph{Query}. Spróbujmy nacisn¹æ \textbf{F5}. WejdŸmy jeszcze raz na zak³adkê \emph{Statistics}, a nastêpnie zaznaczmy przycisk blokowania automatycznego przechodzenia. Jeszcze raz naciœnijmy \textbf{F5}. Jaki jest rezultat?
+
+Odznaczmy przycisk blokowania i naciœnijmy \textbf{F9}. Automatycznie otworzy siê zak³adka z planem wykonania zapytania.\\
+\includegraphics[bb=0 0 743 403,width=\textwidth]{01main04}
+
+Ustawmy kursor w edytorze na s³owie 'USER\_TABLES'. Naciœnijmy \textbf{F12}.\\
+\includegraphics[bb=0 0 807 556,width=\textwidth]{01main05}
+
+Klawiszem \textbf{F12} przenosimy siê do okna opisuj¹cego strukturê tabelki. Mamy tutaj równie¿ dostêp do wszystkich obiektów zale¿nych od tej tabeli / perspektywy oraz wszystkich obiektów na których opiera siê dana tabela czy perspektywa. Jest to bardzo u¿yteczne narzêdzie do szybkiego przegl¹dania zale¿noœci pomiêdzy obiektami.\\
+\begin{center}
+\includegraphics[bb=0 0 228 278,scale=.7]{01main06}
+\end{center}
+
+%\newpage
+\section{Przegl¹darka obiektów}
+Bêd¹c w edytorze naciœnijmy \textbf{Alt+3}. Weszliœmy w ten sposób do przegl¹darki obiektów.\\
+\includegraphics[bb=0 0 683 419,width=\textwidth]{02objview00}
+
+Mamy st¹d dostêp do wszystkich obiektów w danym schemacie. Zaznaczmy dowoln¹ z tabel (zak³adka Tables),  np. COUNTRIES ze schematu HR. Naciœnijmy prawy przycisk myszy i  wybierzmy \emph{Query}.\\
+\begin{center}
+\includegraphics[bb=0 0 327 240,scale=.7]{02objview02}
+\end{center}
+
+W ten sposób utworzyliœmy nowe okno z wpisanym i wykonanym zapytaniem:
+\begin{center}
+SELECT * FROM hr.countries;
+\end{center}
+
+Wybierzmy na tej samym obiekcie w liœcie obiektów (\textbf{Alt+3}) z menu opcjê Load lub po prostu dwukrotnie kliknijmy na tabeli lewym przyciskiem. Uka¿e nam siê okienko \emph{Local DDL Preferences}, na którym dla u³atwienia ustawimy opcje jak przedstawiono na rysunku i naciœniemy OK.
+\begin{center}
+\includegraphics[bb=0 0 425 313,scale=.7]{02objview01}
+\end{center}
+
+Otworzy nam siê okno zawieraj¹ce skrypt tworz¹cy pe³n¹ definicjê tabeli lub innego obiektu.\\
+\includegraphics[bb=0 0 807 622,width=\textwidth]{02objview03}
+
+Umo¿liwia to nam w prosty sposób ponowne utworzenie danego obiektu.
+Po poprawieniu np. opisu kolumny naciskamy po prostu \textbf{F5} i jeœli nie pope³nimy b³êdu, to  zmiany zostan¹ wprowadzone do bazy. W zak³adce \emph{Output} widzimy na czerwono zaznaczone b³êdy wykonania skryptu, na niebiesko zaœ poprawnie wykonane polecenia na bazie.
+\begin{center}
+\includegraphics[bb=0 0 404 278,scale=.7]{02objview04}
+\end{center}
+
+U¿yteczn¹ opcj¹ \emph{listy obiektów} jest mo¿liwoœæ ³adowania wielu obiektów (np. pakietów) do edytora jednoczeœnie, jako jeden du¿y skrypt. Zaznaczmy np. cia³a kilku pakietów i pod prawym przyciskiem wydajmy polecenie \emph{Load all in one}.\\
+\includegraphics[bb=0 0 684 421,width=\textwidth]{02objview05}
+
+Otworzy siê nam jedno okno ze z³¹czonymi cia³ami wszystkich pakietów. Jest to bardzo przydatne, jeœli chcemy szybko przeszukaæ np. wszystkie pakiety w poszukiwaniu treœci komunikatu, który przed chwil¹ zg³osi³ nam ktoœ z u¿ytkowników jako b³¹d.
+
+\section{Parê æwiczeñ nie zaszkodzi}
+Prostota i piêkno jednoczeœnie SQLTools (oprócz darmowoœci:) polega na tym, ¿e nie jesteœmy rozpieszczani wszêdobylskimi kreatorami i magicznymi guziczkami. Uwierzcie mi, ¿e nawet do doœæ zaawansowanych (oprócz debuggera, którego wprost Oracle nie wspiera – chlip) projektów programistycznych ta spartañska prostota w zupe³noœci wystarcza.
+
+Doœæ glêdzenia. Za³ó¿my, ¿e jesteœmy na bazie co najmniej Oracle 8 i mamy w swoim schemacie prawa do tworzenia, usuwania i wykonywania wszystkich operacji na obiektach.
+
+\subsection{Wykonajmy æwiczenia}
+\begin{enumerate}
+\item Utwórzmy tabelkê na wzór tabelki USER\_TABLES, ale tylko z pierwszymi trzema kolumnami.
+\item Przepiszmy do niej poleceniem INSERT odpowiednie dane z USER\_TABLES. 
+\item Na wzór dowolnego pakietu utwórzmy swój w³asny pakiet z jedn¹ publiczn¹ procedur¹ wypisuj¹c¹ za pomoc¹ 'put'+CTRL+SPACE jedn¹ liniê ze stworzonej tabeli (wpisujemy s³owo \emph{put} i naciskamy $<$CTRL+SPACE$>$).
+\item Utwórzmy procedurê wywo³uj¹c¹ z pakietu t¹ procedurê.
+\item Na koniec utwórzmy:\\
+\indent BEGIN\\
+\indent \indent wywo³anie\_utworzonej\_procedury;\\
+\indent END;
+\item Wywo³ajmy skrypt klawiszem \textbf{F5}. Zapiszmy skrypt.
+\item Na nazwie tabeli naciœnijmy \textbf{F12}. Od czego zale¿na jest tabela? Oraz co u¿ywa tej tabeli.
+\item Zamknijmy teraz wszystko. Otwórzmy przegl¹darkê obiektów (\textbf{Alt+3}). Usuñmy tabelkê klawiszem \emph{Drop}.
+\item WejdŸmy do przegl¹darki obiektów na zak³adkê Package bodies. Po naciœniêciu przycisku \emph{Refresh} zaobserwujmy co siê pojawi³o przy pakiecie. 
+\item WejdŸmy do edytora i za³adujmy skrypt. Spróbujmy go wykonaæ. Dlaczego to siê nie uda³o? 
+\item Na koniec usuñmy w przegl¹darce obiektów procedurê oraz pakiet. No i Koniec!
+\end{enumerate}
+
+\subsection{Wskazówki (oczywiœcie istnieje wiele dróg do osi¹gniêcia tego samego celu)}
+1. CREATE TABLE \dots\ AS SELECT table\_name, tablespace\_name, cluster\_name FROM user\_tables WHERE 1=0;\\[.3cm]
+2. INSERT INTO \dots\ SELECT \dots;\\[.3cm]
+3. Otwórzmy przegl¹darkê, za³adujmy dowolny pakiet (specyfikacja + cia³o dla u³atwienia), wyrzuæmy wszystko oprócz 1 procedury, dodajmy do niej trzy linijki:
+\begin{itemize}
+\item z deklaracj¹ zmiennej(ych);
+\item z SELECT \dots\ INTO \dots;
+\item z Dbms\_Output.Put\_Line();
+\end{itemize}
+\includegraphics[bb=0 0 803 471,width=\textwidth]{04exercise00}
+4,5,6,7. Przyk³adowa implementacja.\\
+\includegraphics[bb=0 0 803 473,width=\textwidth]{04exercise01}
+8,9. Znacznik przy 'niewa¿nym' pakiecie oraz pojawiaj¹ce siê komunikaty o b³êdach w jêzyku polskim.
+
+\section{Dla zaawansowanych - dostosowanie SQLTools do w³asnych potrzeb}
+Co tu siê du¿o rozwodziæ. Mamy dostêp do opcji z menu:
+\begin{itemize}
+\item \emph{Text $\to$ File Settings \& Information}
+\item \emph{Tools $\to$ Session / DDL / Grid Settings}
+\item \emph{Tools $\to$ Application / Editor Settings}
+\end{itemize}
+Skróty klawiaturowe mo¿emy zmieniaæ w pliku \emph{Data / custom.keymap}.
+
+\subsection{I co dalej?}
+\emph{2004-12-13}
+W chwili obecnej program nie jest modu³owy – sk³ada siê z jednego pliku *.exe. W przysz³oœci postaramy siê dostosowaæ go do idei wtyczek, które ka¿dy bêdzie móg³ tworzyæ na miarê w³asnych potrzeb bez zagl¹dania do g³ównego kodu. 
+
+G³ówna czêœæ SQLTools (OpenEditor) ju¿ teraz ma swój w³asny projekt na SourceForge. Alex opublikowa³ swój kod SQLTools na licencji GPL.  Myœlê, ¿e przyczyni siê to do istotnego „skoku” w rozwoju programu.
+
+Mam nadziejê, ¿e wszyscy czytaj¹cy ten tekst choæby w drobnych sprawach (raporty b³êdów, testowanie nowych wersji) wspomog¹ nasz zespó³ programistów. Bêdziemy Wam za to bardzo wdziêczni!
+
+\end{document}

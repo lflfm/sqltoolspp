@@ -1,0 +1,19 @@
+
+body { background-color: #99CCFF;}
+
+div             { font-family: Arial; font-size: 10pt; text-align: left;
+                  color: #010101; vertical-align: top;}
+div.title       { font-size: 14pt; font-weight: bold;}
+div.under_title { color: #000033; font-size: 12pt;}
+div.image       { text-align: center;}
+
+li              { font-family: Arial; font-size: 10pt; text-align: left;
+                  color: #010101; vertical-align: top;}
+
+
+td              { font-family: Arial; font-size: 10pt; text-align: left;
+                  color: #010101; vertical-align: top;}
+td.title        { font-size: 12pt; font-weight: bold;
+                  vertical-align: middle;}
+td.image        { vertical-align: middle; text-align: center;}
+td.link         { font-size: 12pt; text-align: right;}

@@ -1,0 +1,200 @@
+% Ce document est régi par les conditions de fonctionnement de la licence GPL.
+%
+% Create DVI:
+% latex sqltools_tutorial_fr.tex
+% Show DVI:
+% yap sqltools_tutorial_fr.dvi
+% Create PDF:
+% dvipdfm sqltools_tutorial_fr.dvi
+%
+
+\documentclass[a4paper,titlepage]{article}
+\hoffset = -2cm
+\voffset = -2cm
+\addtolength{\textwidth}{4cm}
+\addtolength{\textheight}{4cm}
+\usepackage{francais} 
+\usepackage[cp1252]{inputenc} 
+
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.jpg,.jpeg,.gif}
+
+\author{Tomasz Drzewiecki - Traduit et adapté de l'anglais par Michel Traisnel}
+\title{SQLTools en 5 étapes\\ver. 0.1}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Connexion}
+Commençons par exécuter le programme. Nous allons détailler la fenêtre de connexion à la base.\\
+\includegraphics[bb=0 0 696 370,width=\textwidth]{00login00}
+Sur le côté gauche se trouve une liste des précédentes connexions à différentes bases. Sur l'image, la liste est classée
+par date de dernière utilisation, mais il est possible de classer la liste selon n'importe quelle colonne. Il suffit de double-cliquer sur une des connexions pour la rétablir.
+
+Pour se connecter à une nouvelle base de données, il faut entrer le nom d'utilisateur et le mot de passe et ensuite
+choisir un nom de base à partir de la liste TNS (pour être plus précis - la liste des SID).  
+
+Et que se passe-t-il si nous n'avons pas un fichier \emph{tnsnames.ora} correct, ou si nous n'en avons pas du tout ?
+Il est possible de renseigner les paramètres manuellement ! Cocher l'option \emph{Bypass tnsnames.ora} et entrer le nom de la 
+machine (ou son adresse IP), la base de données et le port de connexion (typiquement 1521).\\
+\includegraphics[bb=0 0 695 369,width=\textwidth]{00login01}
+
+Le bouton \emph{Test connection} est très utile durant les tentatives de connexion. Il contrôle l'existence d'une instance Oracle et
+l'exactitude des informations de connexion, mais n'ouvre pas de session sur la base.
+
+S'il est nécessaire de se connecter en tant que SYSDBA ou SYSOPER pour effectuer des tâches d'administration, sélectionner
+l'option appropriée dans la liste déroulante \emph{Mode}.\\
+\begin{center}
+\includegraphics[bb=0 0 247 116,scale=.7]{00login02}
+\end{center}
+
+Après connexion à la base sont affichés les paramètres de connexion ainsi que deux boutons dans la barre d'outils.
+Ces deux boutons permettent de se déconnecter ou se connecter à une autre instance Oracle, ou d'ouvrir une session avec un autre user.\\
+\begin{center}
+\includegraphics[bb=0 0 296 26,scale=.7]{00login03}
+\end{center}
+
+%\newpage
+\section{Fenêtre principale}
+
+Nous voyons ici la fenêtre principale du programme.\\
+\includegraphics[bb=0 0 734 537,width=\textwidth]{01main00}
+
+Dans la fenêtre d'édition, il est possible d'exécuter du SQL, des packages, des procédures et des triggers.
+La fenêtre du bas contient le résultat des requêtes. Faisons un petit essai. Dans la fenêtre du haut, tapez :
+\begin{center}
+SELECT 5+10 FROM DUAL;\\
+\end{center}
+Appuyer sur la touche \textbf{F5}. Le résultat apparaît ci-dessous !\\
+\begin{center}
+\includegraphics[bb=0 0 196 179,scale=.7]{01main01}
+\end{center}
+
+Essayons quelquechose de plus compliqué.
+\begin{center}
+SELECT * FROM user\_tables;
+\end{center}
+
+Notez que lorsque le texte est tapé en minuscules, les mots-clés SQL sont automatiquement transformés en majuscules.
+Le menu \emph{Tools $\to$ Application/Editor Settings $\to$ Normalize keywords} permet de choisir cette option. 
+Si la fenêtre d'édition contient du code non formaté, il est possible d'y remédier en utilisant la commmande \emph{Text $\to$ Normalize Keyword}.
+
+Exécutez la requête citée plus haut en appuyant sur \textbf{F5}. En fonction du contenu de USER\_TABLES, le résultat contiendra probablement des dizaines de lignes en résultat.\\
+\begin{center}
+\includegraphics[bb=0 0 441 337,scale=.7]{01main02}
+\end{center}
+Sur l'image, la barre de statut inférieure indique que le programme a retourné seulement les 100 premières lignes en 0,481s. D'autres lignes seront restituées 
+si on défile jusqu'au bas de la grille de résultats.
+Le nombre de lignes retournées peut être modifié par l'option de menu
+\emph{Tools $\to$ Session/DDL/Grid Settings $\to$ Data Grid $\to$ Row prefetch}.
+
+Choisissons maintenant l'option de menu \emph{Session $\to$ Enable Session Statistics}. Exécutez à nouveau la même requête. Puis, cliquez sur le second onglet \emph{Statistics}.\\
+\includegraphics[bb=0 0 734 445,width=\textwidth]{01main03}
+
+Sur cet onglet nous pouvons voir les statistiques de la dernière requête. (Nous verrions en fait les statistiques de la session entière, mais seule cette requête a été exécutée depuis que les statistiques ont été démarrées.) Sur cette image, le curseur de la souris est positionné sur un bouton très 
+utile - Désactiver le changement automatique d'onglet (Figer l'onglet). Par défaut, l'onglet \emph{Query} sera automatiquement réouvert si on exécute une autre requête.
+Appuyez sur \textbf{F5} pour examiner ce comportement. Puis allez sur l'onglet \emph{Statistics} à nouveau et cliquez sur le bouton. Appuyez sur \textbf{F5} à nouveau. Quel est le résultat ?
+
+Réactivez le bouton et appuyez sur \textbf{F9}. Le plan d'exécution de la requête va s'afficher sur l'onglet \emph{Plan}.\\
+\includegraphics[bb=0 0 743 403,width=\textwidth]{01main04}
+
+Dans la fenêtre du haut, cliquez n'importe où sur le mot 'USER\_TABLES'. Appuyez sur \textbf{F12}.\\
+\includegraphics[bb=0 0 807 556,width=\textwidth]{01main05}
+
+Une fenêtre décrivant la structure de la table ou de la vue apparaît. Il est également possible dans cette fenêtre de voir les objets qui dépendent de cette table ou vue et la liste des objets à partir desquels cette table ou vue est construite. C'est un moyen très pratique pour rechercher rapidement les dépendences entre objets.\\
+\begin{center}
+\includegraphics[bb=0 0 228 278,scale=.7]{01main06}
+\end{center}
+
+%\newpage
+\section{Liste des objets}
+Placez le curseur à l'intérieur de la fenêtre d'édition et appuyez sur \textbf{Alt+3} . Cela ouvre le navigateur des objets.\\
+\includegraphics[bb=0 0 683 419,width=\textwidth]{02objview00}
+
+Cette fenêtre liste tous les objets du schéma de la base. Sélectionnez n'importe quelle table (sur l'onglet \emph{Tables}), par exemple la table COUNTRIES du schéma HR. Cliquez droit dessus et sélectionnez \emph{Query}.\\
+\begin{center}
+\includegraphics[bb=0 0 327 240,scale=.7]{02objview02}
+\end{center}
+
+Nous avons créé une nouvelle fenêtre d'édition et exécuté la requête :
+\begin{center}
+SELECT * FROM hr.countries;
+\end{center}
+
+Choisissez le même objet dans la liste des objets (\textbf{Alt+3}) et sélectionnez l'option \emph{Load} à partir du menu (ou double-cliquez simplement dessus). La fenêtre \emph{Local DDL Preferences} apparaît. Sélectionnez les options comme sur l'image et appuyez sur OK.
+\begin{center}
+\includegraphics[bb=0 0 425 313,scale=.7]{02objview01}
+\end{center}
+
+Une nouvelle fenêtre d'édition apparaît, avec le script de création de la table. Ceci fonctionne également pour les autres objets.\\ 
+\includegraphics[bb=0 0 807 622,width=\textwidth]{02objview03}
+
+Cela permet de recréer facilement l'objet.
+Par exemple, changez quelquechose de mineur, comme la description d'une des colonnes et appuyez sur \textbf{F5}. S'il n'y a pas d'erreur, les modifications seront prises en compte dans la base de données. La fenêtre de résultats \emph{Output} affiche les erreurs d'exécution des scripts avec une icône rouge et les commandes en succès avec une icône bleue.
+\begin{center}
+\includegraphics[bb=0 0 404 278,scale=.7]{02objview04}
+\end{center}
+
+Une option très utile dans l'outil \emph{Object list} est la possibilité de charger immédiatement dans l'éditeur plusieurs objets (comme des packages) au sein d'un seul script. Par exemple, sélectionnez plusieurs packages et choisissez \emph{Load all in one} à partir du menu contextuel à l'aide d'un clic droit.\\
+\includegraphics[bb=0 0 684 421,width=\textwidth]{02objview05}
+
+Une nouvelle fenêtre d'édition apparaît, avec un script contenant l'ensemble des packages bodies sélectionnés. Cette fonctionnalité peut être utilisée, par exemple, pour rechercher un message d'erreur dans tous les packages.
+\section{Et maintenant les exercices}
+
+Un des avantages de SQLTools (indépendamment de son prix) c'est qu'il n'est pas saturé d'assistants et de boutons magiques. Même pour des projets de développement complexes, cet environnement, quelque peu spartiate, suffit.
+
+Assez bavardé - passons aux exercices. Supposez que nous soyons sur Orcale8i ou supérieure et que nous ayons les droits en création et suppression d'objets, ainsi que toutes les autres opérations sur les objets du schéma.
+
+\subsection{Réalisez ces exercices}
+\begin{enumerate}
+\item Créez une copie de la table USER\_TABLES, mais avec seulement les trois premières colonnes.
+\item Copiez les données dans une nouvelle table, en utilisant un INSERT à partir de la table USER\_TABLES.
+\item Créez votre propre package avec une procédure publique en utilisant l'assistant de saisie (utilisez pour cela le modèle 'put'+CTRL+SPACE - tapez le mot \emph{put} puis $<$CTRL+SPACE$>$). La sortie doit contenir les données extraites de la nouvelle table. 
+\item Créez une nouvelle procédure qui va appeler la procédure de votre package.
+\item Créez un bloc anonyme :\\
+\indent BEGIN\\
+\indent \indent our\_created\_procedure;\\
+\indent END;
+\item Exécutez le script en tapant \textbf{F5}. Sauvegardez le script.
+\item Sélectionnez le nom de la table dans l'éditeur et appuyez sur \textbf{F12}. De quels objets dépend-elle ? Quels sont les objets qui utilisent cette table?
+\item Fermez tout. Ouvrez de nouveau la liste des objets en tapant (\textbf{Alt+3}). Détruisez la nouvelle table à l'aide du bouton DROP.
+\item Allez sur l'onglet \emph{Package bodies}. Appuyez sur le bouton \emph{Refresh} et regardez ce qui s'affiche sur le côté gauche du package.
+\item Allez sur la fenêtre de l'éditeur et chargez le script. Essayez de l'exécuter. Pourquoi n'a-t-il pas fonctionné ?
+\item Enfin, retournez sur la liste des objets et supprimez la procédure et le package. Vous avez terminé !
+\end{enumerate}
+
+\subsection{Suggestions (il y a bien entendu plusieurs façons de parvenir au même résultat)}
+1. CREATE TABLE \dots\ AS SELECT table\_name, tablespace\_name, cluster\_name FROM user\_tables WHERE 1=0;\\[.3cm]
+2. INSERT INTO \dots\ SELECT \dots;\\[.3cm]
+3. Ouvrez la liste des objets, chargez n'importe quel package (spécification + body), supprimez tout sauf une procédure et ajoutez ces trois lignes :
+\begin{itemize}
+\item Déclaration de variable(s);
+\item SELECT \dots\ INTO \dots;
+\item Dbms\_Output.Put\_Line();
+\end{itemize}
+\includegraphics[bb=0 0 803 471,width=\textwidth]{04exercise00}
+4,5,6,7. Exemple de réalisation.\\
+\includegraphics[bb=0 0 803 473,width=\textwidth]{04exercise01}
+8,9. Le package 'invalide' et les messages d'erreur sont indiqués en anglais.
+
+\section{Utilisation avancée - Personnaliser SQLTools}
+Pourquoi s'attarder sur cette question ? Nous avons des options dans le menu :
+\begin{itemize}
+\item \emph{Text $\to$ File Settings \& Information}
+\item \emph{Tools $\to$ Session / DDL / Grid Settings}
+\item \emph{Tools $\to$ Application / Editor Settings}
+\end{itemize}
+Les raccourcis clavier peuvent être modifiés dans le fichier \emph{Data / custom.keymap}.
+
+\subsection{Et ensuite ?}
+\emph{17/02/2005}
+Pour le moment, le programme n'est pas modulaire - il consiste en un gros fichier *.exe. A l'avenir, nous étudions la possibilité d'extensions (plugins), que chacun pourrait créer sans connaître le code source principal. 
+
+SQLTools et OpenEditor (qui représente la plus grosse partie du code de SQLTools) ont tous les deux été placés sur SourceForge. Nous espérons que cela va permettre d'accélérer le développement du programme.
+
+Nous espérons aussi que toutes les personnes qui consultent ce document soutiendront notre équipe de développement, ne serait-ce que pour tester les nouvelles versions et détecter les anomalies. Nous leur en serons très reconnaissants !
+
+\end{document}
+

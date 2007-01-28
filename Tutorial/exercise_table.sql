@@ -1,0 +1,1 @@
+CREATE TABLE atmk AS SELECT * FROM user_tables WHERE 0=1;

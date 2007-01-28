@@ -1,0 +1,46 @@
+There is a list of webpages where SQLTools exists:
+
+1. SourceForge
+http://www.sf.net/projects/sqlt
+
+2. Homepage
+http://www.sqltools.net/
+
+3. Open Source Projects for Oracle
+http://www.oracle.com/technology/community/opensource_projects.html
+
+4. Oracle FAQ
+http://www.orafaq.net/links/Products/Freeware/more2.htm
+
+5. SnapFiles
+http://www.snapfiles.com/get/sqltools.html
+
+6. FreeDownloads
+http://www.freedownloadscenter.com/Programming/Databases_and_Networks/SQLTools.html
+
+7. DownloadJunction
+http://www.downloadjunction.com/product/software/53837/
+
+8. DBAsupport
+http://www.dbasupport.com/oracle/ora9i/sqltools.shtml
+
+9. FileForum
+http://fileforum.betanews.com/detail/SQLTools/1022604299/1
+
+10. BullDownload
+http://www.download.com.ph/SQLTools.htm
+
+11. FileBoost
+http://www.fileboost.net/directory/development/databases_networks/mysql_tools/004091/review.html
+
+12. SoftHunters
+http://www.softhunters.com/download/p_14606.htm
+
+13. Mr.Tech
+http://www.mrtech.com/news/messages/3897.html
+
+14. 2downloads
+http://www.2-downloads.com/sqltools/details/3509
+
+15. SharewarePlaza
+http://www.sharewareplaza.com/SQLTools-download_23530.html

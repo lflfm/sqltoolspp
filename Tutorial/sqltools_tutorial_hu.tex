@@ -1,0 +1,203 @@
+% This document is under the terms of the GPL Licence.
+%
+% Create DVI:
+% latex sqltools_tutorial_hu.tex
+% Show DVI:
+% yap sqltools_tutorial_hu.dvi
+% Create PDF:
+% dvipdfm sqltools_tutorial_hu.dvi
+%
+
+\documentclass[a4paper,titlepage]{article}
+\hoffset = -2cm
+\voffset = -2cm
+\addtolength{\textwidth}{4cm}
+\addtolength{\textheight}{4cm}
+\usepackage[hungarian]{babel}
+\usepackage{t1enc}
+
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.jpg,.jpeg,.gif}
+
+\author{Drzewiecki Tomasz - Magyar fordítás és átdolgozás: Gáti Tamás}
+\title{SQLTools in 5 steps\\ver. 0.1}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Kapcsolódás}
+Kezdetnek indítsd el a programot. Megjelenik az adatbázis kapcsolódási ablak.\\
+\includegraphics[bb=0 0 696 370,width=\textwidth]{00login00}
+A bal oldalon látható a korábbi adatbázis kapcsolatok listája. A képen a lista az utolsó használat idôpontja szerint
+van rendezve, de rendezhetô bármelyik oszlop szerint. Valamelyik adatbázisra való dupla kattintással újra kapcsolat létesül.
+
+Egy új adatbázishoz felhasználói név és jelszó beírása
+után tudsz, kiválasztva az adatbázis nevét a TNS listából (pontosabban a SID listából).
+
+Mi történik, ha rossz \emph{tnsnames.ora} fájlod van, vagy egyáltalán nincs is?
+Beírhatod manuálisan a paramétereket. Jelöld ki a \emph{Bypass tnsnames.ora} opciót és üsd be a gép nevét (vagy IP-jét),
+az adatbázist és a kapcsolódási portot (általában 1521).\\
+\includegraphics[bb=0 0 695 369,width=\textwidth]{00login01}
+
+A \emph{Test connection} gomb hasznos lehet kapcsolódási kísérleteknél. Ellenôrizheted az Oracle bázis példányának létezését és
+a login információk helyességét, anélkül hogy belépnél az adatbázisba.
+
+Ha SYSDBA vagy SYSOPER felhasználóként kell belépned bizonyos adminisztratív feladatok miatt, válaszd ki a
+megfelelô opciót a \emph{Mode} legördülô listából.\\
+\begin{center}
+\includegraphics[bb=0 0 247 116,scale=.7]{00login02}
+\end{center}
+
+Az adatbázisba való belépés után láthatod a kapcsolat paramétereit és 2 gombot az eszköztárban.
+Ezekkel lehet szétkapcsoládni, egy másik Oracle példányhoz kapcsolódni vagy más felhasználóként bejelentkezni.\\
+\begin{center}
+\includegraphics[bb=0 0 296 26,scale=.7]{00login03}
+\end{center}
+
+%\newpage
+\section{Központi ablak}
+
+Ime a program központi ablaka.\\
+\includegraphics[bb=0 0 734 537,width=\textwidth]{01main00}
+
+A szerkesztô területen futtathatunk SQL lekérdezéseket, eljárásokat és triggereket.
+Az alsó ablak tartalmazza a lekérdezés eredményét. Probálj ki egy egyszerû példát. A felsô ablakba üsd be:
+\begin{center}
+SELECT 5+10 FROM DUAL;\\
+\end{center}
+Nyomd meg az \textbf{F5} gombot. Az eredmény lent jelenik meg!\\
+\begin{center}
+\includegraphics[bb=0 0 196 179,scale=.7]{01main01}
+\end{center}
+
+Próbálj most valami nehezebbet.
+\begin{center}
+SELECT * FROM user\_tables;
+\end{center}
+
+Figyeld meg, hogy ha kisbetükkel gépelsz, az SQL kulcsszavak azonnal nagybetüssé válnak.
+Ez az autómatikus formázás. A \emph{Tools $\to$ Application/Editor Settings $\to$ Normalize keywords}
+menü opció vezérli ezt a formázást. Ha egy formázatlan kódrészlet van az ablakban,
+meg tudod 'szépíteni' a \emph{Text $\to$ Normalize Keyword} menü opcióval.
+
+Futtasd a fenti lekérdezést az \textbf{F5} lenyomásával. A USER\_TABLES tartalmától függôen kb. egy tucat sor lesz
+az eredmény ablakban.\\
+\begin{center}
+\includegraphics[bb=0 0 441 337,scale=.7]{01main02}
+\end{center}
+A képen az alsó státusz sorban látható, hogy a program csak az elsô 100 sort apta meg 0.481s alatt. További sorokat
+csak akkor kér le a program, ha lefelé lapozol az eredménylistában.
+Az egyszerre lek?0rt sorok számát a \emph{Tools $\to$ Session/DDL/Grid Settings $\to$ Data Grid $\to$ Row prefetch}
+menü opcióval változtathatod meg.
+
+Válaszd most ki a \emph{Session $\to$ Enable Session Statistics} menü opciót. Futtasd újra az elôzô lekérdezést. Kattints a \emph{Statistics} fülre.\\
+\includegraphics[bb=0 0 734 445,width=\textwidth]{01main03}
+
+Ebben a fülben az elôzô lekérdezés statisztikai vannak. (A teljes kapcsolat statisztikairól van szó, de csak egy lekérdezést futott mióta a statisztikai adatgyüjtés kezdete óta.) A képen az egérmutató egy nagyon hasznos
+gmb felett áll - Automatikus fülek közötti váltás kikapcsolása. Alapértelmezésben a the \emph{Query} fül automatikusan megnyílik,
+ha egy új lekérdezést futtatunk. Nyomd meg az \textbf{F5} hogy lásd a mûködését. Ezután menj a \emph{Statistics} fülre és nyomd meg a gombot. Most \textbf{F5} újra. Mit látsz?
+
+Kapcsold ki az Automatikus fülek közötti váltás gombot és nyomj \textbf{F9}-öt. A lekérdezési terv a \emph{Plan} fülben jelenik meg.\\
+\includegraphics[bb=0 0 743 403,width=\textwidth]{01main04}
+
+Térj most vissza a felsô ablakba és kattints valahová a 'USER\_TABLES' szóban. Nyomd meg az \textbf{F12}-t.\\
+\includegraphics[bb=0 0 807 556,width=\textwidth]{01main05}
+
+Ez felhoz egy ablakot a tábla vagy nézet struktúrájával. A táblától vagy nézettôl függô objektumok listáját és a táblát vagy nézetet alkotó objektumok listáját kapjuk. Ez hasznos lehet ha objektulok közötti függôségeket keresel.\\
+\begin{center}
+\includegraphics[bb=0 0 228 278,scale=.7]{01main06}
+\end{center}
+
+%\newpage
+\section{Objektum lista}
+Nyomd meg az \textbf{Alt+3}-at mikor a kurzor a szerkesztô ablakban van. Ez az objektum-böngészôt nyitja meg.\\
+\includegraphics[bb=0 0 683 419,width=\textwidth]{02objview00}
+
+Megnyílik egy ablak az összes objektum listájával. Valassz ki egy táblát (a \emph{Tables} fülben), pl. COUNTRIES a HR sémából. Jobb egérklikk rajta es válaszd ki, hogy \emph{Query}.\\
+\begin{center}
+\includegraphics[bb=0 0 327 240,scale=.7]{02objview02}
+\end{center}
+
+Megnyitottál ezzel egy új szerkesztô ablakot és futtattad az alábbi lekérdezést:
+\begin{center}
+SELECT * FROM hr.countries;
+\end{center}
+
+Válaszd ki ugyanezt az objektumot az objektum listában (\textbf{Alt+3}) és válaszd ki a \emph{Load} opciót a menübôl (vagy egyszerên duplán klikkelj). A \emph{Local DDL Preferences} ablakot látod. Válaszd ki a képen látható opciókat és nyomj OK-t.
+\begin{center}
+\includegraphics[bb=0 0 425 313,scale=.7]{02objview01}
+\end{center}
+
+Egy új szerkesztô ablak jelenik meg a tábla létrehozásához szükséges szkripttel. Ez mas objektumokkal is mûködik.\\
+\includegraphics[bb=0 0 807 622,width=\textwidth]{02objview03}
+
+Ezzel könnyedén újra létre lehet hozni az objektumokat.
+Például vátoztass valami apró részletet, mondjuk az egyik mezô leírását és nyomj \textbf{F5}-öt. Ha nincs hiba, akkor ez a változtatás véglegessé válik az adatbázisban. Az \emph{Output} fülben látszanak a szkript futtatási hibai piros ikonnal és a sikeres parancsok kék ikonnal.
+\begin{center}
+\includegraphics[bb=0 0 404 278,scale=.7]{02objview04}
+\end{center}
+
+Az \emph{Object list} egy szintén hasznos opciója, hogy több objektumot (pl. egész csomagokat) is képes egyszerre betölteni a szerkesztô ablakba, egy nagy szkriptként. Jelölj ki pl. egy csomagot és válaszd a \emph{Load all in one} opciót a jobbgombos menübôl.\\
+\includegraphics[bb=0 0 684 421,width=\textwidth]{02objview05}
+
+Egy új szerkesztô ablak jelenik meg a kijelölt csomagok definiciós szriptjével. Ez jól használható pl. ha egy bizonyos hibaüzenetet keresel a csomagokban.
+
+\section{Gyakorlásból sosem elég}
+
+Az SQLTools egyik szépsége (az árán kívül), hogy nincs telerakva varázslókkal és varázsgombokkal. Hidd el, még komplex fejlesztôi projektekhez is elegendô ez a spártai fejlesztôkörnyezet.
+
+De csapjunk a lovak közé - jöjjön a házi feladat! Tegyük fel, hogy Oracle8i vagy magasabb környezetben vagyunk, és van joguk a sémában objektumok alkotására, törlésére és minden egyéb objektum mûveletre.
+
+\subsection{Némi házi feladat}
+\begin{enumerate}
+\item Csinálj egy táblát a USER\_TABLES-höz hasonlóan, de csak az elsô 3 oszloppal.
+\item Másolj adatokat az új táblába INSERT segítségével a USER\_TABLES táblából.
+\item Készíts saját csomagot egy 'public' egysoros eljárással (használd a következôt 'put'+CTRL+SPACE - írd be, hogy \emph{put} majd nyomj $<$CTRL+SPACE$>$ -t).  A kimeneten az új táblából származó adatok lesznek.
+\item Készíts egy önálló eljárást, amely a csomag eljárását hívja.
+\item Készíts egy névtelen blokktörzset:\\
+\indent BEGIN\\
+\indent \indent our\_created\_procedure;\\
+\indent END;
+\item Futtasd a szripter az \textbf{F5}-tel. Mentsd el a szkriptet egy fáljba.
+\item Jelöld ki a tábla nevét a szerkesztôben és nyomj \textbf{F12}-t. Melyik objetumtól függ a tábla? Mely objektumok használják a táblát?
+\item Csukj be mindent. Nyisd meg újra az objektum listát (\textbf{Alt+3}). Töröld az új táblát a gomb segítségével.
+\item Lépj be az objektum listába a \emph{Package bodies} fülben. Nyomd meg a \emph{Refresh} gombot és figyeld meg mi jelenik meg a csomag jobb oldalán.
+\item Lépj be a szerkesztôbe és töltsd be a szkriptet. Próbáld meg futtatni. Miért nem megy?
+\item Végül t?0rj vissza az objektum listához, töröld az eljárást és a csomagot. Befejeztük!
+\end{enumerate}
+
+\subsection{Segítség (sokféle módon elérhetô természetesen ugyanaz az eredmény)}
+1. CREATE TABLE \dots\ AS SELECT table\_name, tablespace\_name, cluster\_name FROM user\_tables WHERE 1=0;\\[.3cm]
+2. INSERT INTO \dots\ SELECT \dots;\\[.3cm]
+3. Nyisd meg az objektum listát, töltsd be bármelyik csomagot (specifikáció + törzs), töröld az összes eljárást egy kivételével és addj hozzá 3 sort:
+\begin{itemize}
+\item with variable(s) declaration;
+\item with SELECT \dots\ INTO \dots;
+\item with Dbms\_Output.Put\_Line();
+\end{itemize}
+\includegraphics[bb=0 0 803 471,width=\textwidth]{04exercise00}
+4,5,6,7. Egy példa implementáció.\\
+\includegraphics[bb=0 0 803 473,width=\textwidth]{04exercise01}
+8,9. Az 'invalide' csomag és a hibaüzenetek lengyel/angol nyelven lesznek.
+
+\section{Bôvebb tudnivalók - az SQLTools személyreszabása}
+Ezen nincs sok magyaráznivaló? Az opciók a következô menükben vannak:
+\begin{itemize}
+\item \emph{Text $\to$ File Settings \& Information}
+\item \emph{Tools $\to$ Session / DDL / Grid Settings}
+\item \emph{Tools $\to$ Application / Editor Settings}
+\end{itemize}
+A billentyû-kombinációkat a \emph{Data / custom.keymap} lehet megváltoztatni.
+
+\subsection{Hogyan tovább?}
+\emph{2004-12-13}
+Jelenleg a program nem moduláris - egyetlen hatalmas *.exe fájl. A jövôben fontolgatjuk a plugin-ok bevezetését, amit bárki csinalhatna anélkül, hogy a fô forrásállományt ismerné.
+
+Mind az SQLTools mind pedig az OpenEditor (amely az SQLTools jelentôs részét teszi ki) nemrég elérhetôvé vált SourceForge-on. Remélhetôleg ez meggyorsítja majd a fejlesztést.
+
+Remeljük mindenki, aki ezt olvassa, támogatni fogja a fejlesztô csapatot, még ha kis dolgokkal is, mint új verziók tesztelése és hiba-elhárítás. Elôre is köszönjük!
+
+\end{document}
+

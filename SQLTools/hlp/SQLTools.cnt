@@ -1,0 +1,14 @@
+:Base SQLTools.hlp>1
+1 Menus
+2 File menu=menu_file
+2 Edit menu=menu_edit
+2 View menu=menu_view
+2 Window menu=menu_window
+2 Help menu=menu_help
+1 Подключение к БД
+2 Диалог Connect=hidd_connect
+1 SQL скрипт
+2 Создание=sql_new
+2 Редактирование=sql_edit
+2 Сохранение=sql_save
+2 Выполнение=sql_execute

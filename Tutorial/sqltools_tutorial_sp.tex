@@ -1,0 +1,195 @@
+% Este documento esta bajo licencia GPL .
+%
+% Create DVI:
+% platex sqltools_tutorial_sp.tex
+% Show DVI:
+% yap sqltools_tutorial_sp.dvi
+% Create PDF:
+% dvipdfm sqltools_tutorial_sp.dvi
+%
+
+\documentclass[a4paper,titlepage]{article}
+\hoffset = -2cm
+\voffset = -2cm
+\addtolength{\textwidth}{4cm}
+\addtolength{\textheight}{4cm}
+\usepackage[spanish]{babel}
+\usepackage[cp1252]{inputenc} 
+
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.jpg,.jpeg,.gif}
+
+\author{Tomasz Drzewiecki - Traducido y adaptado del Inglés por Oswaldo Enriquez}
+\title{SQLTools en 5 étapes\\ver. 0.1}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Connexion}
+Empecemos por ejecutar el programa. Veremos la ventana de conexión a la base de datos.\\
+\includegraphics[bb=0 0 696 370,width=\textwidth]{00login00}
+Al lado izquierdo encontramos una lista de las conexiones anteriores de las distintas bases. En pantalla, la lista esta ordenada por fecha de la última utilización, sin embargo, es posible ordenarla con respecto a cualquier otra columna. Un doble-click en una conexión la reestablece.
+
+Para conectarse a una nueva base de datos, provea su ID usuario y contrasena y luego escoja una de las bases de la lista TNS
+(Para ser más preciso - la lista de los SID).  
+
+Qué hacer si no tenemos un archivo \emph{tnsnames.ora} correcto, o si no lo tenemos del todo?
+Se puede corregir los parámetros manualmente! Escoja la opción \emph{Bypass tnsnames.ora} e introduzca el nombre del ordenador  (o su dirección IP), la base de datos y el puerto de conexión (habitualmente:  1521).\\
+\includegraphics[bb=0 0 695 369,width=\textwidth]{00login01}
+
+El botón \emph{Test connection} es muy util al intentar una conexión. Este ultimo controla la existencia de una instancia Oracle al igual que la exactitud de los datos de acceso sin embargo, no abre una sesión de la base.
+
+En caso de conexión con SYSDBA o SYSOPER para efectuar tareas de administración, seleccionar
+la opción apropiada en la lista  \emph{Mode}.\\
+\begin{center}
+\includegraphics[bb=0 0 247 116,scale=.7]{00login02}
+\end{center}
+
+Al conectarse a la base se pueden ver los parámetros de conexión y dos botones en la barra de herramientas  
+Estos dos botones nos permiten conectar y desconectar una instancia Oracle, o abrir una sesión con otro usuario.\\
+\begin{center}
+\includegraphics[bb=0 0 296 26,scale=.7]{00login03}
+\end{center}
+
+%\newpage
+\section{Ventana Principal}
+
+Vemos aqui la ventana principal del programa.\\
+\includegraphics[bb=0 0 734 537,width=\textwidth]{01main00}
+
+En la ventana de edición, es posible ejecutar SQL, paquetes, procedimientos y triggers. 
+La ventana inferior contiene los resultados de la consulta. Hagamos un ejemplo simple. En la ventana superior, escriba :
+\begin{center}
+SELECT 5+10 FROM DUAL;\\
+\end{center}
+Presione la tecla \textbf{F5}. El resultado aparece abajo !\\
+\begin{center}
+\includegraphics[bb=0 0 196 179,scale=.7]{01main01}
+\end{center}
+
+Intentemos algo más complicado:
+\begin{center}
+SELECT * FROM user\_tables;
+\end{center}
+
+Note que cuando se escriba en minúscula, las palabras clave de SQL se transforman automáticamente en mayúscula. 
+El menú \emph{Tools $\to$ Application/Editor Settings $\to$ Normalize keywords} permite escoger esta opción. 
+Si la ventana de edición contiene código sin formato, esto se resuelve gracias al comando siguiente \emph{Text $\to$ Normalize Keyword}.
+
+Ejecute la consulta citada anteriormente presionando \textbf{F5}. Dependiendo del contenido de USER\_TABLES, el resultado se presentará en diez o más lineas.\\
+\begin{center}
+\includegraphics[bb=0 0 441 337,scale=.7]{01main02}
+\end{center}
+En pantalla, la barra de estatus inferior indica que el programa solo ha producido las primeras 100 lineas en 0,481s. Las lineas restantes se presentarán si se baja el cursos en los resultados.
+El número de lineas de resultado inicial se puede modificar en la opción de menú 
+\emph{Tools $\to$ Session/DDL/Grid Settings $\to$ Data Grid $\to$ Row prefetch}.
+
+Escojamos ahora la opción de menú 
+ \emph{Session $\to$ Enable Session Statistics}. Ejecute de nuevo la consulta. Luego, haga un simple click en la segunda pestana \emph{Statistics}.\\
+\includegraphics[bb=0 0 734 445,width=\textwidth]{01main03}
+
+En esta pestana podemos observar las estadísticas de la última consulta. (Normalmente, veriamos las estadísticas de todo la sesión, sin embargo solo hemos ejecutado una consulta desde que recolectamos las estadísticas). En esta pantalla, el cursor del ratón se encuentra sobre un botón muy útil. 
+ - Desactivar el cambio de pestana automático (Congelar la pestana). Por defecto, la pestana \emph{Query} se abrirá automáticamente si ejecutamos otra consulta.
+Presione \textbf{F5} para verificar este comportamiento. Luego seleccione otra vez la pestana \emph{Statistics} y haga click en el botón. Presione \textbf{F5} de nuevo. Cúal es el resultado ?
+
+Reactive el botón y presione \textbf{F9}. El plan de ejecución de la consulta se visualiza en la pestana \emph{Plan}.\\
+\includegraphics[bb=0 0 743 403,width=\textwidth]{01main04}
+
+En la ventana superior, haga click en cualquier lugar de la palabra 'USER\_TABLES'. Presione \textbf{F12}.\\
+\includegraphics[bb=0 0 807 556,width=\textwidth]{01main05}
+
+Una ventana que describe la estructura de la tabla o de la vista aparecerá. De la misma manera en esta ventana se pueden visualizar los objetos que dependen de la tabla o vista y la lista de objetos en que se basa la construcción de esta tabla o vista. Es una manera  muy práctica y rápida de buscar las dependencias entre objetos.\\
+\begin{center}
+\includegraphics[bb=0 0 228 278,scale=.7]{01main06}
+\end{center}
+
+%\newpage
+\section{Lista de objetos}
+Posicione el cursor dentro de la ventana de edición y presione \textbf{Alt+3} . Se abrirá el navegador de objetos.\\
+\includegraphics[bb=0 0 683 419,width=\textwidth]{02objview00}
+
+Esta ventana enumera todos los objetos del esquema de la base. Seleccione cualquier tabla (en la pestana \emph{Tables}), por ejemplo la tabla COUNTRIES del esquema HR. Haga un Click derecho y seleccione \emph{Query}.\\
+\begin{center}
+\includegraphics[bb=0 0 327 240,scale=.7]{02objview02}
+\end{center}
+
+Hemos creado une nueva ventana de edición y ejecutado la consulta :
+\begin{center}
+SELECT * FROM hr.countries;
+\end{center}
+
+Escoja el mismo objeto en la lista de objetos (\textbf{Alt+3}) y seleccione la opción \emph{Load} a partir del menú (o simplemente haga un doble click en el objeto). La ventana \emph{Local DDL Preferences} aparece. Seleccione las opciones como en la imagen y presione OK.
+\begin{center}
+\includegraphics[bb=0 0 425 313,scale=.7]{02objview01}
+\end{center}
+
+Una nueva ventana de edición aparece, con el script de creación de la tabla. Esto funciona igualemente para los demás objetos.\\ 
+\includegraphics[bb=0 0 807 622,width=\textwidth]{02objview03}
+
+Esto permite crear de nuevo fácilmente el objeto.
+Por ejemplo, cambie algo menor, como la descripción de una columna y presione \textbf{F5}. Si no hay errores, las modificaciones se tomarán en cuenta en la base de datos. La ventana de resultados \emph{Output} permite visualizar los errores de ejecución de los scripts con un icóno rojo y los comandos exitosos con un icóno azul. 
+\begin{center}
+\includegraphics[bb=0 0 404 278,scale=.7]{02objview04}
+\end{center}
+
+Una opición muy útil en la herramienta \emph{Object list} es la posibilidad de cambiar imediatamente en el editor varios objetos (como los Paquetes) en un mismo script. Por ejemplo, seleccione varios paquetes y escoja \emph{Load all in one} a partir del menú de click derecho.\\
+\includegraphics[bb=0 0 684 421,width=\textwidth]{02objview05}
+
+Una nueva ventana de edición aparece, con un script que contiene todos los paquetes ("packages bodies") seleccionados. Esta funcionalidad puede ser utilizada, por ejemplo, para buscar un mensaje de error en todos los paquetes.
+\section{Y ahora los ejercicios!}
+
+Una de las ventajas de SQLTools (independientemente de su precio) es que no está saturado de asistentes y botones mágicos. Aun para proyectos complejos, este entorno valiente, es suficiente. 
+
+-Suficiente cotilleo - pasemos a los ejercicios. Supongamos que estamos en Orcale8i o superior y que tenemos derechos de creación y supresión de objetos, asi como derechos a todas las operaciones de los objetos del esquema. 
+
+\subsection{Haga los siguientes ejercicios}
+\begin{enumerate}
+\item Cree una copia de la tabla USER\_TABLES, pero solamente con las tres primeras columnas.
+\item Copie los datos en una nueva tabla, utilizando un INSERT a partir de la tabla USER\_TABLES.
+\item Cree su propio package o paquete con un procedimiento público utilizando el asistente de entrada de datos (utilise el modelo 'put'+CTRL+SPACE - escriba la palabra  \emph{put} luego $<$CTRL+SPACE$>$). El resultado debe contener los datos extraidos de la nueva tabla. 
+\item Cree un nuevo procedimiento que llamará un procedimiento de su paquete "package".
+\item Cree un bloque anónimo :\\
+\indent BEGIN\\
+\indent \indent our\_created\_procedure;\\
+\indent END;
+\item Ejecute el script presionando \textbf{F5}. Grabe el script.
+\item Seleccione el nombre de la tabla en el editor y presione \textbf{F12}. De cuales objetos depende? Cuales objetos utilizan esta tabla?
+\item Cierre todo. Abra de nuevo la lista de objetos presionando (\textbf{Alt+3}). Destruya la nueva tabla con el botón DROP.
+\item Vaya a la pestana \emph{Package bodies}. Pesione el botón \emph{Refresh} y observe el lado izquierdo del paquete "package".
+\item Vaya a la ventana del editor y cargue el script. Intente ejecutarlo. Porqué no ha funcionado?
+\item Finalemente, regrese a la lista de objetos y elimine el procedimiento y el paquete. Ha terminado !
+\end{enumerate}
+
+\subsection{Suggestions (Obviamente que existen varias maneras de encontrar el mismo resultado)}
+1. CREATE TABLE \dots\ AS SELECT table\_name, tablespace\_name, cluster\_name FROM user\_tables WHERE 1=0;\\[.3cm]
+2. INSERT INTO \dots\ SELECT \dots;\\[.3cm]
+3. Abra la lista de objetos, cargue cualquier paquete (espeficación + body), elimine todo excepto el procedimiento y agregue estas tres lineas: 
+\begin{itemize}
+\item Declaración de variable(s);
+\item SELECT \dots\ INTO \dots;
+\item Dbms\_Output.Put\_Line();
+\end{itemize}
+\includegraphics[bb=0 0 803 471,width=\textwidth]{04exercise00}
+4,5,6,7. Ejemplo de realización.\\
+\includegraphics[bb=0 0 803 473,width=\textwidth]{04exercise01}
+8,9. El package 'no válido' y los mensajes de error están indicados en inglés.
+
+\section{Utilización avanzada - Personalizar SQLTools}
+Porqué tomar tiempo para responder a esta pregunta ? Tenemos opciones en el menú :
+\begin{itemize}
+\item \emph{Text $\to$ File Settings \& Information}
+\item \emph{Tools $\to$ Session / DDL / Grid Settings}
+\item \emph{Tools $\to$ Application / Editor Settings}
+\end{itemize}
+Los accesos directos del teclado se pueden configurar en el archivo \emph{Data / custom.keymap}.
+
+\subsection{Y luego ?}
+\emph{17/02/2005}
+Por el momento, el programa no es modular - Es un gran archivo *.exe. En el futuro, estamos estudiando la posibilidad de extensiones (plugins), que cada uno podrá crear sin conocer el código de fuente principal.
+SQLTools y OpenEditor (que representa la mayor parte del código de SQLTools) fueron puestos ambos en SourceForge. Esperamos que esto permita acelerar el desaarrollo del programa.
+De igual forma esperamos que todas las personas que consulten este documento apoyen a nuestro equipe de desarrollo aunque sea probando las nuevas versiones para senalar anómalias. Se lo agradeceremos! 
+
+\end{document}
+

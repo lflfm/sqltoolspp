@@ -1,0 +1,20 @@
+
+
+***********************************************************************
+Fatal NI connect error 12203, connecting to:
+ (DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(Host=w2k-10g)(Port=1521)))(CONNECT_DATA=(SID=test10)(CID=(PROGRAM=e:\_last\sqlt.cvs\_output_\Debug\SQLTools.exe)(HOST=WKS)(USER=master))))
+
+  VERSION INFORMATION:
+	TNS for 32-bit Windows: Version 8.0.5.0.0 - Production
+  Time: 01-NOV-06 20:38:11
+  Tracing not turned on.
+  Tns error struct:
+    nr err code: 12203
+    TNS-12203: Message 12203 not found; No message file for product=NET80, facility=TNS
+    ns main err code: 12538
+    TNS-12538: Message 12538 not found; No message file for product=NET80, facility=TNS
+    ns secondary err code: 12560
+    nt main err code: 508
+    TNS-00508: Message 508 not found; No message file for product=NET80, facility=TNS
+    nt secondary err code: 0
+    nt OS err code: 0

@@ -1,0 +1,476 @@
+ History
+~~~~~~~~~
+
+Version 1.4.2 RC3 stable (2006-11-1)
+    B#XXXXXXX - invalid path in tooltip after tab reorganization 
+    B#XXXXXXX - pls/sql match searching has been disabled because 
+                it might generate stack overflow and cause program termination
+    B#XXXXXXX - cannot get DDL for db link if its name is longer than 30 chars
+    B#XXXXXXX - handling NULLs for PCTUSED, FREELISTS, and FREELIST GROUPS storage parameters
+    B#XXXXXXX - compatibily issue with Oracle 7 and 8.0.X
+    B#XXXXXXX - poor fetch performance because prefetch rows disabled
+    B#XXXXXXX - confusing message if password is empty
+    B#XXXXXXX - sqltools cannot find tnsnames.ora in 10g client installation
+    B#XXXXXXX - EXEC does not support bind variables
+    B#XXXXXXX - Data grid has an issue with resizing the first row
+    Updated version of a new help (BT & MT).
+
+
+Version 1.4.2 RC2 stable (2006-08-26)
+    B#1185035 - "Show message on EOF" doesn't work (from OE).
+    First version of a new help (BT & MT).
+
+
+Version 1.4.2 RC1 stable (2006-07-31)
+    R#1445114 - Dockable objects list - refreshing problem (tMk).
+    Improved default installation settings.
+
+
+Version 1.4.1 build 72 (2006-03-07)
+
+    R#1443695 - NSIS installer script improvements (AT & OE & tMk).
+    R#1440528 - Drag&expand for indexes/constraints in the ObjectViewer (tMk).
+    B#1440528 - Fix of R#1097646: when dragging things different than tables/views/cols nothing was copied (tMk).
+
+    B#1429022 - CTreePropSheet - memory leak (tMk).
+    B#1443248 - CAbortThread - memory leak (tMk).
+
+
+Version 1.4.1 build 71 (2006-02-28)
+
+    R#1097646 - Drag&Drop table's columns in ObjectViewer (tMk).
+    R#1108089 - Clear button in the grid panel (tMk).
+    R#1420628 - NSIS installer script (MT & TG & tMk).
+
+    B#1191428 - % in disconnected 'Object viewer' (tMk).
+
+
+Version 1.4.1 build 70 (2006-01-31)
+
+    R#1078900 - 'Find object' (F12) and focus of editor cursor (tMk).
+    R#1108078 - Dockable 'Objects list' (tMk).
+
+    B#1407225 - 10g 'Load all in one' problem (tMk).
+    B#1404162 - Trigger with CALL - unsupported syntax (tMk).
+    B#1373859 - Unserved exception after cancelling Drop (tMk).
+    B#1221764 - DROP DATABASE LINK error (tMk).
+    B#1191426 - Invalid COMPRESS index generation (tMk).
+    B#1119107 - Lack of SYS. prefix in Queries (tMk).
+    B#1111222 - Better diagnostic for investigate this bug (ak).
+    B#1078885 - Doubled GRANT when extracting Columns Privilages (tMk).
+
+
+Version 1.4.1 build 66 (2005-04-18)
+
+    R#1111224 - OE Enable/disable "smart" home key behavior (tMk).
+    R#1092510 - OE Drag/Reorder Tab (tMk).
+    R#1084220 - OE Close Tab on double click (tMk).
+    R#1081930 - OE Open file under cursor (tMk).
+    R#unknown - OE New Netscape-like property sheet interface & new tabs (tMk).
+    R#unknown - OE Highlighting for a dragged workbook tab (tMk).
+    R#unknown - OE Introduced "IndentGuide" (ak).
+    R#unknown - OE Added ColourPicket for Font/Color property page (ak).
+    R#unknown - OE Added auto-scrolling for dragged workbook tabs (ak).
+
+    B#1185035 - OE "Show message on EOF" doesn't work (ak).
+    B#1181324 - Trigger reverse-engineering fails if  description contains comments (ak).
+    B#1165795 - OE Hanging during replace in the selection (ak).
+    B#1093790 - OE Show message on EOF (tMk).
+    B#1086407 - OE Infinite locking directory (tMk).
+    B#unknown - OE Wrong message if file or folder does not exist (ak).
+    B#unknown - OE Missing shortcut labels for double key (ak).
+    B#unknown - OE If file are locked, an unrecoverable error occurs on "Reload" (ak).
+    B#unknown - OE Sorting does not completely remove duplicate rows if a number of dups is even (ak).
+
+
+Version 1.4.1 build 64 (2005-03-21)
+
+    R#unknown - Bind variables (SQL*Plus syntax for VARCHAR2, NUMBER, CLOB) (clubok).
+
+    B#1159674 - Hanging with 'invalid string position' (tMk).
+    B#1123762 - Hanging when ;; at the end of statement (ak).
+    B#unknown - OE An exception on "Find Object", if some name component is null (ak).
+
+
+Version 1.4.1 build 63 (2005-01-10)
+
+    R#1092514 - SQL*Plus CONNECT/DISCONNECT commands
+    R#1082797 - Added support for BINARY_FLOAT and BINARY_DOUBLE.
+    R#unknown - TIMESTAMP, INTERVAL support.
+    R#unknown - Grid format for number columns.
+    R#unknown - XMLTYPE support only for Oracle client 10g, but it's slow as hell.
+
+    B#1095462 - Empty bug report on disconnect (ak).
+    B#1092516 - Copy column from datagrid (clubok).
+    B#1087088 - TIMESTAMP object in Oracle 9i is not recognised (ak).
+    B#1086239 - CSV export (clubok).
+    B#1078884 - XML Export (clubok).
+    B#unknown - Substitution "&var." does not work.
+    B#unknown - Cannot execute "exec null" w/o ending ';'.
+    B#unknown - Compatibility with Oracle client 8.0.X.
+
+
+Versions before SF.net (up to 1.4.1 build 58-9)
+
+1.4.1 build 58-9
+    Improvements:
+    - An input field for Find/Describe object window has been added
+    Following bugs have been fixed:
+    - '/' might be recognized as a statement separator at any position
+
+1.4.1 build 58-8
+    The latest OpenEditor code has been included
+    Following bugs have been fixed:
+    - all compilation errors are ignored after "alter session set current schema"
+    - all compilation errors are ignored for Oracle7
+    - some servers may return very long strings due to oracle bug
+    - external authentication does not work
+    - trigger reverse-engineering fails in OF clause if column name contains "ON_"/"_ON"/"_ON_"
+
+1.4.1 build 58-3
+    bug fix, compatibility with Oracle client 8.0.X
+
+1.4.1 build 58-2
+    bug fix, sqltools crashes if a connection was broken
+
+1.4.1 build 58
+    Improvements:
+    - Action on disconnect: rollback, commit or user choice
+    Following bugs have been fixed:
+    - Memory corruption on a query with blob columns.
+    It's a very serious bug, which has been introduced since 1.4.1 (I guess).
+
+1.4.1 build 57
+    Improvements:
+    - sort in editor
+    Following bugs have been fixed:
+    - Autocommit does not work
+    - unknown exception on "save as", if a user doesn't have permissions
+        to rewrite the destination
+    - exception "FixedString is too long (>=64K)" on undo after save
+
+1.4.1 build 53
+    Improvements:
+    - Bug-report memory consumption has been decreased
+    Following bugs have been fixed:
+    - DDL reengineering: domain index bug (introduced in 141b46)
+    - CreareAs file property is ignored for "Open In Editor", "Query", etc (always in Unix format)
+    - Output: only the first line of multiline error/message is visible (introduced in 141b50)
+
+1.4.1 build 52
+    Improvements:
+    - global sql history is done
+    - history files are merged if concurrent sqltools instances save history for same files
+    - setting and history can be moved to another location.
+        You can do it only manually, see example:
+        REGEDIT4
+        [HKEY_CURRENT_USER\Software\KochWare\SQL Tools\Roots]
+        "History"="e:\\_TEST\\SQLTools.settings\\sql-history"
+        "Settings"="e:\\_TEST\\SQLTools.settings\\data"
+
+    Following bugs have been fixed:
+    - export DDL fails if an object name contains on of \/:*?"<>|
+    - command line parser fails on sysdba/sysoper
+    - sql history memory limit
+
+1.4.1 build 50
+    Small improvements:
+    - global sql history (shared between all sql worksheet)
+    - displaying current record# and number of records in the status bar
+
+1.4.1 build 49
+    Bug fix release:
+    - exception on scrolling if grid contains more then 32K rows
+    - temporary tables reengineering fails on 8.1.X (since build 47)
+    - editor: exception on PgDn if "Cursor beyond end of file" is unchecked
+    - a connection info might not be displayed properly after changing an existing connection profile
+    Small improvements:
+    - a connection info in the main window title (pls let me know if it looks ugly)
+    - a server version in the connection toolbar and in the status bar
+
+1.4.1 build 48
+    Bug fix release:
+    - "Object List"/"Object Tree" small issues with cancellation of ddl loading
+    - DDL reengineering: trigger/views group operation bug (introduced in build 47)
+
+1.4.1 build 47
+    Bug fix release:
+    - DDL reengineering: 64K limit for trigger increased to 512K
+    - DDL reengineering: 64K limit for view increased to 512K
+    - DDL reengineering: Oracle Server 8.0.5 support (tables, indexes)
+    - suppressed bug-reporting for oracle errors on grid fetching
+    - some fixes in general exception handling
+
+1.4.1 build 46
+    Bug fix release:
+    - some fixes in diagnostics and bug-reporting, partial support for Win98/WinME
+    - "Object List" error handling changed to avoid paranoiac bug-reporting
+    - Lock/open/save file error handling changed to avoid paranoiac bug-reporting
+
+1.4.1 build 45
+    Improvements:
+    - Diagnostics and bug-reporting
+    Following bugs have been fixed:
+    - Ctrl+End causes unknown exception in data grid if query result is empty
+    - Explain plan result may contain duplicated records if you press F9 too fast
+    - Explain plan table is not cleared after fetching result
+    - CreareAs property is ignored for ddl scripts (always in Unix format)
+
+1.4.1 build 44
+    Improvements:
+    - SQL History persistence (it should be enabled in History settings)
+    - PERL support (language.dat and settings.dat has to be replaced for activation)
+    Following bugs have been fixed:
+    - Table transformer helper generates unique name only once
+    - Substitution error and Cancel window problem
+    - When using Ctrl +F12 (Load DDL Script) on a table name,
+        only index script is loaded, not table creation script.
+        It happens only when index name is identical to table name.
+    - handling unregular eol, e.c. single '\n' for MSDOS files
+
+1.4.1 build 41
+    - Following bugs have been fixed:
+    - shortcut F1 has been disabled until sqltools help can be worked out
+    - missing public keyword for public synonyms
+    - Unexpected exception: "OCI8::BlobVar::GetString(): String buffer overflow!"
+
+1.4.1 build 40
+    Following bugs have been fixed:
+    - continuous exception "Invalid vector<t> subscript" on query which returns no records,
+        it happens only if grid inplace editor is activated
+
+1.4.1 build 39
+    Following bugs have been fixed:
+    -"Invalid vector<t> subscript" happened again, some diagnostics
+        improvement and protection against infinite exception loop
+    - missing new line characters for procedure/function/package code
+
+1.4.1 build 38
+    Improvements:
+    - type and uniqueness have been added to index description in "Object Viewer"
+    Following bugs have been fixed:
+    - wrong order of html tags for html export
+    - "Invalid vector<T> subscript" happens continually
+        if a query returns error during fetching the first portion of records
+    - file extension is not recognized properly if it's shorter then 3 chars
+    - quote character in comments for table/view DDL
+    - Cancel window does not work properly on Load DDL
+    - missing public keyword for public database links
+
+1.4.1 build 37
+    Improvements:
+    - a new option for cancel query window - it can be topmost
+    Following bugs have been fixed:
+    - the serious bug since the previous build, a procedure/function/package code line can be truncated if its length > 128
+    - multiple occurences of PUBLIC in "Schema" list ("Object List" window)
+    - any sql statement which is executed after cancelation will be also canceled
+    - multiple typos in menus, hints and dialogs
+    - workaround for oracle 8.1.6, removed trailing '0' for long columns and trigger text
+    - html export does not handle empty strings (with spaces) properly
+    - export settings do not affect on quick html/csv viewer launch
+
+1.4.1 build 36
+    Improvements:
+    - open grid data with default html and csv viewers (see gred toolbar)
+    Following bugs have been fixed:
+    - goto the last record does not fetch all rows
+    - clob fields have extra 0 character
+
+1.4.1 build 35
+    It's the first Beta build for 1.4.1 release.
+    Major improvements since 1.4 release:
+    - OCI8 instead of OCI7 and as result some related features
+        which were not be available for OCI7 (for example connect as sysdba)
+    - SQL Window redesign and SQL History pane
+
+1.4.1 build 34
+    8.0.X compatibility problem resolved
+
+1.4.1 build 33
+    A lot of fixes and small improvements
+
+1.4.1 build 32
+    Improvements:
+    - Cancel query is available after reimplementation
+    Several bugs have been fixed
+
+1.4.1 build 31
+    Improvements:
+    - sql history
+
+1.4.1 build 29
+    Following bugs have been fixed:
+    - no error offset for sql statemnet
+    - oracle types support
+
+1.4.1 build 21
+    Improvements:
+    - safety is a new conection property (none, confirmation required (not implemented yet), read-only)
+    - connection control bar
+    - connection string in application title while application is minimized
+
+1.4.1 build 11
+    Improvements:
+    - output/error postions is based on internal line IDs and more stable on editing text above the original line
+    - thousand delemiters for cost,cardinality and bytes in Explain Plan viewer
+
+1.4.1 build 3
+    Improvements:
+    - Added two new connect options SYSDBA and SYSOPER.
+
+1.4 build 28
+    Improvements:
+    - SQR language support has been improved (match for begin-setup/end-setup, ...)
+    - C++ language support has been improved (match for #if/#else/#endif)
+
+1.4     Full list is not available yet. Some latest changes:
+
+    23.03.2003 improvement, save files dialog appears when the program is closing
+    23.03.2003 improvement, added a new command - mdi last window - default shortcut is Ctrl+Tab
+    23.03.2003 improvement, added a new editor option - keep selection after drag and drop operation
+    23.03.2003 improvement, added a new mouse word selectiton on left butten click with pressed ctrl
+    24.03.2003 improvement, MouseSelectionDelimiters has been added (hidden) which influences on double click selection behavior
+    26.03.2003 improvement, added delay for scrolling in drag & drop mode
+    30.03.2003 optimization, removed images from Object Browser for Win95/Win98/WinMe because of resource cost
+    30.03.2003 improvement, added command line support, try sqltools /h to get help
+    30.03.2003 improvement, added SQR language support (no match for control constructions yet)
+
+1.3.5.19 Improvements:
+    - Plan table option
+    - Dbms Output size option
+    Following bugs have been fixed:
+    - wrong declaration length of character type column for fixed charset
+    - wrong aligmnet for long type column in data grid
+
+1.3.5.18 Improvements:
+    "Object List" supports new commands:
+    - Query (it's not good enough yet)
+    - Delete
+    - Truncate
+
+1.3.5.17 Following bugs have been fixed:
+    - bug fix, plsql parser loses all empty lines
+        (any created stored procedure/trigger/view does not have empty lines)
+    - bug fix, a last column with right alignment looks ugly
+        if the colomn is expanded to the right window boundary
+    - numeric column alignment has been changed to right in statistics grid
+
+1.3.5.16 Following bugs have been fixed:
+    - comment processing before define/undefine and after sql statements
+    - wrong error positioning on EXEC (raised in pl/sql procedure)
+    - wrong error positioning on execution of selected text
+        if selection does not starts at start of line
+    - grid painting defect on scrolling to the right
+    Improvements:
+    - Data grid supports
+        - a new format for saving - XML (element based)
+        - auto resizing and remembering column sizes
+        - new copy commands and drag & drop modes
+    NOTE: If you upgrade SQLTools you should increase "Max Column Length"
+        on "Settings"/"Grig" Page to get the benefit of new auto column resizing.
+
+
+1.3.5.15 Following bugs have been fixed:
+    - Data grid does not use persistent settings until grid property page is called.
+    - Spin control behavior in editor/grid property pages.
+    - Cluster reengineering fails
+    - Better SQLPlus compatibility
+    Improvements:
+    - String representation for NULL value and Date format for data grid
+        look Grid page in Settings to change it
+
+1.3.5.14 Following bugs have been fixed:
+    - debug privilege for 9i
+    - small fixes in data grid export
+
+1.3.5.13 Major changes:
+    - Data grid supports a new format for saving - comma delimited (CSV)
+        and a new command "Save and Open with a Default Editor"
+        (for CSV files it can be MS Excel)
+
+1.3.5.12 Following serios bug has been fixed:
+    - SQLTools does not reload compilation errors
+        on Execute/Compile command if an invalid package/procedure
+        has full qualified name (schema name + object name).
+
+1.3.5.11 Following serios bug has been fixed:
+    - Table DDL reengineering fails on integer columns.
+        Integer column is replaced with number one.
+        The same bug still exists in "Quick viewer"
+        because of some limitations in implementation.
+
+1.3.5.10 Following bugs have been fixed:
+    - SQLTools hangs on a context-sensitive help call
+    if there is more than one topic, which is found by keyword
+
+1.3.5.9 Following bugs have been fixed:
+    - OLEACC.DLL is missing for Win95/Win98/NT4
+    - OCIEnvCreate is not found in OCI.DLL for Net 8.0.X
+    - Statistics is always empty because sesstat.dat is missing
+    - minor fixes
+
+1.3.5.8 Following bugs have been fixed:
+    - "Load DDL script" fails on table with trigger
+    which body is bigger then 4K
+    - Command "Find Object" fails on an TYPE object.
+    There is an open issue. Type & package bodies nodes don't have
+    "Dependent On" & "Dependent Objects" folders. It's not possible
+    in the current implementation.
+
+1.3.5.7 Following bugs have been fixed:
+    - empty prompt(s) and rem(s) fail on execute
+    Improvements:
+    - Variable Substitution (& &&) became global persistent option
+        and uses a shared (between multiple windows) substitution map.
+    - Skipping unsupported sqlplus commands (set ..., show ...)
+    - HTML SQL Quick Reference has been updated
+
+1.3.5.6 Following bugs have been fixed:
+    - the program crashes on connect the first time after the first installation
+    - DDL reengineering loses PK & UK storage when it's invoked from PK & UK pages
+    Improvements:
+    - HTML SQL Quick Reference has been added (English version)
+
+1.3.5.5 Following bugs have been fixed:
+    - the program crashes after F6 or F7 (bug since 1.3.0.10)
+    Improvements:
+    - the first step to sqltools help - connection dialog help
+
+1.3.5.4 Following bugs have been fixed:
+    - End line comment bug (';' was not ignored)
+    - "define variable=value" does not work,
+        space was required "define variable = value"
+
+1.3.5.3 Bug fixes (connection dialog, "Load DDL script" command).
+
+1.3.5.1 Major changes:
+    - Compatibility with Oracle 7.3.x and 8.5.x has been dropped because
+    it's impossible to test it and it's significant overhead for coding.
+    - "Object List" window includes 4 new tabs (indexes and constraints).
+    - DDL reengineering supports index-based tables and reverse indexes.
+    - Connection dialog has been re implemented for supporting non-tnsnames
+    connection strings.
+
+1.3.0.10 Following minor bugs have been fixed:
+    - A MDI window splitter flickers after restore or maximize operations
+    - Activation of MDI window fails if a mouse moves out of the current tab
+    - Some name resolving problems in "Find object" command
+    Following functionality have been added:
+    - "Load DDL script" resolves an object name and loads DDL scripts.
+    Shortcut keys are Ctrl+F12 and Shift+Ctrl+F12.
+
+1.3.0.9  Following bugs have been fixed:
+    - OCI7 initialization bug for 8.1.7 client
+    - A package body text is corrupted if a package body header has
+    more then one space between "package" and "body".
+
+1.3.0.8  Sqlplus-like EXECUTE command has been added. DEFINE supports sqlplus syntax.
+    Comments processing bug has been fixed (';' was not skipped in comments).
+
+1.3.0.7  Stable version. Fixed a small bugs in trigger source reengineering.
+    Fixed a bug in function-based index source reengineering. Fixed
+    crash in some case when a editor window is closed after connection
+    losing. Changed focus processing in "Object list" window.
+
+1.3.0.6  Editor bookmark failure has been fixed. Load options for "Load as one"
+    have been fixed. MS Wheel support has been  added.

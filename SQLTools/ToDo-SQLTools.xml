@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<TODOLIST FILEFORMAT="6" PROJECTNAME="SQLTools 1.4.1 branch 58X" NEXTUNIQUEID="105" LASTSORTBY="5" FILEVERSION="29" LASTSORTDIR="0" LASTMODIFIED="2005-01-04">
+    <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.38017361" TITLE="New functionality" TIMEESTUNITS="H" ID="21" STARTDATE="38316.00000000" POS="1">
+        <TASK STARTDATESTRING="2004-12-15" PRIORITY="10" TIMEESPENTUNITS="H" LASTMOD="38337.01164352" TITLE="Change code and test help" TIMEESTUNITS="H" ID="101" STARTDATE="38336.00000000" POS="1"/>
+        <TASK STARTDATESTRING="2004-11-01" PRIORITY="7" TIMEESPENTUNITS="D" LASTMOD="38319.07270833" TITLE="a new sql / sql*plus command parser / performer" TIMEESTUNITS="D" ID="2" PERCENTDONE="85" STARTDATE="38292.00000000" POS="2">
+            <TASK PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.77562500" TITLE="sql*plus commands: describe, connect, ..." TIMEESTUNITS="H" ID="8" POS="1"/>
+            <TASK PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38316.37586806" TITLE="TOAD like mode for execution of sql command" TIMEESTUNITS="H" COMMENTS="space line as separator for sql statements" ID="17" POS="2"/>
+            <TASK STARTDATESTRING="2004-11-01" PRIORITY="7" TIMEESPENTUNITS="H" LASTMOD="38319.07331019" TITLE="parser / performer" TIMEESTUNITS="H" ID="3" PERCENTDONE="100" STARTDATE="38292.00000000" DONEDATESTRING="2004-11-26" POS="3" DONEDATE="38317.00000000"/>
+            <TASK STARTDATESTRING="2004-11-01" PRIORITY="7" TIMEESPENTUNITS="H" LASTMOD="38319.07344907" TITLE="sql*plus commends: exec, define, undef" TIMEESTUNITS="H" COMMENTS="define command has been improved significantly" ID="5" PERCENTDONE="100" STARTDATE="38292.00000000" DONEDATESTRING="2004-11-26" POS="4" DONEDATE="38317.00000000"/>
+        </TASK>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.95746528" TITLE="db grid support for TIMESTAMP, INTERVAL, XMLTIPE, format mask for NUMBER" TIMEESTUNITS="H" COMMENTS="Implemented in branch 59, will be available after merging" ID="43" PERCENTDONE="90" STARTDATE="38316.00000000" POS="3"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.57074074" TITLE="export grid data in sql-script format (and sql*loader)" TIMEESTUNITS="H" ID="56" STARTDATE="38316.00000000" POS="4"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38316.96049769" TITLE="session viewer" TIMEESTUNITS="H" ID="65" STARTDATE="38316.00000000" POS="5"/>
+    </TASK>
+    <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.41456019" TITLE="Improving existing functionality" TIMEESTUNITS="H" ID="22" STARTDATE="38316.00000000" POS="2">
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="7" TIMEESPENTUNITS="H" LASTMOD="38316.45862269" TITLE="implement a filter for Object List" TIMEESTUNITS="H" COMMENTS="Implementation notes: This is client-side implementation (reg exp).  It should support oracle '_%' and reg exp expressions as well." ID="29" STARTDATE="38316.00000000" POS="1"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="7" TIMEESPENTUNITS="H" LASTMOD="38316.44768519" TITLE="add a input field in the Fidn Object window" TIMEESTUNITS="H" ID="30" STARTDATE="38316.00000000" POS="2"/>
+        <TASK STARTDATESTRING="2004-11-29" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38320.94009259" TITLE="reverse engineering  triggers on schemas and database" TIMEESTUNITS="H" ID="100" STARTDATE="38320.00000000" POS="3"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.11135417" TITLE="cleanup history (from date, from number)" TIMEESTUNITS="H" ID="96" STARTDATE="38316.00000000" POS="4"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.07782407" TITLE="add text document template" TIMEESTUNITS="H" ID="91" STARTDATE="38316.00000000" POS="5"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.56303241" TITLE="hide internal oracle tables/indexes in Object List and ignore them in ExtractDDL" TIMEESTUNITS="H" COMMENTS="implement a regexp-based filter which can be changes in &quot;advanced&quot; settings" ID="54" STARTDATE="38316.00000000" POS="6"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38320.94093750" TITLE="handle oracle exception-warning about password expiration and add change password dialog" TIMEESTUNITS="H" ID="41" STARTDATE="38316.00000000" POS="7"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.45250000" TITLE="add a list of ignored errors for sql script execution" TIMEESTUNITS="H" ID="32" STARTDATE="38316.00000000" POS="8"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.54121528" TITLE="ask user to create plan_table if it does not exist" TIMEESTUNITS="H" COMMENTS="probably we use the latest 10g table format - test it" ID="50" STARTDATE="38316.00000000" POS="9"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.00501157" TITLE="info dialog (env)" TIMEESTUNITS="H" ID="72" STARTDATE="38316.00000000" POS="10"/>
+        <TASK STARTDATESTRING="2004-11-26" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.86725694" TITLE="if a transaction is started by EXPLAIN PLAN, commit it to prevent a commit/rollback request on exit" TIMEESTUNITS="H" ID="98" STARTDATE="38317.00000000" POS="11"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.07841435" TITLE="add &quot;open tnsnames.ora&quot; to tools menu" TIMEESTUNITS="H" ID="92" STARTDATE="38316.00000000" POS="12"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38320.94105324" TITLE="add possibility to choose name for new documents and rename for already created but not saved" TIMEESTUNITS="H" COMMENTS="option to create a new document w/o saving on exit?" ID="44" STARTDATE="38316.00000000" POS="13"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38316.56127315" TITLE="an option to control reset a editor &quot;modified&quot; attribute for text/scripts loaded from db (reverse-engineered)" TIMEESTUNITS="H" ID="40" STARTDATE="38316.00000000" POS="14"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38320.94111111" TITLE="add command purge recycle bin for 10g" TIMEESTUNITS="H" ID="53" STARTDATE="38316.00000000" POS="15"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38320.94126157" TITLE="improve grid export menu/commands" TIMEESTUNITS="H" COMMENTS="create individual commands for each particular export format instead of the selection in grid export settings" ID="55" STARTDATE="38316.00000000" POS="16"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38320.94152778" TITLE="reimplemented the object tree for Find Object" TIMEESTUNITS="H" ID="31" STARTDATE="38316.00000000" POS="17"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38319.52636574" TITLE="extensive testing of compatibility with 7.3 and 8.05" TIMEESTUNITS="H" ID="45" STARTDATE="38316.00000000" POS="18"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38317.09368056" TITLE="xml/text export for explain plan" TIMEESTUNITS="H" ID="94" STARTDATE="38316.00000000" POS="19"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38317.06724537" TITLE="next error is too slow because of output log redrawing" TIMEESTUNITS="H" ID="85" STARTDATE="38316.00000000" POS="20"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38317.06680556" TITLE="ESC in control bar should return focus to the current active mdi window, and maybe close froat control bar" TIMEESTUNITS="H" ID="84" STARTDATE="38316.00000000" POS="21"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38316.95540509" TITLE="tab for grid navigation" TIMEESTUNITS="H" ID="63" STARTDATE="38316.00000000" POS="22"/>
+        <TASK PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38316.37527778" TITLE="append &quot;create use&quot; template to pl/sql templates" TIMEESTUNITS="H" ID="15" POS="23"/>
+        <TASK PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38316.37156250" TITLE="add CSS for grid export in HTML format " TIMEESTUNITS="H" ID="10" POS="24"/>
+    </TASK>
+    <TASK PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.56747685" TITLE="Bugs" TIMEESTUNITS="H" ID="1" POS="3">
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="6" TIMEESPENTUNITS="H" LASTMOD="38316.96250000" TITLE="The bug report dialog appears on disconnecting if connection was closed by server" TIMEESTUNITS="H" COMMENTS="Probably all oci exceptions should be processed w/o bug reporting because the most of them are raised on server side. " ID="23" STARTDATE="38316.00000000" POS="1"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="6" TIMEESPENTUNITS="H" LASTMOD="38320.94166667" TITLE="copy grid column included extra leading spaces " TIMEESTUNITS="H" ID="75" STARTDATE="38316.00000000" POS="2"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="6" TIMEESPENTUNITS="H" LASTMOD="38319.39171296" TITLE="trigger reverse-engineering fails" TIMEESTUNITS="H" COMMENTS="CREATE TABLE owidat (dummy VARCHAR2(1));  
+
+CREATE OR REPLACE TRIGGER IDXNOTNULL BEFORE INSERT OR UPDATE ON OWIDAT 
+REFERENCING NEW AS NEWFIELD FOR EACH ROW 
+BEGIN
+  NULL;
+END;
+/" ID="62" STARTDATE="38316.00000000" POS="3"/>
+        <TASK PRIORITY="6" TIMEESPENTUNITS="H" LASTMOD="38319.39140046" TITLE="CSV export: Excel ignores leading zeros for text columns" TIMEESTUNITS="H" COMMENTS="Solution:
+c1,c2,c3
+=&quot;paul&quot;,=&quot;00235&quot;,=&quot;red&quot;
+=&quot;jim&quot;,=&quot;00187&quot;,=&quot;yellow&quot;
+=&quot;sue&quot;,=&quot;00133&quot;,=&quot;green&quot;" ID="4" POS="4"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="6" TIMEESPENTUNITS="H" LASTMOD="38319.39222222" TITLE="error position fails for function/procedure/package reverse engineering if a procedure header contains '\n'" TIMEESTUNITS="H" ID="37" STARTDATE="38316.00000000" POS="5"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.52915509" TITLE="sql error causes a bug report" TIMEESTUNITS="H" COMMENTS="SELECT To_Date(Decode(least(nvl(&quot;NAECHSTE_WP&quot;,
+&gt;to_date('01.01.9999','dd.mm.yyyy'))), to_date('01.01.9999','dd.mm.yyyy'),
+&gt;NULL, least(nvl(&quot;NAECHSTE_WP&quot;, to_date('01.01.9999','dd.mm.yyyy')))),
+&gt;'dd.mm.yyyy') FROM em_transportmittel;" ID="46" STARTDATE="38316.00000000" POS="6"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38356.39126157" TITLE="trigger reverse engineering fails if a trigger name or a column name contains &quot;on&quot;" TIMEESTUNITS="H" COMMENTS="SQLTools 1.4.1 build 588 Beta " ID="33" PERCENTDONE="100" STARTDATE="38316.00000000" DONEDATESTRING="2004-12-02" POS="7" DONEDATE="38323.00000000"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.49373843" TITLE="statement execution takes a while on read-only connection if it's not select" TIMEESTUNITS="H" ID="42" STARTDATE="38316.00000000" POS="8"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38319.39190972" TITLE="toolbar/control bar windows might be moved out of a visible desktop area" TIMEESTUNITS="H" COMMENTS="No way get it back except reset registry" ID="36" STARTDATE="38316.00000000" POS="9"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38319.39199074" TITLE="a very long column (&gt;64K) value may be a cause of slow grid painting and even windows crash " TIMEESTUNITS="H" ID="34" STARTDATE="38316.00000000" POS="10"/>
+        <TASK PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38319.39209491" TITLE="attempt to find (F12) db object by name with ending . (&quot;dbms_job.&quot;) causes an pl/sql exception " TIMEESTUNITS="H" ID="9" POS="11"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38319.39283565" TITLE="bug report on regexp search" TIMEESTUNITS="H" COMMENTS="SQLTools reported an error while processing a replace operation using
+regexp operators. I have a list of names, in the format
+&lt;tab&gt;'&lt;lastname&gt;, &lt;firstname&gt;'
+I was trying to replace this with a string like: 
+Exec tier3fixes.userfromname( '&lt;lastname&gt;, &lt;firstname&gt;' );
+My &quot;Find what&quot; string was: ^\t(*)
+My &quot;Replace with&quot; string was: exec tier3fixes.userfromname( \1 );" ID="68" STARTDATE="38316.00000000" POS="12"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38319.39289352" TITLE="extract ddl fails in 10g" TIMEESTUNITS="H" ID="52" STARTDATE="38316.00000000" POS="13"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38319.39300926" TITLE="unknown exception on canceling drop table statement" TIMEESTUNITS="H" ID="57" STARTDATE="38316.00000000" POS="14"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38319.39307870" TITLE="sqltools may fails with &quot;coi8: cannot allocate handle&quot; on some pc" TIMEESTUNITS="H" ID="61" STARTDATE="38316.00000000" POS="15"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38316.43981481" TITLE="ora-01877: string is too long for internal buffer" TIMEESTUNITS="H" ID="24" STARTDATE="38316.00000000" POS="16"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="6" TIMEESPENTUNITS="H" LASTMOD="38319.39430556" TITLE=" &quot;Next&quot; and &quot;Previous&quot; in Grid are inverted" TIMEESTUNITS="H" ID="64" PERCENTDONE="100" STARTDATE="38316.00000000" DONEDATESTRING="2004-11-28" POS="17" DONEDATE="38319.00000000"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.44273148" TITLE="external authentication does not work" TIMEESTUNITS="H" ID="28" PERCENTDONE="100" STARTDATE="38316.00000000" DONEDATESTRING="2004-11-21" POS="18" DONEDATE="38312.00000000"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.44284722" TITLE="some servers may return very long strings due to oracle bug" TIMEESTUNITS="H" ID="27" PERCENTDONE="100" STARTDATE="38316.00000000" DONEDATESTRING="2004-11-20" POS="19" DONEDATE="38311.00000000"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.44290509" TITLE="all compilation errors are ignored for Oracle7" TIMEESTUNITS="H" ID="26" PERCENTDONE="100" STARTDATE="38316.00000000" DONEDATESTRING="2004-11-22" POS="20" DONEDATE="38313.00000000"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.44295139" TITLE="all compilation errors are ignored after &quot;alter session set current schema&quot;" TIMEESTUNITS="H" ID="25" PERCENTDONE="100" STARTDATE="38316.00000000" DONEDATESTRING="2004-11-22" POS="21" DONEDATE="38313.00000000"/>
+    </TASK>
+    <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.38107639" TITLE="Internal improvements" TIMEESTUNITS="H" ID="20" STARTDATE="38316.00000000" POS="4">
+        <TASK PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.51000000" TITLE="exception model: add a new base class for application exceptions which will not be traceable" TIMEESTUNITS="H" COMMENTS="The cost of StackTrace is too hight, but some application exceptions are a part of normal flow.
+" ID="11" POS="1"/>
+    </TASK>
+    <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06987269" TITLE="OpenEditor" TIMEESTUNITS="H" ID="76" STARTDATE="38316.00000000" POS="5">
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06998843" TITLE="New functionality" TIMEESTUNITS="H" ID="88" STARTDATE="38316.00000000" POS="1">
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.11206019" TITLE="automatically highlight or underline the matching braces" TIMEESTUNITS="H" ID="97" STARTDATE="38316.00000000" POS="1"/>
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.07143519" TITLE="context menu for toolbars" TIMEESTUNITS="H" ID="89" STARTDATE="38316.00000000" POS="2"/>
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06576389" TITLE="projects/favorites" TIMEESTUNITS="H" ID="83" STARTDATE="38316.00000000" POS="3"/>
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06554398" TITLE="history" TIMEESTUNITS="H" ID="82" STARTDATE="38316.00000000" POS="4"/>
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06545139" TITLE="find in files" TIMEESTUNITS="H" ID="81" STARTDATE="38316.00000000" POS="5"/>
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06474537" TITLE="open file under cursor" TIMEESTUNITS="H" ID="78" STARTDATE="38316.00000000" POS="6"/>
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38330.36864583" TITLE="watch and reload changed settings" TIMEESTUNITS="H" COMMENTS="I don't understand." ID="95" STARTDATE="38316.00000000" POS="7"/>
+            <TASK STARTDATESTRING="2005-01-04" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38356.38377315" TITLE="datestamp in SaveAs dialog" TIMEESTUNITS="H" COMMENTS="RFE 1078872.
+&gt;&gt; Tadas7:
+I'd like to suggest one feature. On SaveAs SQLTools 
+prompts for filename and automatically fill the field with 
+corresponding object name. That's great. But is it 
+possible to have option automatically append datestamp 
+to suggested filename (for example &quot;ACCOUNTS_VIEW 
+20041025.sql&quot;)" ID="102" PERCENTDONE="80" STARTDATE="38356.38231481" POS="8"/>
+            <TASK STARTDATESTRING="2005-01-04" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38356.38787037" TITLE="new CTabCtrl component" TIMEESTUNITS="H" COMMENTS="RFE 1084220 &amp; 1092510 - Close Tab on double click &amp; Drag/Reorder Tab. (I investigated some components, but small changes in simple subcomponent will be the easiest way)." ID="103" PERCENTDONE="30" STARTDATE="38356.38231481" POS="9"/>
+            <TASK STARTDATESTRING="2005-01-04" PRIORITY="3" STATUS="Planning" TIMEESPENTUNITS="H" LASTMOD="38356.38899306" TITLE="new Preferences dll" TIMEESTUNITS="H" COMMENTS="New interface like in a Winamp realized as a DLL." ID="104" STARTDATE="38356.38231481" POS="10"/>
+        </TASK>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06943287" TITLE="Bugs" TIMEESTUNITS="H" ID="86" STARTDATE="38316.00000000" POS="2">
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38330.36871528" TITLE="add default extension on file save" TIMEESTUNITS="H" COMMENTS="??? Why this is a bug not a feature ??? " ID="90" STARTDATE="38316.00000000" POS="1"/>
+            <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38330.36817130" TITLE="exception on find match" TIMEESTUNITS="H" COMMENTS="I don't understand this bug. Give example what was searched.
+
+SELECT * FROM xis_nt_mo_me#v mo
+  WHERE NOT EXISTS (
+    SELECT * FROM xis_nt_mo_relations
+      WHERE child_id = mo.id
+        AND (relation_rule_id, stereotype_id) IN
+          (SELECT rul_id, rul_ste_id FROM xis_dd_relation_rules#t WHERE rul_name = 'EMS_M_ME')
+    )
+&gt;&gt; EOF &lt;&lt;" ID="87" STARTDATE="38316.00000000" POS="2"/>
+        </TASK>
+    </TASK>
+    <TASK STARTDATESTRING="2004-11-25" PRIORITY="1" TIMEESPENTUNITS="H" LASTMOD="38316.48402778" TITLE="New functionality for future releases" TIMEESTUNITS="H" ID="38" STARTDATE="38316.00000000" POS="6">
+        <TASK STARTDATESTRING="2004-11-28" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38319.39062500" TITLE="change copyright before publishing" TIMEESTUNITS="H" ID="99" STARTDATE="38319.00000000" POS="1"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06521991" TITLE="objects/columns/methods dropdown list" TIMEESTUNITS="H" ID="80" STARTDATE="38316.00000000" POS="2"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06501157" TITLE="code navigator" TIMEESTUNITS="H" ID="79" STARTDATE="38316.00000000" POS="3"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.06388889" TITLE="object properties control bar" TIMEESTUNITS="H" ID="77" STARTDATE="38316.00000000" POS="4"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38317.00392361" TITLE="sort for data grid" TIMEESTUNITS="H" ID="71" STARTDATE="38316.00000000" POS="5"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.98513889" TITLE="using dba views when they are available for the current connection" TIMEESTUNITS="H" ID="69" STARTDATE="38316.00000000" POS="6"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.94458333" TITLE="project, sql library" TIMEESTUNITS="H" ID="60" STARTDATE="38316.00000000" POS="7"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.94421296" TITLE="table/view viewer" TIMEESTUNITS="H" ID="59" STARTDATE="38316.00000000" POS="8"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.94388889" TITLE="move sql execution in a backgroud thread" TIMEESTUNITS="H" ID="58" STARTDATE="38316.00000000" POS="9"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.53530093" TITLE="sql*plus like bind variables" TIMEESTUNITS="H" ID="48" STARTDATE="38316.00000000" POS="10"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.53466435" TITLE="table/index partitions in reverse-engineering" TIMEESTUNITS="H" ID="47" STARTDATE="38316.00000000" POS="11"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.48469907" TITLE="Insert/delete/update operation for data grid" TIMEESTUNITS="H" ID="39" STARTDATE="38316.00000000" POS="12"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.53878472" TITLE="support for vss and cvs - automatic check out" TIMEESTUNITS="H" ID="49" STARTDATE="38316.00000000" POS="13"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="5" TIMEESPENTUNITS="H" LASTMOD="38316.54271991" TITLE="implement &quot;find in source&quot;" TIMEESTUNITS="H" COMMENTS="&quot;Find in Source&quot; that would search in all DB sources types. After entering the usual search criteria (String to search, whole word, match case,....) and specific criteria (find in all types or selected: procedure, function, pack, trigger, object type, views,...?) a result window could show the list of sources + line numbers that matched the criteria. By clicking on the sources name, an editor window would be automatically open (and why not at the first matching line)." ID="51" STARTDATE="38316.00000000" POS="14"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="4" TIMEESPENTUNITS="H" LASTMOD="38316.99843750" TITLE="execute scripts from the command line" TIMEESTUNITS="H" ID="70" STARTDATE="38316.00000000" POS="15"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38317.08949074" TITLE="multiple connections" TIMEESTUNITS="H" ID="93" STARTDATE="38316.00000000" POS="16"/>
+        <TASK STARTDATESTRING="2004-11-25" PRIORITY="3" TIMEESPENTUNITS="H" LASTMOD="38317.05856481" TITLE="select * from object table/view" TIMEESTUNITS="H" ID="74" STARTDATE="38316.00000000" POS="17"/>
+    </TASK>
+    <TASK PRIORITY="0" TIMEESPENTUNITS="H" LASTMOD="38316.35572917" TITLE="Research" TIMEESTUNITS="H" ID="12" POS="7">
+        <TASK PRIORITY="0" TIMEESPENTUNITS="H" LASTMOD="38316.37531250" TITLE="http://www.aquafold.com/screenshots.html" TIMEESTUNITS="H" ID="13" POS="1"/>
+    </TASK>
+</TODOLIST>

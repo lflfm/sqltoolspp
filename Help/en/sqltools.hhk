@@ -1,0 +1,630 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Introduction">
+		<param name="Name" value="Introduction">
+		<param name="Local" value="introduction.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Author">
+		<param name="Local" value="introduction.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Command Line">
+		<param name="Local" value="commandline.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Windows">
+		<param name="Local" value="windows.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="DDL script">
+		<param name="Local" value="ddlpreferences.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="DDL preferences">
+		<param name="Local" value="ddlpreferences.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Connect">
+		<param name="Local" value="hidd_connect_dialog.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Connection">
+		<param name="Local" value="hidd_connect_dialog.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Extract DDL">
+		<param name="Local" value="hidd_extract_schema.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Extract Schema Dialog">
+		<param name="Local" value="hidd_extract_schema.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Menus">
+		<param name="Local" value="menus.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="File Menu">
+		<param name="Local" value="filemenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="New">
+		<param name="Local" value="filemenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Open">
+		<param name="Local" value="filemenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Close">
+		<param name="Local" value="filemenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Close All">
+		<param name="Local" value="filemenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Save">
+		<param name="Local" value="filemenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="New">
+		<param name="Local" value="hid_file_new.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Open">
+		<param name="Local" value="hid_file_open.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Reload">
+		<param name="Local" value="hid_file_update.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Update Document">
+		<param name="Local" value="hid_file_update.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Close ">
+		<param name="Local" value="hid_file_close.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Close All">
+		<param name="Local" value="hid_window_close_all.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Save">
+		<param name="Local" value="hid_file_save.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Save As">
+		<param name="Local" value="hid_file_save_as.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Save All">
+		<param name="Local" value="hid_file_save_all.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Show File">
+		<param name="Local" value="hid_file_show_file_location.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Page Setup">
+		<param name="Local" value="hid_file_page_setup.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Config Print Page">
+		<param name="Local" value="hid_file_page_setup.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Print Setup">
+		<param name="Local" value="hid_file_print_setup.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Configure Printer">
+		<param name="Local" value="hid_file_print_setup.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Print Preview">
+		<param name="Local" value="hid_file_print_preview.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Print">
+		<param name="Local" value="hid_file_print.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Send Mail">
+		<param name="Local" value="hid_file_send_mail.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Edit Menu">
+		<param name="Local" value="editmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Undo">
+		<param name="Local" value="hid_edit_undo.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Redo">
+		<param name="Local" value="hid_edit_redo.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Cut">
+		<param name="Local" value="hid_edit_cut.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Copy">
+		<param name="Local" value="hid_edit_copy.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Paste">
+		<param name="Local" value="hid_edit_paste.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Cut and append">
+		<param name="Local" value="editcutandappend.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Cut Bookmarked Lines">
+		<param name="Local" value="editcutbookmarkedlines.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Copy and append">
+		<param name="Local" value="editcopyappend.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Copy Bookmarked Lines">
+		<param name="Local" value="editcopybookmarkedlines.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Delete">
+		<param name="Local" value="editdelete.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Delete to End of Word">
+		<param name="Local" value="hid_edit_del_right_word.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Delete Word Back">
+		<param name="Local" value="hid_edit_del_left_word.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Delete Line">
+		<param name="Local" value="editdeleteline.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Delete Bookmarked Lines">
+		<param name="Local" value="editdeletebookmarkedlines.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Select word">
+		<param name="Local" value="editselectword.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Select line">
+		<param name="Local" value="editselectline.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Select All">
+		<param name="Local" value="hid_edit_select_all.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Scroll Up">
+		<param name="Local" value="editscrollup.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Scroll To Center">
+		<param name="Local" value="editscrolltocenter.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Scroll Down">
+		<param name="Local" value="editscrolldown.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="View Menu">
+		<param name="Local" value="viewmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="View Toolbar">
+		<param name="Local" value="viewfiletoolbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="View SQL Toolbar">
+		<param name="Local" value="viewsqltoolbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="View Connection Toolbar">
+		<param name="Local" value="viewconnectiontoolbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Object Viewer">
+		<param name="Local" value="hid_sql_obj_viewer.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Database Object">
+		<param name="Local" value="databaseobjectslist.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="File Panel">
+		<param name="Local" value="viewfilepanel.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Browser">
+		<param name="Local" value="viewfilepanel.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Workbook">
+		<param name="Local" value="hidd_workbook_bar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Status Bar">
+		<param name="Local" value="viewstatusbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Search Menu">
+		<param name="Local" value="searchmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find">
+		<param name="Local" value="hid_edit_find.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Replace">
+		<param name="Local" value="hid_edit_replace.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find Next">
+		<param name="Local" value="searchfindnext.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find">
+		<param name="Local" value="searchfindnext.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find Previous">
+		<param name="Local" value="searchfindprevious.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find">
+		<param name="Local" value="searchfindprevious.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Go To">
+		<param name="Local" value="searchgoto.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Toggle Bookmark">
+		<param name="Local" value="searchtogglebookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Bookmark">
+		<param name="Local" value="searchtogglebookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Next Bookmark">
+		<param name="Local" value="searchnextbookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Bookmark">
+		<param name="Local" value="searchnextbookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Remove All Bookmarks">
+		<param name="Local" value="searchremoveallbookmarks.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Set Random Bookmark">
+		<param name="Local" value="searchsetrandombookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Random Bookmark">
+		<param name="Local" value="searchsetrandombookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Get Random Bookmark">
+		<param name="Local" value="searchgetrandombookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Random Bookmark">
+		<param name="Local" value="searchgetrandombookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find Match">
+		<param name="Local" value="searchfindmatch.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find Match And Select">
+		<param name="Local" value="searchfindmatchselect.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find in files">
+		<param name="Local" value="searchfindinfiles.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Text Menu">
+		<param name="Local" value="textmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Stream Selection">
+		<param name="Local" value="textstreamselection.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Column Selection">
+		<param name="Local" value="textcolumnselection.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Toggle Selection Mode">
+		<param name="Local" value="texttoggleselectionmode.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Sort">
+		<param name="Local" value="textsort.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Indent Selection">
+		<param name="Local" value="textindentselection.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Undent Selection">
+		<param name="Local" value="textundentselection.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Untabify Selection">
+		<param name="Local" value="textuntabifyselection.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Tabify Selection">
+		<param name="Local" value="texttabifyselectionall.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Tabify Selection">
+		<param name="Local" value="texttabifyselectionleading.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Leading">
+		<param name="Local" value="texttabifyselectionleading.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Normalize Keyword">
+		<param name="Local" value="textnormalizekeyword.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Lowercase">
+		<param name="Local" value="textlowercase.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Uppercase">
+		<param name="Local" value="textuppercase.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Capitalize">
+		<param name="Local" value="textcapitalize.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Invert Case">
+		<param name="Local" value="textinvertcase.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Comment Line">
+		<param name="Local" value="textcommentline.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Uncomment Line">
+		<param name="Local" value="textuncommentline.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Expand Template">
+		<param name="Local" value="textexpandtemplate.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Template">
+		<param name="Local" value="textexpandtemplate.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Datetime Stamp">
+		<param name="Local" value="textdatetimestamp.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Visible Spaces">
+		<param name="Local" value="textvisiblespaces.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Line Numbers">
+		<param name="Local" value="textlinenumbers.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Column Markers">
+		<param name="Local" value="textcolumnmarkers.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="File Settings">
+		<param name="Local" value="textfilesettingsinformation.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Grid Menu">
+		<param name="Local" value="gridmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Session Menu">
+		<param name="Local" value="sessionmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Connect">
+		<param name="Local" value="hid_sql_connect.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Disconnect">
+		<param name="Local" value="hid_sql_disconnect.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Commit">
+		<param name="Local" value="hid_sql_commit.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Rollback">
+		<param name="Local" value="hid_sql_rollback.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Dbms Output">
+		<param name="Local" value="hid_sql_dbms_output.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Session Statistics">
+		<param name="Local" value="hid_sql_session_statistics.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Statistics">
+		<param name="Local" value="hid_sql_session_statistics.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Script Menu">
+		<param name="Local" value="scriptmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Execute Script">
+		<param name="Local" value="hid_sql_execute.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Execute Statement">
+		<param name="Local" value="hid_sql_execute_current.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Execute Current">
+		<param name="Local" value="hid_sql_execute_current.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Execute And Step">
+		<param name="Local" value="hid_sql_execute_current_and_step.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Next Error">
+		<param name="Local" value="hid_sql_next_error.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Previous Error">
+		<param name="Local" value="hid_sql_prev_error.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Get History and step back">
+		<param name="Local" value="scriptgethistoryandstepback.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Get History and step forward">
+		<param name="Local" value="scriptstepforwardandgethistory.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Find Object">
+		<param name="Local" value="scriptfindobject.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Load DDL Script">
+		<param name="Local" value="scriptloadddlscript.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Explain Plan">
+		<param name="Local" value="hid_sql_explain_plan.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Enable Substitution Variables">
+		<param name="Local" value="hid_sql_substitution_variables.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Tools Menu">
+		<param name="Local" value="toolsmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Extract Schema">
+		<param name="Local" value="hid_sql_extract_schema.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Table Transformation Helper">
+		<param name="Local" value="hidd_table_transfomer.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Session Settings">
+		<param name="Local" value="toolssessionddlgridsetting.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="DDL Settings">
+		<param name="Local" value="toolssessionddlgridsetting.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Grid Settings">
+		<param name="Local" value="toolssessionddlgridsetting.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Application Settings">
+		<param name="Local" value="toolsapplicationeditorsettings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Editor Settings">
+		<param name="Local" value="toolsapplicationeditorsettings.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Window Menu">
+		<param name="Local" value="windowmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Help Menu">
+		<param name="Local" value="helpmenu.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Help">
+		<param name="Local" value="helphelptopics.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="SQL Reference">
+		<param name="Local" value="hid_pl_sql_help.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Website">
+		<param name="Local" value="hid_sqltools_on_the_web.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="About">
+		<param name="Local" value="hidd_aboutbox.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="ToolBars">
+		<param name="Local" value="toolbars.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="File Toolbar">
+		<param name="Local" value="hid_view_file_toolbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="SQL Toolbar">
+		<param name="Local" value="hid_view_sql_toolbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Connection Toolbar">
+		<param name="Local" value="hid_view_connect_toolbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Print Toolbar">
+		<param name="Local" value="printtoolbar.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Tools">
+		<param name="Local" value="tools.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Bookmark">
+		<param name="Local" value="bookmark.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Connection List">
+		<param name="Local" value="connectionlist.html">
+		</OBJECT>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value="Direct Connection">
+		<param name="Local" value="directconnection.html">
+		</OBJECT>
+</UL>
+</BODY></HTML>

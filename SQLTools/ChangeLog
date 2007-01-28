@@ -1,0 +1,619 @@
+2006-08-25	tmk_pl
+	* History.txt [r142_stable] 1.13.2.2:
+	* VersionInfo.rh [r142_stable] 1.10.2.1:
+		1.4.2 RC2 release.
+
+	* Dlg/AboutDlg.cpp [r142_stable] 1.4.2.1:
+		Removed 7.3 (use SQLTools1.3) and 10g (use versions above 1.4.2)
+		.
+
+	* SQLTools.vcproj 1.9:
+		*** empty log message ***
+
+2006-08-14	tmk_pl
+	* DbBrowser/DbObjListCtrl.cpp 1.3:
+	* DbBrowser/DbObjListCtrl2.cpp 1.3:
+	* DbBrowser/ObjectTreeBuilder.cpp 1.6:
+	* DbBrowser/ObjectViewerWnd.cpp 1.9:
+	* MetaDict/Loader.cpp 1.3:
+	* MetaDict/Loader_Cluster.cpp 1.3:
+	* MetaDict/Loader_Constraint.cpp 1.3:
+	* MetaDict/Loader_DBLink.cpp 1.3:
+	* MetaDict/Loader_Grant.cpp 1.3:
+	* MetaDict/Loader_Index.cpp 1.3:
+	* MetaDict/Loader_PLSCode.cpp 1.4:
+	* MetaDict/Loader_Sequence.cpp 1.3:
+	* MetaDict/Loader_SnapshotLog.cpp 1.3:
+	* MetaDict/Loader_Synonym.cpp 1.3:
+	* MetaDict/Loader_Table.cpp 1.4:
+	* MetaDict/Loader_Trigger.cpp 1.5:
+	* MetaDict/Loader_View.cpp 1.3:
+		Remove RULE hint in databases above 9i from queries.
+
+2006-07-30	tmk_pl
+	* History.txt [r142_stable] 1.13.2.1:
+		1.42 RC1 stable
+
+	* Settings/sqltools.dat 1.3:
+		Merge from Stable version.
+
+	* Settings/sqltools.dat [r142_stable] 1.2.2.1:
+		Settings optimisation (version 1016).
+
+2006-03-08	tmk_pl
+	* DbBrowser/DbSourceWnd.cpp 1.9:
+	* MainFrm.cpp 1.4:
+		B#1445114 - Dockable objects list - refreshing problem.
+
+2006-03-06	tmk_pl
+	* History.txt 1.13:
+	* VersionInfo.rh 1.10:
+		Changes of version info&history for the Release "1.4.1 Beta 
+		build 72".
+
+2006-03-04	tmk_pl
+	* SQLTools.cpp 1.6:
+		B#1443248 - CAbortThread - memory leak.
+		For carefully and detailed testing!
+
+2006-03-03	tmk_pl
+	* DbBrowser/TreeViewer.cpp 1.3:
+		R#1440528 - Drag&expand for indexes/constraints in the ObjectViewer:
+		- we could drag&expand Tables/Views/Indexes/Constraints,
+		- ALT causes nothing to be expanded,
+		- fixed bug when dragging indexes/constraints (nothing was copied).
+
+2006-02-28	tmk_pl
+	* SQLTools2005.sln 1.1:
+	* SQLTools2005.vcproj 1.1:
+		VisualC++ 2005 project (thanks to Wojciech Opieka) - untested by 
+		me.
+
+2006-02-27	tmk_pl
+	* VersionInfo.rh 1.9:
+		1.41 build 71
+
+	* History.txt 1.12:
+		Changes for the Release "1.4.1 Beta build 71".
+
+2006-02-18	tmk_pl
+	* HelpSQL/sqlqkref.chm 1.1:
+		Added SQL help file.
+		R#1420628 - NSIS installer script.
+
+2006-02-15	tmk_pl
+	* License.txt 1.2:
+		Removed unnecessary comments.
+
+2006-02-14	tmk_pl
+	* OpenGrid/GridView.cpp 1.5:
+	* OpenGrid/GridView.h 1.2:
+	* OpenGrid/OCIGridView.cpp 1.2:
+	* OpenGrid/OCISource.cpp 1.4:
+	* SQLTools.rc 1.13:
+	* SQLWorksheet/Booklet.cpp 1.4:
+	* hlp/HTMLDefines.h 1.5:
+	* res/BookletToolbar.bmp 1.3:
+	* resource1.h 1.6:
+		First 'experimental' implementation of Clear button inside the 
+		GridView (R#1108089).
+
+2006-02-10	tmk_pl
+	* DbBrowser/DbSourceWnd.cpp 1.8:
+	* DbBrowser/ObjectTreeBuilder.cpp 1.5:
+		Fixed some VisualC++ 2005 compatibility issues (thanks to 
+		Wojciech Opieka).
+
+2006-02-08	tmk_pl
+	* DbBrowser/TreeViewer.cpp 1.2:
+		R#1097646 - Drag&Drop columns list from table in ObjectViewer.
+
+2006-02-07	tmk_pl
+	* DbBrowser/ObjectViewerWnd.cpp 1.8:
+		B#1191428 - % in disconnected 'Object viewer'.
+		Check existence of an open DB connection.
+
+2006-02-03	tmk_pl
+	* MetaDict/MetaDictionary.h 1.2:
+	* MetaDict/MetaObjects.cpp 1.8:
+	* MetaDict/MetaObjects.h 1.3:
+	* OCI8/ACursor.h 1.10:
+	* OCI8/Connect.h 1.4:
+	* OCI8/Statement.h 1.4:
+	* OpenGrid/GridSourceBase1.cpp 1.9:
+	* SQLTools.cpp 1.5:
+	* SQLTools_4.cpp 1.5:
+		Fixed some VisualC++ 2005 compatibility issues (thanks to 
+		Wojciech Opieka).
+
+2006-01-31	tmk_pl
+	* Dlg/AboutDlg.cpp 1.4:
+	* History.txt 1.11:
+	* VersionInfo.rh 1.8:
+		Changes of version info for the Release "1.4.1 Beta build 70".
+
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.13:
+		R#1078900 - 'Find object' (F12) and focus of editor cursor.
+		Added option 'FindObject moves cursor' in Editor::General settings page.
+
+	* DbBrowser/DbSourceWnd.cpp 1.7:
+	* DbBrowser/DbSourceWnd.h 1.3:
+	* SQLTools.rc 1.12:
+		R#1108078 - Dockable 'Objects list' (tMk).
+		Shrinked buttons, added code for moving components inside the window.
+
+2006-01-19	tmk_pl
+	* MetaDict/Loader_Trigger.cpp 1.4:
+	* MetaDict/MetaObjects.cpp 1.7:
+	* MetaDict/MetaObjects.h 1.2:
+	* Settings/languages.dat 1.2:
+		B#1404162 - Trigger with CALL - unsupported syntax (tMk)
+
+	* DbBrowser/DbSourceWnd.cpp 1.6:
+		B#1373859 - Unserved exception after cancelling Drop
+
+2006-01-16	tmk_pl
+	* MetaDict/Loader_Table.cpp 1.3:
+		B#1407225 - 10g 'Load all in one' problem.
+		Skip objects from recyclebin during extraction of table script.
+
+2005-09-29	tmk_pl
+	* DbBrowser/DbSourceWnd.cpp 1.5:
+		B#1221764. Cutting only SCHAME name.
+
+2005-06-29	tmk_pl
+	* DbBrowser/DbSourceWnd.cpp 1.4:
+		B#1221764 - DROP DATABASE LINK error
+
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.12:
+		R#1078900 - 'Find object' (F12) and focus of editor cursor.
+
+	* MainFrm.cpp 1.3:
+		R#1108078 - Dockable 'Objects list'.
+
+2005-06-20	tmk_pl
+	* DbBrowser/DbObjListCtrl2.cpp 1.2:
+	* DbBrowser/ObjectViewerWnd.cpp 1.7:
+	* Dlg/SchemaList.cpp 1.2:
+	* SQLTools_3.cpp 1.4:
+	* Settings/sqltools.dat 1.2:
+	* Tools/ExtractSchemaHelpers2.cpp 1.2:
+	* Tools/TableTransformer.cpp 1.4:
+		B#1119107 - SYS. & dba_ views for DDL reverse-engineering.
+
+2005-06-17	tmk_pl
+	* DbBrowser/DbSourceWnd.cpp 1.3:
+	* DbBrowser/ObjectTreeBuilder.cpp 1.4:
+	* MetaDict/Loader_Cluster.cpp 1.2:
+	* MetaDict/Loader_Constraint.cpp 1.2:
+	* MetaDict/Loader_DBLink.cpp 1.2:
+	* MetaDict/Loader_Grant.cpp 1.2:
+	* MetaDict/Loader_Index.cpp 1.2:
+	* MetaDict/Loader_PLSCode.cpp 1.3:
+	* MetaDict/Loader_Sequence.cpp 1.2:
+	* MetaDict/Loader_Snapshot.cpp 1.2:
+	* MetaDict/Loader_SnapshotLog.cpp 1.2:
+	* MetaDict/Loader_Synonym.cpp 1.2:
+	* MetaDict/Loader_Table.cpp 1.2:
+	* MetaDict/Loader_Trigger.cpp 1.3:
+	* MetaDict/Loader_View.cpp 1.2:
+	* OCI8/Connect.cpp 1.6:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.11:
+		B#1119107 - SYS. & dba_ views for DDL reverse-engineering.
+
+2005-06-14	tmk_pl
+	* MetaDict/MetaObjects.cpp 1.6:
+		B#1191426 - Invalid COMPRESS index generation.
+		There was mistake in the function Index::Write().
+
+2005-06-13	tmk_pl
+	* MetaDict/MetaObjects.cpp 1.5:
+		Bug was in the function Grant::Write().
+		Putting GRANT in buffer 'out' was doubled inside second loop.
+
+2005-04-28	akochetov
+	* OCI8/Connect.cpp 1.5:
+		introduced STACK_OVERFLOW_GUARD,  better diagnostics for b#
+		1111222
+
+2005-04-22	tmk_pl
+	* History.txt 1.9:
+		Changes in format of the history file.
+
+	* History.txt 1.10:
+		Cosmetic changes (RFE's first; sorting request numbers from 
+		bigger to smaller; added OE prefix to things from the OpenEditor)
+		.
+
+2005-04-21	akochetov
+	* ConnectionBar.cpp 1.2:
+	* MainFrm.cpp 1.2:
+		(ak) changing style after toolbar creation is a workaround for 
+		toolbar background artifacts
+
+	* .cvsignore 1.1:
+		ignore some binary files
+
+2005-04-18	akochetov
+	* SQLTools.rc 1.11:
+		small buf fix, wrong default format for grid timestamp columns
+
+	* Bugs.txt 1.3:
+	* OCI8/ACursor.cpp 1.9:
+	* OCI8/Statement.cpp 1.4:
+	* SQLTools.cpp 1.4:
+	* SQLTools.vcproj 1.8:
+	* SQLTools_2.cpp 1.4:
+	* SQLTools_4.cpp 1.4:
+	* SQLWorksheet/CommandParser.cpp 1.10:
+	* Settings/custom.keymap 1.2:
+	* Settings/default(ms).keymap 1.3:
+	* Settings/default.keymap 1.3:
+		included the latest OpenEditor stuff
+
+	* History.txt 1.7:
+	* History.txt 1.8:
+	* VersionInfo.rh 1.7:
+		build 66
+
+2005-04-13	akochetov
+	* MetaDict/Loader_Trigger.cpp 1.2:
+		small fix
+
+	* MetaDict/MetaObjects.cpp 1.4:
+		bug fix #1181324, (ak) trigger reverse-engineering fails if 
+		description contains comments (again)
+
+2005-04-11	akochetov
+	* CommandLineParser.cpp 1.5:
+	* OpenGrid/GridView.cpp 1.4:
+	* SQLTools.cpp 1.3:
+	* SQLTools.rc 1.10:
+	* SQLTools_2.cpp 1.3:
+	* SQLTools_4.cpp 1.3:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.10:
+	* Settings/default(ms).keymap 1.2:
+	* Settings/default.keymap 1.2:
+	* StdAfx.h 1.3:
+	* Tools/TableTransformer.cpp 1.3:
+	* VersionInfo.rh 1.6:
+		(ak) simplified settings class hierarchy
+
+2005-04-10	akochetov
+	* ChildFrm.cpp 1.2:
+	* ChildFrm.h 1.2:
+		bug fix, flicker on resizing
+
+	* Settings/templates.dat 1.2:
+		typo fix
+
+2005-03-24	tmk_pl
+	* SQLTools.rc 1.9:
+	* SQLTools.vcproj 1.7:
+		Update from OE sources.
+
+2005-03-21	clubok
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.10:
+		Fixed minor bug in bind variables
+
+2005-03-21	akochetov
+	* DbBrowser/ObjectViewerWnd.cpp 1.6:
+		(ak) bug fix, an exception on "Find Object", if some name 
+		component is null
+
+	* SQLWorksheet/CommandParser.cpp 1.9:
+		(ak) sql*plus like behaviour for processing ';/'
+
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.11:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.9:
+	* SQLWorksheet/SQLWorksheetDoc.h 1.6:
+		changed execution time format
+
+	* History.txt 1.6:
+	* ReadMe.txt 1.3:
+		build 64
+
+	* SQLWorksheet/PlSqlAnalyser.cpp 1.4:
+		ak) bug fix, unnecessary bug report on statement, like this "
+		select * from dual;;"
+
+2005-03-14	tmk_pl
+	* SQLWorksheet/CommandParser.cpp 1.8:
+		Hanging with 'invalid string position' [B1159674].
+
+2005-03-14	akochetov
+	* OCI8/Datatypes.cpp 1.6:
+	* OCI8/Datatypes.h 1.5:
+	* SQLWorksheet/BindGridView.cpp 1.3:
+	* SQLWorksheet/BindGridView.h 1.3:
+	* SQLWorksheet/BindParser.cpp 1.2:
+	* SQLWorksheet/BindSource.cpp 1.3:
+	* SQLWorksheet/BindSource.h 1.3:
+	* SQLWorksheet/BindVariableTypes.h 1.1:
+	* SQLWorksheet/Booklet.cpp 1.3:
+	* SQLWorksheet/CommandParser.cpp 1.7:
+	* SQLWorksheet/CommandParser.h 1.5:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.9:
+	* SQLWorksheet/CommandPerformerImpl.h 1.4:
+	* SQLWorksheet/PlSqlAnalyser.cpp 1.3:
+	* SQLWorksheet/PlSqlAnalyser.h 1.2:
+	* SQLWorksheet/PlsSqlParser.h 1.4:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.8:
+	* SQLWorksheet/SQLWorksheetDoc.h 1.5:
+		some changes for bind variables
+
+	* VersionInfo.rh 1.5:
+		141 build 64
+
+2005-03-11	clubok
+	* OCI8/ACursor.cpp 1.8:
+	* OCI8/ACursor.h 1.9:
+	* SQLWorksheet/BindGridView.cpp 1.2:
+	* SQLWorksheet/BindGridView.h 1.2:
+	* SQLWorksheet/BindSource.cpp 1.2:
+	* SQLWorksheet/BindSource.h 1.2:
+	* SQLWorksheet/CommandParser.cpp 1.6:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.8:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.7:
+	* SQLWorksheet/SQLWorksheetDoc.h 1.4:
+		Cleaned up some of the bind variable code
+
+2005-02-08	clubok
+	* OCI8/ACursor.cpp 1.7:
+	* OCI8/ACursor.h 1.8:
+	* OCI8/Datatypes.cpp 1.5:
+	* OCI8/Datatypes.h 1.4:
+	* SQLTools.rc 1.8:
+	* SQLTools.vcproj 1.6:
+	* SQLToolsSettings.cpp 1.4:
+	* SQLToolsSettings.h 1.4:
+	* SQLWorksheet/BindGridView.cpp 1.1:
+	* SQLWorksheet/BindGridView.h 1.1:
+	* SQLWorksheet/BindParser.cpp 1.1:
+	* SQLWorksheet/BindParser.h 1.1:
+	* SQLWorksheet/BindSource.cpp 1.1:
+	* SQLWorksheet/BindSource.h 1.1:
+	* SQLWorksheet/Booklet.cpp 1.2:
+	* SQLWorksheet/Booklet.h 1.2:
+	* SQLWorksheet/CommandParser.cpp 1.5:
+	* SQLWorksheet/CommandParser.h 1.4:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.7:
+	* SQLWorksheet/CommandPerformerImpl.h 1.3:
+	* SQLWorksheet/PlsSqlParser.h 1.3:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.6:
+	* SQLWorksheet/SQLWorksheetDoc.h 1.3:
+	* SQLWorksheet/ScriptAnalyser.cpp 1.2:
+	* res/BookletToolbar.bmp 1.2:
+	* resource1.h 1.5:
+		Request 1105003: Bind variables
+
+2005-01-13	clubok
+	* OpenGrid/GridSourceBase.h 1.4:
+	* OpenGrid/GridSourceBase1.cpp 1.8:
+	* SQLWorksheet/HistorySource.cpp 1.3:
+	* SQLWorksheet/HistorySource.h 1.3:
+		CSV fix: finished rename of IsStringField
+
+2005-01-10	akochetov
+	* History.txt 1.5:
+	* VersionInfo.rh 1.4:
+	* hlp/HTMLDefines.h 1.3:
+		141 build 63
+
+	* OpenGrid/GridManager2.cpp 1.2:
+		small bug fix
+
+	* MetaDict/MetaObjects.cpp 1.3:
+		bug fix, trigger reverse-engineering fails if description 
+		contains comments
+
+	* SQLWorksheet/CommandParser.cpp 1.4:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.6:
+		small improvements
+
+2005-01-09	akochetov
+	* OCI8/Connect.cpp 1.4:
+	* OCI8/Connect.h 1.3:
+		bug fix, memory violation in ~Connect
+
+	* InputDlg.cpp 1.3:
+	* InputDlg.h 1.3:
+		created CPasswordDlg because an attrinute "password" can be 
+		changed dynamicly
+
+	* DbBrowser/ObjectViewerWnd.cpp 1.5:
+	* DbBrowser/ObjectViewerWnd.h 1.3:
+	* SQLTools.rc 1.7:
+		replaced CComboBoxEx with CComboBox because of unpredictable 
+		CComboBoxEx
+
+	* CommandLineParser.cpp 1.4:
+		bug fix: GetConnectionInfo does not handle "/@alias..."
+
+	* OCI8/ACursor.cpp 1.6:
+	* OCI8/ACursor.h 1.7:
+	* OCI8/BCursor.cpp 1.3:
+	* OCI8/BCursor.h 1.3:
+	* OCI8/Statement.cpp 1.3:
+	* OCI8/Statement.h 1.3:
+		OciConnect replaced with Connect
+
+	* SQLWorksheet/CommandParser.cpp 1.3:
+	* SQLWorksheet/CommandParser.h 1.3:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.5:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.5:
+		R1092514: SQL*Plus CONNECT/DISCONNECT commands - small 
+		improvements
+
+2005-01-07	clubok
+	* SQLWorksheet/CommandParser.cpp 1.2:
+	* SQLWorksheet/CommandParser.h 1.2:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.4:
+	* SQLWorksheet/CommandPerformerImpl.h 1.2:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.4:
+		Request 1092514 - SQL*Plus commands: connect/disconnect
+
+2005-01-04	tmk_pl
+	* ToDo-SQLTools.xml 1.3:
+		Added 2 OE items. Closed trigger bug with 'ON'.
+
+2005-01-04	akochetov
+	* VersionInfo.rh 1.3:
+		next build
+
+	* OpenGrid/GridSourceBase1.cpp 1.7:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.3:
+		tiny optimization
+
+	* SQLTools.rc 1.5:
+		changed default format masks for number
+
+	* OCI8/Connect.cpp 1.3:
+	* OCI8/default_oci_handler.cpp 1.2:
+		disabled stack trace for oci exceptions
+
+	* OCI8/Datatypes.cpp 1.4:
+		typo
+
+	* SQLTools_3.cpp 1.3:
+		Empty bug report on disconnect if connection was already lost
+
+2005-01-03	clubok
+	* OCI8/ACursor.cpp 1.4:
+	* OCI8/ACursor.h 1.5:
+	* OpenGrid/GridSourceBase1.cpp 1.4:
+	* SQLTools.aps 1.5:
+		Two fixes for CVS prefix option
+
+	* OpenGrid/GridSourceBase1.cpp 1.5:
+		*** empty log message ***
+
+2005-01-03	akochetov
+	* SQLTools.aps 1.6:
+		it's not a required file
+
+	* InputDlg.cpp 1.2:
+	* InputDlg.h 1.2:
+		added m_password to hide input content
+
+	* OCI8/ACursor.cpp 1.5:
+	* OCI8/ACursor.h 1.6:
+	* OCI8/Datatypes.h 1.3:
+	* OpenGrid/GridSourceBase1.cpp 1.6:
+	* OpenGrid/OCISource.cpp 1.3:
+	* OpenGrid/OCISource.h 1.3:
+		changes for CSV export
+
+	* CommandLineParser.cpp 1.3:
+	* CommandLineParser.h 1.2:
+		added static method CCommandLineParser::GetConnectionInfo
+
+2004-12-27	akochetov
+	* History.txt 1.4:
+	* OCI8/ACursor.cpp 1.3:
+		request 1082797 added support for BINARY_FLOAT and BINARY_DOUBLE
+
+	* CommandLineParser.cpp 1.2:
+		old style streams replaced with new
+
+	* DbBrowser/DbObjListCtrl.cpp 1.2:
+	* DbBrowser/DbObjListCtrl.h 1.2:
+	* DbBrowser/DbSourceWnd.cpp 1.2:
+	* DbBrowser/DbSourceWnd.h 1.2:
+	* DbBrowser/ObjectTreeBuilder.cpp 1.3:
+	* DbBrowser/ObjectViewerWnd.cpp 1.4:
+	* Dlg/AboutDlg.cpp 1.3:
+	* Dlg/ConnectDlg.cpp 1.2:
+	* Dlg/PropGridPage.cpp 1.2:
+	* Dlg/PropGridPage.h 1.2:
+	* History.txt 1.3:
+	* MetaDict/Loader.cpp 1.2:
+	* MetaDict/Loader.h 1.2:
+	* MetaDict/Loader_PLSCode.cpp 1.2:
+	* MetaDict/MetaObjects.cpp 1.2:
+	* OCI8/ACursor.cpp 1.2:
+	* OCI8/ACursor.h 1.4:
+	* OCI8/BCursor.cpp 1.2:
+	* OCI8/BCursor.h 1.2:
+	* OCI8/Connect.cpp 1.2:
+	* OCI8/Connect.h 1.2:
+	* OCI8/Datatypes.cpp 1.2:
+	* OCI8/Datatypes.cpp 1.3:
+	* OCI8/Datatypes.h 1.2:
+	* OCI8/Statement.cpp 1.2:
+	* OCI8/Statement.h 1.2:
+	* OpenGrid/GridView.cpp 1.3:
+	* ReadMe.txt 1.2:
+	* SQLTools.cpp 1.2:
+	* SQLTools.h 1.2:
+	* SQLTools.rc 1.4:
+	* SQLTools.vcproj 1.3:
+	* SQLToolsSettings.cpp 1.3:
+	* SQLToolsSettings.h 1.3:
+	* SQLTools_2.cpp 1.2:
+	* SQLTools_3.cpp 1.2:
+	* SQLTools_4.cpp 1.2:
+	* SQLWorksheet/CommandPerformerImpl.cpp 1.2:
+	* SQLWorksheet/HistoryFileManager.cpp 1.2:
+	* SQLWorksheet/SQLWorksheetDoc.cpp 1.3:
+	* SQLWorksheet/SQLWorksheetDoc.h 1.2:
+	* SQLWorksheet/SQLWorksheetDoc2.cpp 1.2:
+	* StdAfx.h 1.2:
+	* Tools/ExtractSchemaDlg.cpp 1.2:
+	* Tools/ExtractSchemaDlg.h 1.2:
+	* Tools/TableTransformer.cpp 1.2:
+	* Tools/TableTransformer.h 1.2:
+	* VersionInfo.rh 1.2:
+	* hlp/HTMLDefines.h 1.2:
+	* resource1.h 1.3:
+		Branches 58X and 59-60 have been finally merged
+
+2004-12-26	akochetov
+	* SQLWorksheet/PlsSqlParser.h 1.2:
+		added SimpleSyntaxAnalyser - a simple helper class
+
+	* hlp/sqltools.chm 1.4:
+		removed because it is the result of compilation
+
+	* DbBrowser/ObjectViewerWnd.cpp 1.3:
+	* DbBrowser/ObjectViewerWnd.h 1.2:
+	* SQLTools.aps 1.4:
+	* SQLTools.rc 1.3:
+	* res/bmp00003.bmp 1.2:
+		Find Object/Object Viewer improvements
+
+	* AbortThread/AbortThread.cpp 1.2:
+	* AbortThread/AbortThread.h 1.2:
+		added abortDlgShowDelay to override a default settings value
+
+	* DbBrowser/ObjectTreeBuilder.cpp 1.2:
+		changed default value for abortDlgShowDelay to avoid moving 
+		focus to the main window
+
+	* OpenGrid/GridSourceBase.h 1.3:
+		modified to suppress warning
+
+2004-12-22	clubok
+	* OCI8/ACursor.h 1.3:
+	* OpenGrid/GridSourceBase1.cpp 1.3:
+		Bug 1078884: XML Export
+
+2004-12-19	clubok
+	* Dlg/PropGridOutputPage.cpp 1.2:
+	* OCI8/ACursor.h 1.2:
+	* OpenGrid/GridSourceBase.h 1.2:
+	* OpenGrid/GridSourceBase0.cpp 1.2:
+	* OpenGrid/GridSourceBase1.cpp 1.2:
+	* OpenGrid/GridView.cpp 1.2:
+	* OpenGrid/OCISource.cpp 1.2:
+	* OpenGrid/OCISource.h 1.2:
+	* SQLTools.aps 1.3:
+	* SQLTools.rc 1.2:
+	* SQLToolsSettings.cpp 1.2:
+	* SQLToolsSettings.h 1.2:
+	* SQLWorksheet/HistorySource.cpp 1.2:
+	* SQLWorksheet/HistorySource.h 1.2:
+	* resource1.h 1.2:
+		Added CVS prefix option to grid export.  Default of "=" will 
+		prevent Excel from dropping leading zeros.
+
