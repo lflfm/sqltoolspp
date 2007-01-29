@@ -386,7 +386,7 @@ void fetchObjectDescriptors (OciCursor& cursor, std::vector<ObjectDescriptor>& r
         cursor.GetString(2, desc.type);
         result.push_back(desc);
 
-        TRACE("FOUND: %s.%s.%\n", desc.owner.c_str(), desc.name.c_str(), desc.type.c_str());
+        TRACE("FOUND: %s.%s.%s\n", desc.owner.c_str(), desc.name.c_str(), desc.type.c_str());
 
         // problem with public.% :(
         if (rows > 300)
