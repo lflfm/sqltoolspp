@@ -50,6 +50,7 @@ public:
     bool HasErrors () const             { return m_Errors; }
     bool IsLastStatementSelect () const { return m_LastStatementIsSelect; }
 	bool IsLastStatementBind () const	{ return m_LastStatementIsBind; }
+    double GetLastExecTime () const     { return m_LastExecTime; }
 
     std::auto_ptr<OciAutoCursor> GetCursorOwnership ();
 private:
@@ -59,6 +60,7 @@ private:
 
     int m_statementCount;
     bool m_Errors, m_LastStatementIsSelect, m_LastStatementIsBind;
+	double m_LastExecTime;
 
     // prohibited
     CommandPerformerImpl (const CommandPerformerImpl&);

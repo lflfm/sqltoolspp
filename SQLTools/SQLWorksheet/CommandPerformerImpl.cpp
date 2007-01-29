@@ -146,6 +146,8 @@ void CommandPerformerImpl::DoExecuteSql (CommandParser& commandParser, const str
         message << ", executed in ";
         CPLSWorksheetDoc::PrintExecTime(message, execTime);
 
+		m_LastExecTime = execTime;
+
         m_doc.PutMessage(message.str(), commandParser.GetBaseLine());
 
         // TODO: recognize changed variables, highlight them and switch to the "bins" page
