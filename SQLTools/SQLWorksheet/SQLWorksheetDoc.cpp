@@ -69,6 +69,8 @@
 #include "AbortThread/AbortThread.h"
 #include "CommandPerformerImpl.h"
 
+#include "XPlanView.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -137,12 +139,18 @@ void CPLSWorksheetDoc::Init ()
     m_pExplainPlan = new CExplainPlanView;
 	m_pBindGrid = new BindGridView;
 
+	m_pXPlan = new cXPlanEdit;
+
+	m_pXPlan->setOldView(m_pExplainPlan);
+
     if (!m_pHistory)
         m_pHistory  = new CHistoryView;
 }
 
 CPLSWorksheetDoc::~CPLSWorksheetDoc()
 {
+	if (m_pXPlan)
+		delete m_pXPlan;
 }
 
 // 06.18.2003 bug fix, SaveFile dialog occurs for pl/sql files which are loaded from db
@@ -253,8 +261,20 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
             if (sel.is_empty()) // make default selection
             {
                 sel.start.column = 0;
-                // from the current line
+                // search from the current line to top for blank line
                 sel.start.line = m_pEditor->GetPosition().line;
+
+				const char *linePtr;
+				int len;
+
+				while (sel.start.line > 0)
+				{
+					m_pEditor->GetLine(sel.start.line - 1, linePtr, len);
+					if (len == 0)
+						break;
+
+					sel.start.line--;
+				}
                 // to the bottom
                 sel.end.column = INT_MAX;
                 sel.end.line   = INT_MAX;
@@ -276,12 +296,21 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
             {
                 int len;
                 const char* str;
-                m_pEditor->GetLine(line, str, len);
+				// dummy variable for bugfix
+				// Prevent null pointer assertion failure in case of blank line returned by editor
+				const char dummy = '\0';
+
+				m_pEditor->GetLine(line, str, len);
 
                 if (line == sel.end.line) len = min(len, sel.end.column);
 
-                commandParser.PutLine(str + offset, len - offset);
-                offset = 0;
+                if (len > 0)
+					commandParser.PutLine(str + offset, len - offset);
+				else
+					// Prevent null pointer assertion failure
+					commandParser.PutLine(&dummy, len);
+
+				offset = 0;
 
                 if (performer.IsCompleted())
                     break;
@@ -347,8 +376,23 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
 
                 if (mode == ALL) // from the top
                     sel.start.line = 0;
-                else             // from the current line
+                else             // search from the current line to top for blank line
+				{
                     sel.start.line = m_pEditor->GetPosition().line;
+
+					const char *linePtr;
+					int len;
+
+					while (sel.start.line > 0)
+					{
+						m_pEditor->GetLine(sel.start.line - 1, linePtr, len);
+						if (len == 0)
+							break;
+
+						sel.start.line--;
+					}
+				}
+
                 // to the bottom
                 sel.end.column = INT_MAX;
                 sel.end.line   = INT_MAX;
@@ -369,13 +413,23 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
             {
                 int len;
                 const char* str;
+
+				// dummy variable for bugfix
+				// Prevent null pointer assertion failure in case of blank line returned by editor
+				const char dummy = '\0';
+
                 m_pEditor->GetLine(line, str, len);
 
                 if (line == sel.end.line)
                     len = min(len, sel.end.column);
 
-                commandParser.PutLine(str + offset, len - offset);
-                offset = 0;
+                if (len > 0)
+					commandParser.PutLine(str + offset, len - offset);
+				else
+					// Prevent null pointer assertion failure
+					commandParser.PutLine(&dummy, len);
+                
+				offset = 0;
 
                 if (performer.GetStatementCount() && mode != ALL)
                     break;
@@ -385,7 +439,7 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
             bool switchToEditor = m_pEditor->GetParentFrame()->GetActiveView() == m_pEditor ? true : false;
 
             if (!performer.HasErrors() && performer.IsLastStatementSelect())
-                ShowSelectResult(performer.GetCursorOwnership());
+				ShowSelectResult(performer.GetCursorOwnership(), performer.GetLastExecTime());
 
 			if (!performer.HasErrors() && performer.IsLastStatementBind())
                 ActivateTab(m_pBindGrid);
@@ -462,19 +516,26 @@ void CPLSWorksheetDoc::MakeStep (int curLine)
     GoTo(line);
 }
 
-void CPLSWorksheetDoc::ShowSelectResult (std::auto_ptr<OciAutoCursor>& cursor)
+void CPLSWorksheetDoc::ShowSelectResult (std::auto_ptr<OciAutoCursor>& cursor, double lastExecTime)
 {
     ActivateTab(m_pDbGrid);
     clock_t startTime = clock();
     m_pDbGrid->SetCursor(cursor);
 
     ostringstream out;
-    out << "  " << m_pDbGrid->GetRecordCount()
+	out << "Statement executed in ";
+	PrintExecTime(out, lastExecTime);
+    out << ", " << m_pDbGrid->GetRecordCount()
         << " first records fetched in ";
     PrintExecTime(out, (double(clock() - startTime)/ CLOCKS_PER_SEC));
 
-    PutMessage(out.str());
-    Global::SetStatusText(out.str());
+	Global::SetStatusText(out.str());
+
+    ostringstream out_message;
+    out_message << " " << m_pDbGrid->GetRecordCount()
+        << " first records fetched in ";
+    PrintExecTime(out_message, (double(clock() - startTime)/ CLOCKS_PER_SEC));
+    PutMessage(out_message.str());
 }
 
 
