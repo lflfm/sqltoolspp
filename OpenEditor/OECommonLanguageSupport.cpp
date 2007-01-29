@@ -211,7 +211,9 @@ bool CommonLanguageSupport::FindMatch (int _line, int _offset, Match& match)
         {
             if (!match.backward ? (it->position >= offset) : (it->position <= offset))
             {
-                MatchEntry& top = cxt.matchStack.top();
+				MatchEntry& top = MatchEntry(1);
+				if (!cxt.matchStack.empty())
+					top = cxt.matchStack.top();
 
                 if (cxt.matchStack.empty()
                 || top.IsOrientationSame(*it))
