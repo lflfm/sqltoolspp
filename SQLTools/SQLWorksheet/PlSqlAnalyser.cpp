@@ -278,7 +278,8 @@ void PlSqlAnalyser::PutToken (const Token& token)
         case SQL:
             if (token == etSEMICOLON
             // 13.12.2004 bug fix, '/' might be recognized as a statement separator at any position
-            || (token == etSLASH && !token.offset))
+            || (token == etSLASH && !token.offset)
+			|| (token == etEOL && token.offset == 0))
                 m_state = COMPLETED;
             break;
         case TRIGGER:
