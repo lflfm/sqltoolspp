@@ -33,6 +33,9 @@
 #include <OCI8/BCursor.h>
 #include "ExplainPlanView.h"
 
+#include "XPlanView.h"
+#include "Booklet.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -57,6 +60,8 @@ const int ps_optimizer   = 7;
 const int ps_cost        = 8;
 const int ps_cardinality = 9;
 const int ps_bytes       = 10;
+
+static const char expl_xplan[] = "select plan_table_output from table(dbms_xplan.display('<PLAN_TABLE>', :sttm_id, 'ALL'))";
 
 LPSCSTR expl_sttm[2] = {
     "SELECT operation," //  0
@@ -229,6 +234,59 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 
         explan_curs.Close();
 
+		if (m_connect.GetVersion() >= OCI8::esvServer9X)
+		{
+			string text;
+
+			subst.ResetContent();
+			subst.ResetResult();
+			subst.AddPair("<PLAN_TABLE>", GetSQLToolsSettings().GetPlanTable());
+			subst << expl_xplan;
+
+			explan_curs.Prepare(subst.GetResult());
+			explan_curs.Bind(":sttm_id", sttm_id);
+
+			explan_curs.Execute();
+			while (explan_curs.Fetch()) 
+			{
+				explan_curs.GetString(0, buff);
+				text += buff;
+				text += "\r\n";
+			}
+
+	        explan_curs.Close();
+
+			/*
+			POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
+
+			if (CDocTemplate* pDocTemplate = AfxGetApp()->GetNextDocTemplate(pos))
+			{
+				if (CDocument* doc = pDocTemplate->OpenDocumentFile(NULL))
+				{
+					CMemFile mf((BYTE*)text.c_str(), text.length());
+					CArchive ar(&mf, CArchive::load);
+					doc->Serialize(ar);
+
+					// it's bad because of dependency on CPLSWorksheetDoc
+					ASSERT_KINDOF(CPLSWorksheetDoc, doc);
+					CPLSWorksheetDoc* pDoc = (CPLSWorksheetDoc*)doc;
+
+					// 03.06.2003 bug fix, "Open In Editor" does not set document type
+					// 29.06.2003 bug fix, "Open In Editor" fails on comma/tab delimited formats
+					const char* name = "Text";
+
+					pDoc->SetClassSetting(name);
+					// 22.03.2004 bug fix, CreareAs file property is ignored for "Open In Editor", "Query", etc (always in Unix format)
+					pDoc->SetSaveAsToDefault();
+				}
+			}
+			*/
+
+			m_pXPlan->SetWindowText(text.c_str());
+		}
+		else
+			m_pXPlan->SetWindowText("");
+
         subst.ResetContent();
         subst.ResetResult();
         subst.AddPair("<PLAN_TABLE>", GetSQLToolsSettings().GetPlanTable());
@@ -249,7 +307,14 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
         tree.Invalidate();
         tree.SetFocus();
 
-        ActivateTab(m_pExplainPlan);
+		ActivateTab(m_pExplainPlan);
+
+		if (m_pXPlan->GetWindowTextLength() > 0)
+		{
+			m_pBooklet->getActiveView()->ShowWindow(SW_HIDE);
+			m_pXPlan->ShowWindow(SW_SHOW);
+			m_pXPlan->SetFocus();
+		}
     //} 
     //_DEFAULT_HANDLER_
 }
