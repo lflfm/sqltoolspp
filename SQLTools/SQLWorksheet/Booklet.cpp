@@ -26,6 +26,8 @@
 #include "SQLWorksheetDoc.h"
 #include <OpenGrid/GridView.h>
 
+#include "XPlanView.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -128,7 +130,19 @@ bool CBooklet::SetDocument (CPLSWorksheetDoc* doc)
             m_Tabs.push_back(m_pDocument->m_BookletFamily[i]);
         }
 
-        ActivateTab(0);
+		//SSNOTIFY CView: Create(NULL, NULL, WS_CHILD|WS_HSCROLL|WS_VSCROLL|ES_MULTILINE|ES_WANTRETURN, CRect(0,0,0,0), this, 111))
+		if (! m_pDocument->m_pXPlan->Create(ES_READONLY|ES_MULTILINE|ES_WANTRETURN|WS_CHILD|WS_HSCROLL|WS_VSCROLL|WS_VISIBLE, CRect(0,0,0,0), this, 111))
+		{
+            MessageBeep((UINT)-1);
+            AfxMessageBox("Fatal error: cannot create a new XPlan window.");
+            AfxThrowUserException( );
+		}
+		else
+		{
+			// m_pDocument->AddView(m_pDocument->m_pXPlan);
+		}
+
+		ActivateTab(0);
     }
     return true;
 }
@@ -139,7 +153,10 @@ void CBooklet::ActivateTab (int nTab)
 
     if (nTab < static_cast<int>(m_Tabs.size()))
     {
-        if (getActiveView())
+		if (m_pDocument->m_pXPlan->IsWindowVisible())
+			m_pDocument->m_pXPlan->ShowWindow(SW_HIDE);
+
+		if (getActiveView())
             getActiveView()->ShowWindow(SW_HIDE);
 
         m_nActiveItem = nTab;
@@ -269,6 +286,9 @@ void CBooklet::OnSize (UINT nType, int cx, int cy)
             if (m_Tabs[i])
                 m_Tabs[i]->SetWindowPos(0, 0, rc.Height()-1, cx, cy - rc.Height()+1, SWP_NOZORDER);
 	    }
+
+		if (m_pDocument)
+			m_pDocument->m_pXPlan->SetWindowPos(0, 0, rc.Height()-1, cx, cy - rc.Height()+1, SWP_NOZORDER);
     }
 }
 
@@ -302,6 +322,13 @@ void CBooklet::OnPlan ()
 {
     ActivateTab(2);
     getActiveView()->SetFocus();
+
+	if (m_pDocument->m_pXPlan->GetWindowTextLength() > 0)
+	{
+		getActiveView()->ShowWindow(SW_HIDE);
+		m_pDocument->m_pXPlan->ShowWindow(SW_SHOW);
+		m_pDocument->m_pXPlan->SetFocus();
+	}
 }
 
 void CBooklet::OnOutput ()
@@ -345,6 +372,18 @@ void CBooklet::OnInitialUpdate()
             m_pDocument->AddView(m_pDocument->m_BookletFamily[i]);
             m_Tabs.push_back(m_pDocument->m_BookletFamily[i]);
         }
+
+		//SSNOTIFY CView: Create(NULL, NULL, WS_CHILD|WS_HSCROLL|WS_VSCROLL|ES_MULTILINE|ES_WANTRETURN, CRect(0,0,0,0), this, 111))
+		if (! m_pDocument->m_pXPlan->Create(ES_READONLY|ES_MULTILINE|ES_WANTRETURN|WS_CHILD|WS_HSCROLL|WS_VSCROLL, CRect(0,0,0,0), this, 111))
+		{
+            MessageBeep((UINT)-1);
+            AfxMessageBox("Fatal error: cannot create a new XPlan window.");
+            AfxThrowUserException( );
+		}
+		else
+		{
+			// m_pDocument->AddView(m_pDocument->m_pXPlan);
+		}
 
         ActivateTab(0);
     }
