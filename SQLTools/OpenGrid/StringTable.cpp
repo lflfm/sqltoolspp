@@ -83,11 +83,23 @@ void StringTable::GetMaxRowLength (nvector<size_t>& result) const
                 if (*it == '\n' && ++nlines == lim) 
                     break;
 
-            if (nlines > 1
-            && str.size() > 0
-            && it == str.end() 
-            && *(--it) == '\n' || *(it) == '\r')
-                nlines--;
+			if (nlines > 1
+			&& str.size() > 0
+			&& it == str.end())
+			{
+				if (*(--it) == '\n')
+				{
+					nlines--;
+				}
+			}
+			
+			if (it != str.end())
+			{
+			    if (*(it) == '\r')
+				{
+					nlines--;
+				}
+			}
         }
         return nlines;
     }
