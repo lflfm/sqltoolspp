@@ -50,6 +50,8 @@ public:
     void CView::OnDraw(CDC*) {}
 	//}}AFX_VIRTUAL
 
+    CView* getActiveView () const                   { return m_Tabs.at(m_nActiveItem); }
+
 protected:
 	//{{AFX_MSG(CBooklet)
 	afx_msg int  OnCreate (LPCREATESTRUCT lpCreateStruct);
@@ -67,8 +69,6 @@ protected:
 
     // Attributes
 private:
-    CView* getActiveView () const                   { return m_Tabs.at(m_nActiveItem); }
-
     bool m_tabPinned;
     int m_nActiveItem;
     std::vector<CView*> m_Tabs;
