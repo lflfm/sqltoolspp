@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="windows-1251"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8,00"
@@ -21,7 +21,7 @@
 			IntermediateDirectory=".\..\_output_\Debug\objs"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
-			UseOfMFC="2"
+			UseOfMFC="1"
 			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
@@ -51,10 +51,10 @@
 				AdditionalOptions="/Zm200 /EHa"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;..;..\OpenEditor;..\3DPARTY;..\3DPARTY\ARG\include;..\3DPARTY\BOOST"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_AFXDLL;BUILD_TYPE=1"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;BUILD_TYPE=1"
 				MinimalRebuild="false"
 				ExceptionHandling="0"
-				RuntimeLibrary="2"
+				RuntimeLibrary="1"
 				ForceConformanceInForLoopScope="false"
 				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="2"
@@ -2405,6 +2405,10 @@
 				RelativePath=".\DbBrowser\TreeViewer.h"
 				>
 			</File>
+			<File
+				RelativePath=".\SQLWorksheet\XPlanView.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Dlg"
@@ -2999,6 +3003,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\SQLWorksheet\XPlanView.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="bugs.txt"
