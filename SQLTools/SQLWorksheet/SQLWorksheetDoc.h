@@ -51,6 +51,8 @@
     class CExplainPlanView;
 	class BindGridView;
 
+	class cXPlanEdit;
+
     class SQLToolsSettings;
 
     namespace OG2 {
@@ -78,6 +80,9 @@ class CPLSWorksheetDoc : public COEDocument
         {
             COEditorView* m_pEditor;
             CBooklet*     m_pBooklet;
+			// cXPlanView* m_pXPlan;
+			cXPlanEdit* m_pXPlan;
+			// CEdit* m_pXPlan;
             union
             {
                 struct
@@ -119,7 +124,7 @@ public:
     void DoSqlExecute (int);
 
     void MakeStep (int curLine);
-    void ShowSelectResult (std::auto_ptr<OciAutoCursor>& cursor);
+    void ShowSelectResult (std::auto_ptr<OciAutoCursor>& cursor, double lastExecTime);
     void ShowOutput (bool error);
     int  LoadErrors (const char* owner, const char* name, const char* type, int line);
     void FetchDbmsOutputLines ();
