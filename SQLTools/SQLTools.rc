@@ -226,14 +226,15 @@ BEGIN
     CONTROL         "Tab1",IDC_DS_TAB,"SysTabControl32",TCS_MULTILINE | 
                     TCS_FOCUSNEVER | WS_TABSTOP,0,19,442,88
     PUSHBUTTON      "&Load",IDC_DS_LOAD,0,111,45,14
-    PUSHBUTTON      "&Compile",IDC_DS_COMPILE,46,111,45,14
+    PUSHBUTTON      "Comp&ile",IDC_DS_COMPILE,46,111,45,14
     PUSHBUTTON      "&Drop",IDC_DS_DELETE,92,111,45,14
     PUSHBUTTON      "&Refresh",IDC_DS_REFRESH,138,111,45,14
     CHECKBOX        "&Other   »",IDC_DS_OTHER,184,111,45,14,BS_PUSHLIKE
     CHECKBOX        "O&ptions   »",IDC_DS_OPTIONS,230,111,45,14,BS_PUSHLIKE
     CHECKBOX        "Close",IDC_DS_CANCEL,276,111,45,14,BS_PUSHLIKE
+    PUSHBUTTON      "&Copy",IDC_DS_COPY,322,111,45,14
     CONTROL         "Total: %   Selected: %",IDC_DS_STATUS,"Static",
-                    SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,322,113,120,11,
+                    SS_LEFTNOWORDWRAP | SS_NOPREFIX | WS_GROUP,368,113,74,11,
                     WS_EX_STATICEDGE
     CONTROL         "As List",IDC_DS_AS_LIST,"Button",BS_AUTORADIOBUTTON | 
                     BS_ICON | BS_PUSHLIKE | WS_GROUP | WS_TABSTOP,1,2,15,14
@@ -247,7 +248,7 @@ BEGIN
     CONTROL         "Invalid",IDC_DS_INVALID,"Button",BS_AUTOCHECKBOX | 
                     BS_ICON | BS_PUSHLIKE | WS_TABSTOP,212,2,15,14
     LTEXT           "&Filter:",IDC_STATIC,236,4,18,8,NOT WS_VISIBLE
-    COMBOBOX        IDC_DS_FILTER,257,2,185,121,CBS_DROPDOWN | CBS_SORT | 
+    COMBOBOX        IDC_DS_FILTER,257,2,127,121,CBS_DROPDOWN | CBS_SORT | 
                     WS_DISABLED | WS_VSCROLL | WS_TABSTOP
 END
 
@@ -1512,8 +1513,10 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Load",                       IDC_DS_LOAD
         MENUITEM "L&oad ""all in one""",        IDC_DS_LOAD_ALL_IN_ONE
-        MENUITEM "&Compile",                    IDC_DS_COMPILE
+        MENUITEM "Comp&ile",                    IDC_DS_COMPILE
         MENUITEM "&Drop",                       IDC_DS_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "&Copy",                       IDC_DS_COPY
         MENUITEM SEPARATOR
         MENUITEM "&Enable",                     IDC_DS_ENABLE, GRAYED
         MENUITEM "D&isable",                    IDC_DS_DISABLE, GRAYED
@@ -1736,6 +1739,7 @@ BEGIN
     IDC_DS_AS_REPORT        "Show objects window as details list\nDetails"
     IDC_DS_VALID            "Show only valid objects\nValid"
     IDC_DS_INVALID          "Show only invalid objects\nInvalid"
+    IDC_DS_COPY             "Copy selected objects to clipboard\nCopy selected objects to clipboard"
 END
 
 STRINGTABLE 
