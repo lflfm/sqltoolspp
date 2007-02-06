@@ -190,6 +190,7 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_COMMAND(IDC_DS_LOAD, OnLoad)
     ON_COMMAND(IDC_DS_LOAD_ALL_IN_ONE, OnLoadAsOne)
     ON_COMMAND(IDC_DS_COMPILE, OnCompile)
+    ON_COMMAND(IDC_DS_COPY, OnCopy)
     ON_COMMAND(IDC_DS_DELETE, OnDelete)
     ON_COMMAND(IDC_DS_DISABLE, OnDisable)
     ON_COMMAND(IDC_DS_ENABLE, OnEnable)
@@ -423,7 +424,7 @@ void CDbSourceWnd::OnSize (UINT nType, int cx, int cy)
         {
             IDC_DS_LOAD, IDC_DS_COMPILE, IDC_DS_DELETE,
             IDC_DS_REFRESH, IDC_DS_OTHER, IDC_DS_OPTIONS,
-            IDC_DS_CANCEL, IDC_DS_STATUS
+            IDC_DS_CANCEL, IDC_DS_COPY, IDC_DS_STATUS
         };
 		int nRightChildrenCount = sizeof nRightChildren / sizeof nRightChildren[0];
 		int nTopChildrenCount = sizeof nTopChildren / sizeof nTopChildren[0];
@@ -1046,6 +1047,79 @@ void CDbSourceWnd::OnCompile ()
             Do(&CDbSourceWnd::DoCompileBody, wndListCtrl, "Compiling %s ...", "TYPE");
         else
             Do(&CDbSourceWnd::DoAlter, wndListCtrl, "COMPILE", "Compiling %s ...");
+    }
+}
+
+void CDbSourceWnd::OnCopy_Public()
+{
+	OnCopy();
+}
+
+
+void CDbSourceWnd::OnCopy ()
+{
+    if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
+    {
+        LV_ITEM lvi;
+        memset(&lvi, 0, sizeof lvi);
+        lvi.mask = LVIF_TEXT|LVIF_PARAM;
+        char szBuff[NAME_MAX_SIZE]; 
+        lvi.pszText = szBuff;
+        lvi.cchTextMax = sizeof szBuff;
+
+		string s_theTextList;
+		string s_delimiter = "";
+
+        int index = -1;
+        while ((index = wndListCtrl->GetNextItem(index, LVNI_SELECTED))!=-1) 
+        {
+            lvi.iItem      = index;
+            lvi.iSubItem   = 0;
+            lvi.pszText    = szBuff;
+            lvi.cchTextMax = sizeof szBuff;
+            if (!wndListCtrl->GetItem(&lvi)) {
+                AfxMessageBox("Unknown error!");
+                AfxThrowUserException();
+            }
+
+			s_theTextList += s_delimiter + lvi.pszText;
+			s_delimiter = ", ";
+        }
+
+		// AfxMessageBox(s_theTextList.c_str());
+
+		if (::OpenClipboard(NULL))
+		{
+			CWaitCursor wait;
+
+			::EmptyClipboard();
+
+			if (s_theTextList.size())
+			{
+				HGLOBAL hDataSrc = ::GetClipboardData(CF_TEXT);
+				const char* src = hDataSrc ? (const char*)::GlobalLock(hDataSrc) : NULL;
+				size_t length = src ? strlen(src) : 0; 
+	            
+				HGLOBAL hDataDest = ::GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, length + s_theTextList.size() + 1);
+				if (hDataDest)
+				{
+					char* dest = (char*)::GlobalLock(hDataDest);
+					if (dest) 
+					{
+						if (src) memcpy(dest, src, length);
+						memcpy(dest + length, s_theTextList.c_str(), s_theTextList.size() + 1);
+					}
+					if (hDataSrc) ::GlobalUnlock(hDataSrc);
+					::GlobalUnlock(hDataDest);
+					::EmptyClipboard();
+					::SetClipboardData(CF_TEXT, hDataDest);
+				}
+			}
+
+			::CloseClipboard();
+		}
+
+		Global::SetStatusText("Copied to clipboard: " + s_theTextList);
     }
 }
 
