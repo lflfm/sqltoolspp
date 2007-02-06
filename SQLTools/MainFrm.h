@@ -46,6 +46,10 @@ public:
     
     CConnectionBar& GetConnectionBar ()     { return m_wndConnectionBar; }
 
+	CWorkbookControlBar& GetObjectViewerFrame() { return m_wndObjectViewerFrame; }
+
+	void OnSqlObjViewer_Public();
+
 	//{{AFX_VIRTUAL(CMDIMainFrame)
 	//}}AFX_VIRTUAL
 
@@ -83,6 +87,7 @@ protected:
 	afx_msg void OnSqlDbSource();
 	afx_msg void OnUpdate_SqlDbSource(CCmdUI* pCmdUI);
 	afx_msg void OnFileGrep();
+	afx_msg void OnObjectListCopy();
 	afx_msg void OnFileShowGrepOutput();
 	afx_msg void OnUpdate_FileShowGrepOutput(CCmdUI* pCmdUI);
 	afx_msg void OnUpdate_FileGrep(CCmdUI* pCmdUI);

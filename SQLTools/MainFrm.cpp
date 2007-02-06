@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CMDIMainFrame, CWorkbookMDIFrame)
 	ON_COMMAND(ID_VIEW_FILE_TOOLBAR, OnViewFileToolbar)
 	ON_COMMAND(ID_VIEW_SQL_TOOLBAR, OnViewSqlToolbar)
 	ON_COMMAND(ID_VIEW_CONNECT_TOOLBAR, OnViewConnectToolbar)
+	ON_COMMAND(IDC_DS_COPY, OnObjectListCopy)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_FILE_TOOLBAR, OnUpdate_FileToolbar)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_SQL_TOOLBAR, OnUpdate_SqlToolbar)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_CONNECT_TOOLBAR, OnUpdate_ConnectToolbar)
@@ -266,6 +267,11 @@ int CMDIMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 /////////////////////////////////////////////////////////////////////////////
 // CMDIMainFrame message handlers
 
+void CMDIMainFrame::OnSqlObjViewer_Public()
+{
+    OnSqlObjViewer();
+}
+
 void CMDIMainFrame::OnSqlObjViewer()
 {
     ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
@@ -335,6 +341,11 @@ void CMDIMainFrame::OnViewSqlToolbar ()
 void CMDIMainFrame::OnViewConnectToolbar ()
 {
     ShowControlBar(&m_wndConnectionBar, !m_wndConnectionBar.IsVisible(), FALSE);
+}
+
+void CMDIMainFrame::OnObjectListCopy ()
+{
+	m_wndDbSourceWnd.OnCopy_Public();
 }
 
 void CMDIMainFrame::OnUpdate_FileToolbar (CCmdUI* pCmdUI)
