@@ -126,6 +126,8 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
     CTreeCtrl& tree = m_pExplainPlan->GetTreeCtrl();
     tree.DeleteAllItems();
 
+	m_pXPlan->SetWindowText("");
+
     //try { EXCEPTION_FRAME;
 
         int ver = (m_connect.GetVersion() < OCI8::esvServer80X) ? 0 : 1;
@@ -256,36 +258,8 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 
 	        explan_curs.Close();
 
-			/*
-			POSITION pos = AfxGetApp()->GetFirstDocTemplatePosition();
-
-			if (CDocTemplate* pDocTemplate = AfxGetApp()->GetNextDocTemplate(pos))
-			{
-				if (CDocument* doc = pDocTemplate->OpenDocumentFile(NULL))
-				{
-					CMemFile mf((BYTE*)text.c_str(), text.length());
-					CArchive ar(&mf, CArchive::load);
-					doc->Serialize(ar);
-
-					// it's bad because of dependency on CPLSWorksheetDoc
-					ASSERT_KINDOF(CPLSWorksheetDoc, doc);
-					CPLSWorksheetDoc* pDoc = (CPLSWorksheetDoc*)doc;
-
-					// 03.06.2003 bug fix, "Open In Editor" does not set document type
-					// 29.06.2003 bug fix, "Open In Editor" fails on comma/tab delimited formats
-					const char* name = "Text";
-
-					pDoc->SetClassSetting(name);
-					// 22.03.2004 bug fix, CreareAs file property is ignored for "Open In Editor", "Query", etc (always in Unix format)
-					pDoc->SetSaveAsToDefault();
-				}
-			}
-			*/
-
 			m_pXPlan->SetWindowText(text.c_str());
 		}
-		else
-			m_pXPlan->SetWindowText("");
 
         subst.ResetContent();
         subst.ResetResult();
@@ -309,12 +283,13 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 
 		ActivateTab(m_pExplainPlan);
 
-		if (m_pXPlan->GetWindowTextLength() > 0)
-		{
-			m_pBooklet->getActiveView()->ShowWindow(SW_HIDE);
-			m_pXPlan->ShowWindow(SW_SHOW);
-			m_pXPlan->SetFocus();
-		}
+		if (!m_pBooklet->IsTabPinned())
+			if (m_pXPlan->GetWindowTextLength() > 0)
+			{
+				m_pBooklet->getActiveView()->ShowWindow(SW_HIDE);
+				m_pXPlan->ShowWindow(SW_SHOW);
+				m_pXPlan->SetFocus();
+			}
     //} 
     //_DEFAULT_HANDLER_
 }
