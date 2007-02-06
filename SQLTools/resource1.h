@@ -276,6 +276,7 @@
 #define IDC_FF_TEXT                     1604
 #define IDC_DS_INVALID                  1605
 #define IDC_DS_FILTER                   1606
+#define IDC_DS_COPY                     1621
 #define IDC_DS_LOAD                     1607
 #define IDC_DS_LOAD_ALL_IN_ONE          1608
 #define IDC_DS_COMPILE                  1609
