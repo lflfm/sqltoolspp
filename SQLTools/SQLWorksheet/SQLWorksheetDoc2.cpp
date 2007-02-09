@@ -63,6 +63,8 @@ const int ps_bytes       = 10;
 
 static const char expl_xplan[] = "select plan_table_output from table(dbms_xplan.display('<PLAN_TABLE>', :sttm_id, 'ALL'))";
 
+static const char expl_xplan_display_cursor[] = "select plan_table_output from table(dbms_xplan.display_cursor(NULL, NULL, 'ALLSTATS LAST'))";
+
 LPSCSTR expl_sttm[2] = {
     "SELECT operation," //  0
             "options,"        //  1
@@ -120,6 +122,28 @@ CTypeMap::TData _typeMap [] = {
 };
 
 CTypeMap typeMap = { sizeof _typeMap / sizeof _typeMap[0], _typeMap };
+
+
+void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
+{
+	if (m_connect.GetVersion() >= OCI8::esvServer10X)
+	{
+		string text, buff;
+		OciCursor explan_curs(GetApp()->GetConnect(), expl_xplan_display_cursor);
+
+		explan_curs.Execute();
+		while (explan_curs.Fetch()) 
+		{
+			explan_curs.GetString(0, buff);
+			text += buff;
+			text += "\r\n";
+		}
+
+        explan_curs.Close();
+
+		m_pXPlan->SetWindowText(text.c_str());
+	}
+}
 
 void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 {

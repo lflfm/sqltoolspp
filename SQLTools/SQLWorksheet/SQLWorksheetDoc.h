@@ -131,6 +131,7 @@ public:
     void AdjustErrorPosToLastLine (int& line, int& col) const;
 
     void DoSqlExplainPlan (const string&);
+	void DoSqlDbmsXPlanDisplayCursor();
 
     void GoTo (int);
 

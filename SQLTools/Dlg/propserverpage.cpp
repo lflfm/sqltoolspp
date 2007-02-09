@@ -73,4 +73,5 @@ void CPropServerPage::DoDataExchange(CDataExchange* pDX)
     SendDlgItemMessage(IDC_SERV_PROP_CANCEL_QUERY_DELAY_SPIN, UDM_SETRANGE32, 0, 60 * 60);
 
     DDX_Check(pDX, IDC_SERV_PROP_TOPMOST_CANCEL_QUERY, m_settings.m_TopmostCancelQuery);
+    DDX_Check(pDX, IDC_SERV_PROP_DISPLAY_CURSOR, m_settings.m_DbmsXplanDisplayCursor);
 }

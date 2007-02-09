@@ -322,6 +322,11 @@ void CSQLToolsApp::OnSqlSubstitutionVariables()
     GetSQLToolsSettingsForUpdate().SetScanForSubstitution(!GetSQLToolsSettings().GetScanForSubstitution());
 }
 
+void CSQLToolsApp::OnSqlDbmsXplanDisplayCursor()
+{
+    GetSQLToolsSettingsForUpdate().SetDbmsXplanDisplayCursor(!GetSQLToolsSettings().GetDbmsXplanDisplayCursor());
+}
+
 void CSQLToolsApp::OnUpdate_SqlSubstitutionVariables (CCmdUI* pCmdUI)
 {
     pCmdUI->SetCheck(GetSQLToolsSettings().GetScanForSubstitution() ?  1 : 0);
@@ -343,6 +348,12 @@ void CSQLToolsApp::OnUpdate_SqlGroup (CCmdUI* pCmdUI)
             break;
         case ID_SQL_SESSION_STATISTICS:
             if (GetSQLToolsSettings().GetSessionStatistics())
+                pCmdUI->SetCheck(1);
+            else
+                pCmdUI->SetCheck(0);
+            break;
+        case ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR:
+            if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor())
                 pCmdUI->SetCheck(1);
             else
                 pCmdUI->SetCheck(0);

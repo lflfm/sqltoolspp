@@ -105,6 +105,7 @@ public:
 	afx_msg void OnSqlDisconnect();
 	afx_msg void OnSqlDbmsOutput();
     afx_msg void OnSqlSubstitutionVariables();
+    afx_msg void OnSqlDbmsXplanDisplayCursor();
 	afx_msg void OnSqlHelp();
 	afx_msg void OnSqlSessionStatistics();
 	afx_msg void OnSqlExtractSchema();

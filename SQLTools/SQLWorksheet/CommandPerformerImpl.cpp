@@ -154,6 +154,8 @@ void CommandPerformerImpl::DoExecuteSql (CommandParser& commandParser, const str
         if (!bindVars.empty())
 		    m_doc.RefreshBinds();
 
+		if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor())
+			m_doc.DoSqlDbmsXPlanDisplayCursor();
         // TODO: implement isDML
         if (isOutputEnabled /*&& !m_cursor->IsDML()*/) // even select can write dbms output
             m_doc.FetchDbmsOutputLines();

@@ -43,6 +43,7 @@ SQLToolsSettings::SQLToolsSettings ()
     m_PlanTable           = "PLAN_TABLE";
     m_CancelQueryDelay    = 1;
     m_TopmostCancelQuery  = true;
+    m_DbmsXplanDisplayCursor = false;
                                  
     m_GridMaxColLength           = 16;
     m_GridMultilineCount         = 3;
@@ -173,6 +174,7 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_READ_MEMBER(settings, PlanTable          );
     OESMS_VER_READ_MEMBER(1009, settings, CancelQueryDelay, 1);
     OESMS_VER_READ_MEMBER(1010, settings, TopmostCancelQuery, true);
+    OESMS_VER_READ_MEMBER(1016, settings, DbmsXplanDisplayCursor, false);
                                 
     OESMS_READ_MEMBER(settings, GridMaxColLength          );
     OESMS_READ_MEMBER(settings, GridMultilineCount        );
@@ -267,6 +269,7 @@ void SQLToolsSettingsWriter::operator << (const SQLToolsSettings& settings)
     OESMS_WRITE_MEMBER(settings, PlanTable          );
     OESMS_WRITE_MEMBER(settings, CancelQueryDelay   );
     OESMS_WRITE_MEMBER(settings, TopmostCancelQuery );
+    OESMS_WRITE_MEMBER(settings, DbmsXplanDisplayCursor );
                                 
     OESMS_WRITE_MEMBER(settings, GridMaxColLength          );
     OESMS_WRITE_MEMBER(settings, GridMultilineCount        );

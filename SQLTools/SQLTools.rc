@@ -132,6 +132,9 @@ BEGIN
     CONTROL         "&Topmost cancel query window",
                     IDC_SERV_PROP_TOPMOST_CANCEL_QUERY,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,117,143,112,10
+   CONTROL          "Sho&w DISPLAY_CURSOR output (10g)", 
+                    IDC_SERV_PROP_DISPLAY_CURSOR, "Button", 
+					BS_AUTOCHECKBOX | WS_TABSTOP,117,155,135,10 
 END
 
 IDD_PROP_GRID1 DIALOGEX 0, 0, 256, 164
@@ -1198,8 +1201,9 @@ BEGIN
         MENUITEM "&Commit",                     ID_SQL_COMMIT
         MENUITEM "&Rollback",                   ID_SQL_ROLLBACK
         MENUITEM SEPARATOR
-        MENUITEM "Enable Dbms Output",          ID_SQL_DBMS_OUTPUT
-        MENUITEM "Enable Session Statistics",   ID_SQL_SESSION_STATISTICS
+        MENUITEM "Enable Dbms &Output",          ID_SQL_DBMS_OUTPUT
+        MENUITEM "Enable Session &Statistics",   ID_SQL_SESSION_STATISTICS
+        MENUITEM "Enable DBMS_XPL&AN.DISPLAY_CURSOR",   ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR
     END
     POPUP "Too&ls"
     BEGIN
@@ -1399,8 +1403,9 @@ BEGIN
         MENUITEM "&Commit",                     ID_SQL_COMMIT
         MENUITEM "&Rollback",                   ID_SQL_ROLLBACK
         MENUITEM SEPARATOR
-        MENUITEM "Enable Dbms Output",          ID_SQL_DBMS_OUTPUT
-        MENUITEM "Enable Session Statistics",   ID_SQL_SESSION_STATISTICS
+        MENUITEM "Enable Dbms &Output",          ID_SQL_DBMS_OUTPUT
+        MENUITEM "Enable Session &Statistics",   ID_SQL_SESSION_STATISTICS
+        MENUITEM "Enable DBMS_XPL&AN.DISPLAY_CURSOR",   ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR
     END
     POPUP "Sc&ript"
     BEGIN

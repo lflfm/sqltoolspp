@@ -190,6 +190,7 @@ void CSQLToolsApp::InitGUICommand ()
     GUICommandDictionary::InsertCommand("Session.Rollback",                ID_SQL_ROLLBACK);
     GUICommandDictionary::InsertCommand("Session.EnableDbmsOutput",        ID_SQL_DBMS_OUTPUT);
     GUICommandDictionary::InsertCommand("Session.EnableSessionStatistics", ID_SQL_SESSION_STATISTICS);
+    GUICommandDictionary::InsertCommand("Session.DbmsXplanDisplayCursor",  ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR);
 //Script
     GUICommandDictionary::InsertCommand("Script.Execute",                  ID_SQL_EXECUTE);
     GUICommandDictionary::InsertCommand("Script.ExecuteBelow",             ID_SQL_EXECUTE_BELOW);
