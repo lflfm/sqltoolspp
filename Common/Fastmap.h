@@ -18,6 +18,7 @@
 
 #pragma once
 #pragma warning ( disable : 4430 )
+#pragma warning ( disable : 4812 )
 #ifndef __FASTMAP_H__
 #define __FASTMAP_H__
 

@@ -18,6 +18,7 @@
 
 #pragma once
 #pragma warning ( disable : 4430 )
+#pragma warning ( disable : 4812 )
 #ifndef __QuickArray_h__
 #define __QuickArray_h__
 
