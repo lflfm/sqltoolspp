@@ -10,10 +10,10 @@
 ;--------------------------------
 ;General
 	;TODO: ADD CHECK PREVENTING INSTALL ALPHA INTO BETA/STABLE FOLDER !!!
-	Name "SQLTools v${SQLTOOLSVER} Beta"
-	OutFile SQLTools_${SQLTOOLSVER}.exe
+	Name "SQLTools_pp v${SQLTOOLSVER} Beta"
+	OutFile SQLTools_pp_${SQLTOOLSVER}.exe
 
-	!define DEST_NAME	"SQLTools 1.42"
+	!define DEST_NAME	"SQLTools_pp"
 	!define SRCDIR 		"..\SQLTools"
 	!define EXEDIR  	"..\_output_\${SQLTOOLS_BUILDDIR}"
 	!define TEMP 		$R0
