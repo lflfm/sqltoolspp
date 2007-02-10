@@ -23,12 +23,12 @@ BEGIN
         BLOCK "000004b0"
         BEGIN
             VALUE "CompanyName", "Freeware by Aleksey Kochetov"
-            VALUE "FileDescription", "SQLTools"
+            VALUE "FileDescription", "SQLTools_pp"
             VALUE "FileVersion", SQLTOOLS_VERSION_STR
-            VALUE "InternalName", "SQLTools"
+            VALUE "InternalName", "SQLTools_pp"
             VALUE "LegalCopyright", SQLTOOLS_COPYRIGHT
             VALUE "OriginalFilename", "SQLTools.exe"
-            VALUE "ProductName", "SQLTools"
+            VALUE "ProductName", "SQLTools_pp"
             VALUE "ProductVersion", SQLTOOLS_VERSION_STR
         END
     END
