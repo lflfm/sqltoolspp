@@ -63,7 +63,7 @@ const int ps_bytes       = 10;
 
 static const char expl_xplan[] = "select plan_table_output from table(dbms_xplan.display('<PLAN_TABLE>', :sttm_id, 'ALL'))";
 
-static const char expl_xplan_display_cursor[] = "select plan_table_output from table(dbms_xplan.display_cursor(NULL, NULL, 'ALLSTATS LAST'))";
+static const char expl_xplan_display_cursor[] = "select plan_table_output from table(dbms_xplan.display_cursor(:sql_id, :child_number, 'ALLSTATS LAST'))";
 
 LPSCSTR expl_sttm[2] = {
     "SELECT operation," //  0
@@ -130,6 +130,8 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 	{
 		string text, buff;
 		OciCursor explan_curs(GetApp()->GetConnect(), expl_xplan_display_cursor);
+		explan_curs.Bind(":sql_id", m_connect.GetCurrentSqlID().c_str());
+		explan_curs.Bind(":child_number", m_connect.GetCurrentSqlChildNumber().c_str());
 
 		explan_curs.Execute();
 		while (explan_curs.Fetch()) 
