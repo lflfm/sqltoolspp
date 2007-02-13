@@ -71,7 +71,8 @@ void StatGauge::Open (OciConnect& connect)
 
     try 
     {
-        {
+        /*
+		{
             OciCursor curs(connect, "select sid from v$session where audsid = userenv('SESSIONID')", 1);
             
             curs.Execute();
@@ -81,12 +82,15 @@ void StatGauge::Open (OciConnect& connect)
 
             curs.Close();
         }
+		*/
+
+		m_SID = connect.GetSessionSid();
 
         m_MapRowToNum.clear();
 
         OciCursor curs(connect, "select name, statistic# from v$statname", 300);
         
-        curs.Execute();
+        curs.ExecuteShadow();
         while (curs.Fetch()) 
         {
             map<string,int>::const_iterator 
@@ -100,10 +104,14 @@ void StatGauge::Open (OciConnect& connect)
 
         curs.Close();
 
+		connect.SetSession();
+
         Calibrate(connect);
     } 
     catch (...) 
     {
+		connect.SetSession();
+
         m_StatisticAccessible = false;
         throw;
     }
@@ -121,9 +129,11 @@ void StatGauge::LoadStatistics (OciConnect& connect, map<int,int>& data)
 
     OciCursor stats(connect, "select statistic#,value from v$sesstat where sid = :sid", 300);
     stats.Bind(":sid", m_SID.c_str());
-    stats.Execute();
+    stats.ExecuteShadow();
     while(stats.Fetch()) 
         data.insert(map<int,int>::value_type(stats.ToInt(0), stats.ToInt(1)));
+
+	connect.SetSession();
 }
 
 void StatGauge::Calibrate (OciConnect& connect)
