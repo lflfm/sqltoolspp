@@ -71,6 +71,17 @@ void BuffCursor::Execute ()
     m_endOfFetch = false;
 }
 
+void BuffCursor::ExecuteShadow ()
+{
+    Statement::ExecuteShadow(0);
+
+    Define();
+
+    m_curRecord = static_cast<ub4>(-1);
+    m_retRecords = m_buffRecords = 0;
+    m_endOfFetch = false;
+}
+
 bool BuffCursor::Fetch ()
 {
     bool retVal = false;

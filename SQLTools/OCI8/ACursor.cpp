@@ -71,6 +71,21 @@ void AutoCursor::Execute ()
     m_endOfFetch = false;
 }
 
+void AutoCursor::ExecuteShadow ()
+{
+    if (GetType() == StmtSelect)
+    {
+        Statement::ExecuteShadow(0);
+        Define();
+    }
+    else
+    {
+        Statement::ExecuteShadow(1);
+    }
+
+    m_endOfFetch = false;
+}
+
 bool AutoCursor::Fetch ()
 {
     if (!m_endOfFetch)

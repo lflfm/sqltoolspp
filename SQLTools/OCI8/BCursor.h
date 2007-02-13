@@ -42,6 +42,7 @@ public:
 	
     using Statement::Prepare;
     void Execute ();
+    void ExecuteShadow ();
     bool Fetch ();
 
     void SetStringLimit (int);
