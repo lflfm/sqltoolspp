@@ -101,7 +101,33 @@ void Statement::Execute (ub4 iters, bool guaranteedSafe)
     && !IsReadOnly())
         OCI_RAISE(Exception(0, "OCI8::Statement::Execute: Only SELECT is allowed for Read-Only connection!"));
 
-    // 27.06.2004 bug fix, Autocommit does not work
+	m_connect.SetSession();
+	// 27.06.2004 bug fix, Autocommit does not work
+    sword status = OCIStmtExecute(GetOCISvcCtx(), m_sttmp, GetOCIError(), iters, 
+        0, (OCISnapshot*)NULL, (OCISnapshot*)NULL, m_autocommit ? OCI_COMMIT_ON_SUCCESS : OCI_DEFAULT);
+
+    switch (status)
+    {
+    case OCI_SUCCESS:
+    case OCI_SUCCESS_WITH_INFO:
+        break;
+    default:
+        CHECK(status);
+    }
+}
+
+void Statement::ExecuteShadow (ub4 iters, bool guaranteedSafe)
+{
+    ASSERT_EXCEPTION_FRAME;
+    CHECK_INTERRUPT();
+
+    if (!guaranteedSafe
+    && m_connect.GetSafety() == esReadOnly
+    && !IsReadOnly())
+        OCI_RAISE(Exception(0, "OCI8::Statement::Execute: Only SELECT is allowed for Read-Only connection!"));
+
+	m_connect.SetShadowSession();
+	// 27.06.2004 bug fix, Autocommit does not work
     sword status = OCIStmtExecute(GetOCISvcCtx(), m_sttmp, GetOCIError(), iters, 
         0, (OCISnapshot*)NULL, (OCISnapshot*)NULL, m_autocommit ? OCI_COMMIT_ON_SUCCESS : OCI_DEFAULT);
 

@@ -53,6 +53,7 @@ public:
 
 	void Prepare (const char* sttm);
     void Execute (ub4 iters = 0, bool guaranteedSafe = false);
+    void ExecuteShadow (ub4 iters = 0, bool guaranteedSafe = false);
 
     bool Fetch (sword* pstatus = 0);
     bool Fetch (ub4 rows, ub4& outrows, sword* pstatus = 0);
