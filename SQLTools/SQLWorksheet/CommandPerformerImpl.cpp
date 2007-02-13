@@ -132,6 +132,8 @@ void CommandPerformerImpl::DoExecuteSql (CommandParser& commandParser, const str
         clock_t startClock = clock();
         m_cursor->Execute();
         double execTime = double(clock() - startClock)/ CLOCKS_PER_SEC;
+		if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor())
+			connect.RetrieveCurrentSqlInfo();
 
         ostringstream message;
         message << m_cursor->GetSQLFunctionDescription();
