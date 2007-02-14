@@ -22,6 +22,8 @@
 #include "OCI8/BCursor.h"
 #include <COMMON/ExceptionHelper.h>
 #include <COMMON/OsInfo.h>
+#include "COMMON/AppGlobal.h"
+#include "SQLTools.h"
 
 // 23.06.2003 bug fix, 8.0.5 compatibility
 // 26.10.2003 bug fix, any sql statement which is executed after cancelation will be also canceled
@@ -266,12 +268,12 @@ void ConnectBase::Open (const char* uid, const char* pswd, const char* alias, EC
     m_mode = mode;
     m_safety = safety;
 
-    bool ext_auth = false;
+    m_ext_auth = false;
 
     if ((!uid || !strlen(uid)) && (!pswd || !strlen(pswd)) && (alias && strlen(alias)))
     {
         m_alias = alias;
-        ext_auth = true;
+        m_ext_auth = true;
     }
     else if ((!pswd || !strlen(pswd)) || (!alias || !strlen(alias)))
     {
@@ -313,17 +315,29 @@ void ConnectBase::Open (const char* uid, const char* pswd, const char* alias, EC
     CHECK(OCIServerAttach(m_srvhp, m_errhp, (OraText*)m_alias.c_str(), m_alias.length(), 0));
 
     CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_authp, (ub4)OCI_HTYPE_SESSION, 0, 0));
+    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_auth_shadowp, (ub4)OCI_HTYPE_SESSION, 0, 0));
 
     if (!m_uid.empty())
         CHECK(OCIAttrSet(m_authp, OCI_HTYPE_SESSION,
             (OraText*)m_uid.c_str(), m_uid.length(), OCI_ATTR_USERNAME, m_errhp));
+        CHECK(OCIAttrSet(m_auth_shadowp, OCI_HTYPE_SESSION,
+            (OraText*)m_uid.c_str(), m_uid.length(), OCI_ATTR_USERNAME, m_errhp));
     if (!m_password.empty())
         CHECK(OCIAttrSet(m_authp, OCI_HTYPE_SESSION,
+            (OraText*)m_password.c_str(), m_password.length(), OCI_ATTR_PASSWORD, m_errhp));
+        CHECK(OCIAttrSet(m_auth_shadowp, OCI_HTYPE_SESSION,
             (OraText*)m_password.c_str(), m_password.length(), OCI_ATTR_PASSWORD, m_errhp));
 
     CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid **)&m_svchp, OCI_HTYPE_SVCCTX, 0, 0));
     CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_srvhp, 0, OCI_ATTR_SERVER, m_errhp));
-    CHECK(OCISessionBegin(m_svchp, m_errhp, m_authp, ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
+    CHECK(OCISessionBegin(m_svchp, m_errhp, m_authp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
+	if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
+	{
+		CHECK(OCISessionBegin(m_svchp, m_errhp, m_auth_shadowp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
+		m_openShadow = true;
+    }
+	else
+		m_openShadow = false;
     CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
 
 #ifdef XMLTYPE_SUPPORT
@@ -343,6 +357,36 @@ void ConnectBase::Open (const char* uid, const char* pswd, const char* alias, EC
 #endif//XMLTYPE_SUPPORT
 
 	m_open = true;
+}
+
+void ConnectBase::CheckShadowSession()
+{
+	if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
+	{
+		if (! m_openShadow)
+		{
+			CHECK(OCISessionBegin(m_svchp, m_errhp, m_auth_shadowp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
+			m_openShadow = true;
+	    }
+    }
+	else
+	{
+		if (m_openShadow)
+		{
+			CHECK(OCISessionEnd(m_svchp, m_errhp, m_auth_shadowp, OCI_DEFAULT));
+			m_openShadow = false;
+		}
+	}
+}
+
+void ConnectBase::SetSession()
+{
+    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
+}
+
+void ConnectBase::SetShadowSession()
+{
+    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_auth_shadowp, 0, OCI_ATTR_SESSION, m_errhp));
 }
 
 void ConnectBase::Close (bool purge)
@@ -370,11 +414,18 @@ void ConnectBase::Close (bool purge)
 
         try { CHECK(OCISessionEnd(m_svchp, m_errhp, m_authp, OCI_DEFAULT)); }
         catch (const Exception&) { if (!purge) throw; }
+		if (m_openShadow)
+		{
+			try { CHECK(OCISessionEnd(m_svchp, m_errhp, m_auth_shadowp, OCI_DEFAULT)); }
+			catch (const Exception&) { if (!purge) throw; }
+			m_openShadow = false;
+	    }
         try { CHECK(OCIServerDetach(m_srvhp, m_errhp, OCI_DEFAULT)); }
         catch (const Exception&) { if (!purge) throw; }
 
         OCIHandleFree(m_svchp, OCI_HTYPE_SVCCTX);
         OCIHandleFree(m_authp, OCI_HTYPE_SESSION);
+        OCIHandleFree(m_auth_shadowp, OCI_HTYPE_SESSION);
         OCIHandleFree(m_srvhp, OCI_HTYPE_SERVER);
         OCIHandleFree(m_errhp, OCI_HTYPE_ERROR);
 
@@ -538,12 +589,18 @@ void Connect::Open (const char* uid, const char* pswd, const char* alias, EConne
 
     m_strGlobalName.erase();
     m_strVersion.erase();
+	m_sessionSid.clear();
 
     ConnectBase::Open(uid, pswd, alias, mode, safety);
 
     LoadSessionNlsParameters();
     AlterSessionNlsParams();
     EnableOutput(m_OutputEnable, m_OutputSize, true);
+	GetSessionSid();
+	if (IsOpenShadow())
+		SetShadowClientInfo();
+
+	// AfxMessageBox((string("SID: ") + string(m_sessionSid)).c_str());
 
     m_evAfterOpen.Handle(*this);
 }
@@ -559,6 +616,7 @@ void Connect::Open (const char* uid, const char* pswd, const char* host, const c
 
     m_strGlobalName.erase();
     m_strVersion.erase();
+	m_sessionSid.clear();
 
     string alias;
     MakeTNSString(alias, host, port, sid, serviceInsteadOfSid);
@@ -567,6 +625,9 @@ void Connect::Open (const char* uid, const char* pswd, const char* host, const c
     LoadSessionNlsParameters();
     AlterSessionNlsParams();
     EnableOutput(m_OutputEnable, m_OutputSize, true);
+	GetSessionSid();
+	if (IsOpenShadow())
+		SetShadowClientInfo();
 
     m_evAfterOpen.Handle(*this);
 }
@@ -583,6 +644,7 @@ void Connect::Close (bool purge)
 
         m_strGlobalName.erase();
         m_strVersion.erase();
+		m_sessionSid.erase();
 
         m_evAfterClose.Handle(*this);
     }
@@ -624,6 +686,14 @@ void Connect::ExecuteStatement (const char* sttm, bool guaranteedSafe)
 	cursor.Execute(1, guaranteedSafe);
 }
 
+void Connect::ExecuteShadowStatement (const char* sttm, bool guaranteedSafe)
+{
+    SHOW_WAIT;
+    Statement cursor(*this);
+	cursor.Prepare(sttm);
+	cursor.ExecuteShadow(1, guaranteedSafe);
+}
+
 void Connect::EnableOutput (bool enable, unsigned long size, bool connectInit)
 {
     // 22.03.2003 small improvement, removed redundant server calls
@@ -662,6 +732,28 @@ const char* Connect::GetGlobalName () // throw Exception
         cursor.GetString(0, m_strGlobalName);
     }
     return m_strGlobalName.c_str();
+}
+
+const char* Connect::GetSessionSid () // throw Exception
+{
+	if (! m_sessionSid.size())
+	{
+        try
+        {
+			BuffCursor cursor(*this);
+			cursor.Prepare("SELECT sid FROM v$mystat where rownum <= 1");
+			cursor.Execute();
+			cursor.Fetch();
+			cursor.GetString(0, m_sessionSid);
+        }
+        catch (const Exception& x)
+        {
+            MessageBeep(MB_ICONHAND);
+			AfxMessageBox((string("Error: ") + x.what() + string("reading sid from v$mystat.")).c_str());
+		}
+	}
+
+	return m_sessionSid.c_str();
 }
 
 const char* Connect::GetVersionStr () // throw Exception
@@ -754,6 +846,71 @@ void Connect::LoadSessionNlsParameters ()
     }
 }
 
+void Connect::RetrieveCurrentSqlInfo()
+{
+	m_CurrentSqlAddress.clear();
+	m_CurrentSqlHashValue.clear();
+	m_CurrentSqlChildNumber.clear();
+	m_CurrentSqlID.clear();
+
+	try
+	{
+		BuffCursor cursor(*this);
+		if (GetVersion() >= esvServer10X)
+			cursor.Prepare("SELECT rawtohex(sql_address) as sql_address, sql_hash_value, rawtohex(prev_sql_addr) as prev_sql_addr, prev_hash_value, sql_id, prev_sql_id, sql_child_number, prev_child_number from v$session where sid = :sid");
+		else
+			cursor.Prepare("SELECT rawtohex(sql_address) as sql_address, sql_hash_value, rawtohex(prev_sql_addr) as prev_sql_addr, prev_hash_value from v$session where sid = :sid");
+		cursor.Bind(":sid", GetSessionSid());
+		cursor.ExecuteShadow();
+
+		while (cursor.Fetch())
+		{
+			string sql_address, sql_hash_value, prev_sql_addr, prev_hash_value;
+			string sql_id, prev_sql_id, sql_child_number, prev_child_number;
+			cursor.GetString(0, sql_address);
+			cursor.GetString(1, sql_hash_value);
+			cursor.GetString(2, prev_sql_addr);
+			cursor.GetString(3, prev_hash_value);
+			if (GetVersion() >= esvServer10X)
+			{
+				cursor.GetString(4, sql_id);
+				cursor.GetString(5, prev_sql_id);
+				cursor.GetString(6, sql_child_number);
+				cursor.GetString(7, prev_child_number);
+			}
+
+			if (sql_address == "00")
+			{
+				m_CurrentSqlAddress = prev_sql_addr;
+				m_CurrentSqlHashValue = prev_hash_value;
+				if (GetVersion() >= esvServer10X)
+				{
+					m_CurrentSqlID = prev_sql_id;
+					m_CurrentSqlChildNumber = prev_child_number;
+				}
+			}
+			else
+			{
+				m_CurrentSqlAddress = sql_address;
+				m_CurrentSqlHashValue = sql_hash_value;
+				if (GetVersion() >= esvServer10X)
+				{
+					m_CurrentSqlID = sql_id;
+					m_CurrentSqlChildNumber = sql_child_number;
+				}
+			}
+		}
+
+		cursor.Close();
+    }
+    catch (const Exception& x)
+    {
+		Global::SetStatusText(string("Error: ") + x.what() + string(" retrieving current sql address from v$session..."), TRUE);
+    }
+
+	SetSession();
+}
+
 void Connect::AlterSessionNlsParams ()
 {
     if (IsOpen()
@@ -767,6 +924,24 @@ void Connect::AlterSessionNlsParams ()
         ExecuteStatement(buff.c_str(), true);
 
         m_dbNlsDateFormat = m_NlsDateFormat;
+    }
+}
+
+void Connect::CheckShadowSession()
+{
+	ConnectBase::CheckShadowSession();
+
+	if (IsOpenShadow())
+		SetShadowClientInfo();
+}
+
+void Connect::SetShadowClientInfo ()
+{
+    if (IsOpen())
+    {
+        string buff = "BEGIN DBMS_APPLICATION_INFO.SET_CLIENT_INFO('SQLTools_pp background session'); END;";
+
+        ExecuteShadowStatement(buff.c_str(), true);
     }
 }
 

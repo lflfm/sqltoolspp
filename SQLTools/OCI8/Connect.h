@@ -149,6 +149,10 @@ public:
     virtual void Rollback ();
     virtual void Break (bool purge);
 
+	void CheckShadowSession();
+	void SetSession();
+	void SetShadowSession();
+
     OCIEnv*    GetOCIEnv ()     { return m_envhp; }
     OCISvcCtx* GetOCISvcCtx ()  { return m_svchp; }
     OCIError*  GetOCIError ()   { return m_errhp; }
@@ -159,6 +163,7 @@ public:
 #endif//XMLTYPE_SUPPORT
 
     bool IsOpen () const        { return m_open; }
+    bool IsOpenShadow () const        { return m_openShadow; }
 
     const char* GetUID () const         { return m_uid.c_str(); }
     const char* GetPassword () const    { return m_password.c_str(); }
@@ -204,6 +209,7 @@ private:
     OCIEnv*     m_envhp;
     OCIServer*  m_srvhp;
     OCISession* m_authp;
+    OCISession* m_auth_shadowp;
     OCISvcCtx*	m_svchp;
     OCIError*	m_errhp;
 #ifdef XMLTYPE_SUPPORT
@@ -212,7 +218,7 @@ private:
 #endif//XMLTYPE_SUPPORT
 
 
-    bool m_open, m_interrupted;
+    bool m_open, m_interrupted, m_openShadow, m_ext_auth;
     string m_uid, m_password, m_alias;
     EConnectionMode m_mode;
     ESafety m_safety;
@@ -244,6 +250,7 @@ public:
     void Close (bool purge = false);
 
     void ExecuteStatement (const char*, bool guaranteedSafe = false);
+    void ExecuteShadowStatement (const char*, bool guaranteedSafe = false);
 
     void EnableOutput (bool enable = true, unsigned long size = ULONG_MAX, bool = false);
     void ResetOutput ();
@@ -254,14 +261,25 @@ public:
 
     const char* GetGlobalName ();               // throw Exception;
     const char* GetVersionStr ();               // throw Exception;
+    const char* GetSessionSid ();               // throw Exception;
     EServerVersion GetVersion ();               // throw Exception;
 
+	void RetrieveCurrentSqlInfo();
+	const string& GetCurrentSqlAddress() const {return m_CurrentSqlAddress;}
+	const string& GetCurrentSqlHashValue() const {return m_CurrentSqlHashValue;}
+	const string& GetCurrentSqlChildNumber() const {return m_CurrentSqlChildNumber;}
+	const string& GetCurrentSqlID() const {return m_CurrentSqlID;}
 protected:
     bool m_OutputEnable;
     unsigned long m_OutputSize;
     string m_strVersion, m_strGlobalName;
     string m_strHost, m_strPort, m_strSid;
     bool m_bypassTns;
+	string m_sessionSid;
+	string m_CurrentSqlAddress;
+	string m_CurrentSqlHashValue;
+	string m_CurrentSqlChildNumber;
+	string m_CurrentSqlID;
 
     // NLS parameters
     void LoadSessionNlsParameters ();
@@ -285,6 +303,8 @@ protected:
 
 public:
     void AlterSessionNlsParams (); // changes session NLS_DATE_FORMAT only
+	void CheckShadowSession();
+	void SetShadowClientInfo();
 
 private:
     // copy-constraction & assign-operation is not supported
