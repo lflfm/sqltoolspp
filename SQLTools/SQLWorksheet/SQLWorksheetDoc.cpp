@@ -139,7 +139,7 @@ void CPLSWorksheetDoc::Init ()
     m_pExplainPlan = new CExplainPlanView;
 	m_pBindGrid = new BindGridView;
 
-	m_pXPlan = new cXPlanEdit;
+	m_pXPlan = new cXPlanEdit(*this);
 
 	m_pXPlan->setOldView(m_pExplainPlan);
 
