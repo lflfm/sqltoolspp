@@ -1571,6 +1571,18 @@ BEGIN
     END
 END
 
+IDR_NEWPLAN_OPTIONS MENU 
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "&Copy",                       ID_EDIT_COPY
+        MENUITEM "Select &All",                 ID_EDIT_SELECT_ALL
+        MENUITEM SEPARATOR
+        MENUITEM "&Switch to old plan view",    ID_NP_SWITCH_OLD_VIEW
+        MENUITEM "&Refresh",                    ID_NP_REFRESH
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
