@@ -45,7 +45,7 @@ void cXPlanView::Dump(CDumpContext& dc) const
 
 // cXPlanView message handlers
 
-void cXPlanView::OnLButtonDblClk(UINT nFlags, CPoint point)
+void cXPlanView::OnLButtonDblClk(UINT , CPoint )
 {
 	// TODO: Add your message handler code here and/or call default
 	ShowWindow(SW_HIDE);
@@ -88,9 +88,16 @@ void cXPlanView::OnEditChange()
 	// return FALSE;   // continue routing
 }
 
+/*
 cXPlanEdit::cXPlanEdit()
 {
 
+}
+*/
+
+cXPlanEdit::cXPlanEdit(CPLSWorksheetDoc& doc) : m_doc(doc)
+{
+	m_IsDisplayCursor = false;
 }
 
 cXPlanEdit::~cXPlanEdit()
@@ -100,6 +107,13 @@ cXPlanEdit::~cXPlanEdit()
 BEGIN_MESSAGE_MAP(cXPlanEdit, CEdit)
 	ON_WM_CREATE()
 	ON_WM_LBUTTONDBLCLK()
+	ON_COMMAND(ID_NP_SWITCH_OLD_VIEW, OnSwitchOldView)
+	ON_COMMAND(ID_NP_REFRESH, OnRefreshPlan)
+	ON_WM_CONTEXTMENU()
+    ON_WM_INITMENUPOPUP()
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_COMMAND(ID_EDIT_SELECT_ALL, OnEditSelectAll)
+
 	// ON_CONTROL_REFLECT(STN_DBLCLK, &cXPlanEdit::OnStnDblclick)
 END_MESSAGE_MAP()
 
@@ -124,15 +138,36 @@ void cXPlanEdit::Dump(CDumpContext& dc) const
 
 // cXPlanView message handlers
 
-void cXPlanEdit::OnLButtonDblClk(UINT nFlags, CPoint point)
+void cXPlanEdit::OnEditCopy()
 {
-	// TODO: Add your message handler code here and/or call default
+	CEdit::Copy();
+}
+
+void cXPlanEdit::OnEditSelectAll()
+{
+	CEdit::SetSel(0, -1, TRUE);
+}
+
+void cXPlanEdit::OnSwitchOldView()
+{
 	ShowWindow(SW_HIDE);
 
 	m_OldView->ShowWindow(SW_SHOW);
 	m_OldView->SetFocus();
+}
 
-	// CEditView::OnLButtonDblClk(nFlags, point);
+void cXPlanEdit::OnRefreshPlan()
+{
+    try { EXCEPTION_FRAME;
+	m_doc.DoSqlDbmsXPlanDisplayCursor();
+    } 
+    _DEFAULT_HANDLER_
+}
+
+void cXPlanEdit::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	CEdit::OnLButtonDblClk(nFlags, point);
 }
 
 int  cXPlanEdit::OnCreate (LPCREATESTRUCT lpCreateStruct)
@@ -168,3 +203,25 @@ void cXPlanEdit::OnStnDblclick()
 	m_OldView->SetFocus();
 }
 */
+
+void cXPlanEdit::OnContextMenu (CWnd* , CPoint pos)
+{
+    CMenu menu;
+    VERIFY(menu.LoadMenu(IDR_NEWPLAN_OPTIONS));
+    CMenu* pPopup = menu.GetSubMenu(0);
+    ASSERT(pPopup != NULL);
+    pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, pos.x, pos.y, this);
+}
+
+void cXPlanEdit::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
+{
+    CEdit::OnInitMenuPopup(pPopupMenu, nIndex, bSysMenu);
+
+	int nStart, nEnd;
+	CEdit::GetSel(nStart, nEnd);
+
+	pPopupMenu->EnableMenuItem(ID_EDIT_COPY,                 MF_BYCOMMAND|((nEnd > nStart) ? MF_ENABLED : MF_GRAYED));
+	pPopupMenu->EnableMenuItem(ID_NP_SWITCH_OLD_VIEW,        MF_BYCOMMAND|((! m_IsDisplayCursor) ? MF_ENABLED : MF_GRAYED));
+	pPopupMenu->EnableMenuItem(ID_NP_REFRESH,                MF_BYCOMMAND|((m_IsDisplayCursor) ? MF_ENABLED : MF_GRAYED));
+}
+
