@@ -129,11 +129,11 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 	if (m_connect.GetVersion() >= OCI8::esvServer10X)
 	{
 		string text, buff;
-		OciCursor explan_curs(GetApp()->GetConnect(), expl_xplan_display_cursor);
+		OciCursor explan_curs(m_connect, expl_xplan_display_cursor);
 		explan_curs.Bind(":sql_id", m_connect.GetCurrentSqlID().c_str());
 		explan_curs.Bind(":child_number", m_connect.GetCurrentSqlChildNumber().c_str());
 
-		explan_curs.Execute();
+		explan_curs.ExecuteShadow();
 		while (explan_curs.Fetch()) 
 		{
 			explan_curs.GetString(0, buff);
@@ -143,7 +143,10 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 
         explan_curs.Close();
 
+		m_connect.SetSession();
+
 		m_pXPlan->SetWindowText(text.c_str());
+		m_pXPlan->SetIsDisplayCursor(true);
 	}
 }
 
@@ -285,6 +288,7 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 	        explan_curs.Close();
 
 			m_pXPlan->SetWindowText(text.c_str());
+			m_pXPlan->SetIsDisplayCursor(false);
 		}
 
         subst.ResetContent();
