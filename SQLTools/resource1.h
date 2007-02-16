@@ -414,7 +414,9 @@
 #define ID_BOOKLET_PIN                  38193
 #define ID_BOOKLET_UNPIN                38194
 #define ID_BOOKLET_BINDS                38195
-
+#define ID_NP_SWITCH_OLD_VIEW           40001
+#define ID_NP_REFRESH                   40002
+#define IDR_NEWPLAN_OPTIONS             999
 
 // Next default values for new objects
 // 
