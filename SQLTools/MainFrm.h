@@ -27,6 +27,9 @@
 #include "DbBrowser/ObjectViewerWnd.h"
 #include "Tools/Grep/GrepView.h"
 #include "ConnectionBar.h"
+//#include "SQLWorksheet/XPlanView.h"
+
+class cXPlanEdit;
 
 class CMDIMainFrame : public CWorkbookMDIFrame
 {
@@ -43,6 +46,8 @@ public:
 public:
     CObjectViewerWnd& ShowTreeViewer ();
     CTreeCtrl& ShowPlanViewer (const char*);
+
+	void SetXPlanEdit(cXPlanEdit* p_wndXPlanEdit) {m_wndXPlanEdit = p_wndXPlanEdit; }
     
     CConnectionBar& GetConnectionBar ()     { return m_wndConnectionBar; }
 
@@ -75,6 +80,8 @@ protected:  // control bar embedded members
 
     CString m_orgTitle;
 
+	cXPlanEdit*			m_wndXPlanEdit;
+
 // Generated message map functions
 protected:
 	//{{AFX_MSG(CMDIMainFrame)
@@ -87,6 +94,7 @@ protected:
 	afx_msg void OnSqlDbSource();
 	afx_msg void OnUpdate_SqlDbSource(CCmdUI* pCmdUI);
 	afx_msg void OnFileGrep();
+	afx_msg void OnNewPlanRefresh();
 	afx_msg void OnObjectListCopy();
 	afx_msg void OnFileShowGrepOutput();
 	afx_msg void OnUpdate_FileShowGrepOutput(CCmdUI* pCmdUI);

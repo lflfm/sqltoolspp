@@ -24,6 +24,7 @@
 #include "SQLTools.h"
 #include "MainFrm.h"
 #include "Tools/Grep/GrepDlg.h"
+#include "SQLWorksheet/XPlanView.h"
 
 /*
     22.03.2003 bug fix, checking for changes works even the program is inactive - checking only on activation now
@@ -66,6 +67,7 @@ BEGIN_MESSAGE_MAP(CMDIMainFrame, CWorkbookMDIFrame)
 	ON_COMMAND(ID_VIEW_SQL_TOOLBAR, OnViewSqlToolbar)
 	ON_COMMAND(ID_VIEW_CONNECT_TOOLBAR, OnViewConnectToolbar)
 	ON_COMMAND(IDC_DS_COPY, OnObjectListCopy)
+	ON_COMMAND(ID_NP_REFRESH, OnNewPlanRefresh)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_FILE_TOOLBAR, OnUpdate_FileToolbar)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_SQL_TOOLBAR, OnUpdate_SqlToolbar)
 	ON_UPDATE_COMMAND_UI(ID_VIEW_CONNECT_TOOLBAR, OnUpdate_ConnectToolbar)
@@ -346,6 +348,12 @@ void CMDIMainFrame::OnViewConnectToolbar ()
 void CMDIMainFrame::OnObjectListCopy ()
 {
 	m_wndDbSourceWnd.OnCopy_Public();
+}
+
+void CMDIMainFrame::OnNewPlanRefresh ()
+{
+	// m_wndXPlanEdit->OnRefreshPlan();
+	AfxMessageBox("OnNewPlanRefresh");
 }
 
 void CMDIMainFrame::OnUpdate_FileToolbar (CCmdUI* pCmdUI)
