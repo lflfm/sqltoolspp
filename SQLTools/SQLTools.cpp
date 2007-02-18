@@ -32,6 +32,7 @@
 #include <COMMON/OsInfo.h>
 #include <COMMON/ExceptionHelper.h>
 #include "COMMON/NVector.h"
+#include "COMMON/GUICommandDictionary.h"
 
 /*
     30.03.2003 improvement, command line support, try sqltools /h to get help
@@ -190,6 +191,13 @@ BOOL CSQLToolsApp::InitInstance()
 
         m_orgMainWndTitle.LoadString(IDR_MAINFRAME);
 	    // create main MDI Frame window
+		InitGUICommand();
+		string buffer;
+		Global::GetSettingsPath(buffer);
+		GUICommandDictionary::BuildAcceleratorTable(
+			(buffer + '\\' + COEDocument::GetSettingsManager().GetGlobalSettings()->GetKeymapLayout() + ".keymap").c_str(),
+			m_accelTable);
+
 	    CMDIMainFrame* pMainFrame = new CMDIMainFrame;
         pMainFrame->m_bSaveMainWinPosition
             = COEDocument::GetSettingsManager().GetGlobalSettings()->GetSaveMainWinPosition();
