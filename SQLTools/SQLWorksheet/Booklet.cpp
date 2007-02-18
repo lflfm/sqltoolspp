@@ -374,7 +374,7 @@ void CBooklet::OnInitialUpdate()
         }
 
 		//SSNOTIFY CView: Create(NULL, NULL, WS_CHILD|WS_HSCROLL|WS_VSCROLL|ES_MULTILINE|ES_WANTRETURN, CRect(0,0,0,0), this, 111))
-		if (! m_pDocument->m_pXPlan->Create(ES_READONLY|ES_MULTILINE|ES_WANTRETURN|WS_CHILD|WS_HSCROLL|WS_VSCROLL, CRect(0,0,0,0), this, 111))
+		if (! m_pDocument->m_pXPlan->Create(ES_READONLY|ES_MULTILINE|ES_WANTRETURN|ES_NOHIDESEL|WS_CHILD|WS_HSCROLL|WS_VSCROLL, CRect(0,0,0,0), this, 111))
 		{
             MessageBeep((UINT)-1);
             AfxMessageBox("Fatal error: cannot create a new XPlan window.");
