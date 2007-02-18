@@ -271,6 +271,27 @@ bool GUICommandDictionary::BuildAcceleratorTable (const char* filename, HACCEL& 
     return accelTable != NULL ? true : false;
 }
 
+HACCEL GUICommandDictionary::GetSingleCommandAccelTable (Command command)
+{
+    ACCEL AccelTable[MAX_MENU_ITEMS_NUMBER];
+    memset(AccelTable, 0, sizeof(AccelTable));
+
+	HACCEL theAccelTable = 0;
+
+	if (g_accelTable)
+    {
+		int size = CopyAcceleratorTable(g_accelTable, AccelTable, sizeof AccelTable/ sizeof AccelTable[0]);
+
+		for (int i = 0; i < size; i++)
+		{
+			if (AccelTable[i].cmd == command)
+				theAccelTable = CreateAcceleratorTable(&AccelTable[i], 1);
+		}
+	}
+
+	return theAccelTable;
+}
+
 //
 // recognaze only [<Control>+][<Alt>+][<Shift>+]('Char'|<Key>)[,'Char']
 //
@@ -407,6 +428,54 @@ static void walk_menu (HMENU& hMenu, MenuItemVector& menuitems)
             }
         }
     }
+}
+
+HACCEL GUICommandDictionary::GetMenuAccelTable (HMENU& hMenu)
+{
+    MenuItemVector menuitems;
+    TRACE("Walk menu\n");
+    walk_menu(hMenu, menuitems);
+    TRACE1("\tGUICommandDictionary::AddAccelDescriptionToMenu: number of menuitems is %d\n", menuitems.size());
+
+    // allocate and get acceleration table by handle
+    ACCEL AccelTable[MAX_MENU_ITEMS_NUMBER];
+    memset(AccelTable, 0, sizeof(AccelTable));
+    int size = CopyAcceleratorTable(g_accelTable, AccelTable, sizeof AccelTable/ sizeof AccelTable[0]);
+
+	typedef std::map<WORD, ACCEL> accelMap;
+
+	accelMap theAccelMap;
+
+	for (int i = 0; i < size; i++)
+	{
+		theAccelMap.insert(accelMap::value_type(AccelTable[i].cmd, AccelTable[i]));
+	}
+
+    memset(AccelTable, 0, sizeof(AccelTable));
+
+	i = 0;
+
+    for (MenuItemVector::iterator it = menuitems.begin(); it != menuitems.end(); ++it)
+    {
+        MenuItem& menuitem = *it;
+
+		accelMap::iterator am_it = theAccelMap.find(menuitem.m_command);
+
+		if (am_it != theAccelMap.end())
+	    {
+			AccelTable[i] = am_it->second;
+			i += 1;
+		}
+	}
+
+	HACCEL theAccel = 0;
+
+	if (i > 0)
+	{
+		theAccel = CreateAcceleratorTable(AccelTable, i);
+	}
+
+	return theAccel;
 }
 
 void GUICommandDictionary::AddAccelDescriptionToMenu (HMENU& hMenu)

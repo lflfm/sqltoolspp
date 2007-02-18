@@ -50,6 +50,8 @@ public:
     static bool GetDblKeyDescription (int dblKeyAccelInx, string&, VKey = 0);
     static bool GetDblKeyAccelCmdId  (int dblKeyAccelInx, VKey, Command&);
     static bool GetCommandAccelLabel (Command, string&);
+	static HACCEL GetSingleCommandAccelTable (Command command);
+	static HACCEL GetMenuAccelTable (HMENU& hMenu);
 };
 
 };//namespace Common
