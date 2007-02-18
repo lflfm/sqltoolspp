@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "SQLTools.h"
 #include "XPlanView.h"
+#include "COMMON/GUICommandDictionary.h"
 
 
 // cXPlanView
@@ -98,10 +99,13 @@ cXPlanEdit::cXPlanEdit()
 cXPlanEdit::cXPlanEdit(CPLSWorksheetDoc& doc) : m_doc(doc)
 {
 	m_IsDisplayCursor = false;
+	m_accelTable = 0;
 }
 
 cXPlanEdit::~cXPlanEdit()
 {
+	if (m_accelTable)
+		DestroyAcceleratorTable(m_accelTable);
 }
 
 BEGIN_MESSAGE_MAP(cXPlanEdit, CEdit)
@@ -140,6 +144,12 @@ void cXPlanEdit::Dump(CDumpContext& dc) const
 
 void cXPlanEdit::OnEditCopy()
 {
+	int nStart, nEnd;
+	CEdit::GetSel(nStart, nEnd);
+
+	if (nStart >= nEnd)
+		OnEditSelectAll();
+
 	CEdit::Copy();
 }
 
@@ -158,10 +168,13 @@ void cXPlanEdit::OnSwitchOldView()
 
 void cXPlanEdit::OnRefreshPlan()
 {
-    try { EXCEPTION_FRAME;
-	m_doc.DoSqlDbmsXPlanDisplayCursor();
+	if (m_IsDisplayCursor)
+	{
+		try { EXCEPTION_FRAME;
+		m_doc.DoSqlDbmsXPlanDisplayCursor();
+		} 
+		_DEFAULT_HANDLER_
     } 
-    _DEFAULT_HANDLER_
 }
 
 void cXPlanEdit::OnLButtonDblClk(UINT nFlags, CPoint point)
@@ -190,7 +203,25 @@ int  cXPlanEdit::OnCreate (LPCREATESTRUCT lpCreateStruct)
 
 	SetFont(&m_Font);
 
+    CMenu menu;
+    VERIFY(menu.LoadMenu(IDR_NEWPLAN_OPTIONS));
+    CMenu* pPopup = menu.GetSubMenu(0);
+    ASSERT(pPopup != NULL);
+    Common::GUICommandDictionary::AddAccelDescriptionToMenu(pPopup->m_hMenu);
+
+	m_accelTable = Common::GUICommandDictionary::GetMenuAccelTable(pPopup->m_hMenu);
+
+	// ((CMDIMainFrame *)GetParentFrame())->SetXPlanEdit(this);
+
 	return retval;
+}
+
+BOOL cXPlanEdit::PreTranslateMessage(MSG* pMsg)
+{
+	if (m_accelTable)
+		return TranslateAccelerator(m_hWnd, m_accelTable, pMsg) != 0;
+	else
+		return CEdit::PreTranslateMessage(pMsg);
 }
 
 /*
@@ -210,6 +241,7 @@ void cXPlanEdit::OnContextMenu (CWnd* , CPoint pos)
     VERIFY(menu.LoadMenu(IDR_NEWPLAN_OPTIONS));
     CMenu* pPopup = menu.GetSubMenu(0);
     ASSERT(pPopup != NULL);
+    Common::GUICommandDictionary::AddAccelDescriptionToMenu(pPopup->m_hMenu);
     pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, pos.x, pos.y, this);
 }
 
@@ -217,10 +249,7 @@ void cXPlanEdit::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
 {
     CEdit::OnInitMenuPopup(pPopupMenu, nIndex, bSysMenu);
 
-	int nStart, nEnd;
-	CEdit::GetSel(nStart, nEnd);
-
-	pPopupMenu->EnableMenuItem(ID_EDIT_COPY,                 MF_BYCOMMAND|((nEnd > nStart) ? MF_ENABLED : MF_GRAYED));
+	// pPopupMenu->EnableMenuItem(ID_EDIT_COPY,                 MF_BYCOMMAND|((nEnd > nStart) ? MF_ENABLED : MF_GRAYED));
 	pPopupMenu->EnableMenuItem(ID_NP_SWITCH_OLD_VIEW,        MF_BYCOMMAND|((! m_IsDisplayCursor) ? MF_ENABLED : MF_GRAYED));
 	pPopupMenu->EnableMenuItem(ID_NP_REFRESH,                MF_BYCOMMAND|((m_IsDisplayCursor) ? MF_ENABLED : MF_GRAYED));
 }

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef __XPLANVIEW_H__
+#define __XPLANVIEW_H__
 
 #include "ExplainPLanView.h"
 #include "SQLWorksheetDoc.h"
@@ -63,6 +65,7 @@ public:
 private:
 	CFont m_Font;
 	CPLSWorksheetDoc& m_doc;
+	HACCEL m_accelTable;
 	bool m_IsDisplayCursor;
 
 protected:
@@ -77,6 +80,8 @@ public:
 	afx_msg void OnRefreshPlan();
 	afx_msg void OnEditCopy();
 	afx_msg void OnEditSelectAll();
+    virtual BOOL PreTranslateMessage(MSG* pMsg);
 	// afx_msg void OnStnDblclick();
 };
+#endif//__XPLANVIEW_H__
 
