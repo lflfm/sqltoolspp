@@ -32,6 +32,8 @@ class CObjectViewerWnd : public CDialog
     CImageList  m_Images;
     bool m_selChanged;
 
+	HACCEL m_accelTable;
+  
 // Dialog Data
 	enum { IDD = IDD_OBJ_INFO_TREE };
 
@@ -45,6 +47,7 @@ public:
 
     CTreeCtrl& GetTreeCtrl ()               { return m_treeViewer; }
     void LoadAndSetImageList (UINT nResId)  { m_treeViewer.LoadAndSetImageList(nResId); }
+    virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 protected:
     void setQuestionIcon ();
@@ -57,4 +60,5 @@ protected:
     afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg void OnInput_SelChange ();
     afx_msg void OnInput_CloseUp ();
+	afx_msg void OnSqlObjViewer();
 };

@@ -33,6 +33,7 @@
 #include "DbBrowser\ObjectViewerWnd.h"
 #include "DbBrowser\ObjectTreeBuilder.h"
 #include "SQLWorksheet/PlsSqlParser.h"
+#include "COMMON/GUICommandDictionary.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 // CObjectViewerWnd
@@ -40,15 +41,35 @@ CObjectViewerWnd::CObjectViewerWnd()
 : CDialog(IDD),
 m_selChanged(false)
 {
+	m_accelTable = 0;
 }
 
 CObjectViewerWnd::~CObjectViewerWnd()
 {
+	if (m_accelTable)
+		DestroyAcceleratorTable(m_accelTable);
+}
+
+BOOL CObjectViewerWnd::PreTranslateMessage(MSG* pMsg)
+{
+	if (m_accelTable)
+		return TranslateAccelerator(m_hWnd, m_accelTable, pMsg) != 0;
+	else
+		return CDialog::PreTranslateMessage(pMsg);
+}
+
+void CObjectViewerWnd::OnSqlObjViewer()
+{
+    // ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
+	GetParentFrame()->SendMessage(WM_COMMAND, (1 << 16) | ID_SQL_OBJ_VIEWER, 0);
 }
 
 BOOL CObjectViewerWnd::Create (CWnd* pParentWnd)
 {
-    return CDialog::Create(IDD_OBJ_INFO_TREE, pParentWnd);
+	if (! m_accelTable)
+		m_accelTable = Common::GUICommandDictionary::GetSingleCommandAccelTable(ID_SQL_OBJ_VIEWER);
+
+	return CDialog::Create(IDD_OBJ_INFO_TREE, pParentWnd);
 }
 
 void CObjectViewerWnd::DoDataExchange (CDataExchange* pDX)
@@ -148,6 +169,7 @@ BEGIN_MESSAGE_MAP(CObjectViewerWnd, CDialog)
     ON_WM_SIZE()
     ON_CBN_SELCHANGE(IDC_OIT_INPUT, OnInput_SelChange)
     ON_CBN_CLOSEUP(IDC_OIT_INPUT, OnInput_CloseUp)
+	ON_COMMAND(ID_SQL_OBJ_VIEWER, OnSqlObjViewer)
 END_MESSAGE_MAP()
 
 // CObjectViewerWnd message handlers
