@@ -57,6 +57,8 @@
 #include "OpenEditor/OEHighlighter.h" // for a destructor
 #include "OpenEditor/OESortDlg.h"
 #include "COMMON/StrHelpers.h"
+#include "SQLTools.h"
+#include "MainFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -225,6 +227,8 @@ COEditorView::~COEditorView ()
             DetachSibling(i);
     }
     _DESTRUCTOR_HANDLER_;
+
+	// ((CMDIMainFrame *)AfxGetMainWnd())->SetActiveView(NULL, FALSE);
 }
 
 void COEditorView::AttachSibling (COEditorView* sibling, UINT ruler)
@@ -543,6 +547,8 @@ void COEditorView::ShowCaret (bool show, bool dont_destroy_caret)
 void COEditorView::OnSetFocus (CWnd* pOldWnd)
 {
 	CView::OnSetFocus(pOldWnd);
+
+	((CMDIMainFrame *)AfxGetMainWnd())->SetActiveView(this, FALSE);
 
     ShowCaret(TRUE);
 }
