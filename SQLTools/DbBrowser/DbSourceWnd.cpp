@@ -1060,31 +1060,7 @@ void CDbSourceWnd::OnCopy ()
 {
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
     {
-        LV_ITEM lvi;
-        memset(&lvi, 0, sizeof lvi);
-        lvi.mask = LVIF_TEXT|LVIF_PARAM;
-        char szBuff[NAME_MAX_SIZE]; 
-        lvi.pszText = szBuff;
-        lvi.cchTextMax = sizeof szBuff;
-
-		string s_theTextList;
-		string s_delimiter = "";
-
-        int index = -1;
-        while ((index = wndListCtrl->GetNextItem(index, LVNI_SELECTED))!=-1) 
-        {
-            lvi.iItem      = index;
-            lvi.iSubItem   = 0;
-            lvi.pszText    = szBuff;
-            lvi.cchTextMax = sizeof szBuff;
-            if (!wndListCtrl->GetItem(&lvi)) {
-                AfxMessageBox("Unknown error!");
-                AfxThrowUserException();
-            }
-
-			s_theTextList += s_delimiter + lvi.pszText;
-			s_delimiter = ", ";
-        }
+		string s_theTextList = wndListCtrl->GetListSelectionAsText();
 
 		// AfxMessageBox(s_theTextList.c_str());
 
