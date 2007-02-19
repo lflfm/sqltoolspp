@@ -211,7 +211,7 @@ int  cXPlanEdit::OnCreate (LPCREATESTRUCT lpCreateStruct)
 
 	m_accelTable = Common::GUICommandDictionary::GetMenuAccelTable(pPopup->m_hMenu);
 
-	// ((CMDIMainFrame *)GetParentFrame())->SetXPlanEdit(this);
+	((CMDIMainFrame *)AfxGetMainWnd())->SetXPlanEdit(this);
 
 	return retval;
 }
@@ -219,7 +219,10 @@ int  cXPlanEdit::OnCreate (LPCREATESTRUCT lpCreateStruct)
 BOOL cXPlanEdit::PreTranslateMessage(MSG* pMsg)
 {
 	if (m_accelTable)
-		return TranslateAccelerator(m_hWnd, m_accelTable, pMsg) != 0;
+		if (TranslateAccelerator(m_hWnd, m_accelTable, pMsg) == 0)
+			return CEdit::PreTranslateMessage(pMsg);
+		else
+			return true;
 	else
 		return CEdit::PreTranslateMessage(pMsg);
 }
