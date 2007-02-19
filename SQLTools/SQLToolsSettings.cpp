@@ -149,6 +149,10 @@ const VisualAttributesSet& SQLToolsSettings::GetVASet (const string& name) const
     if (m_version >= ver) m_in.read(#p, o.m_##p); \
     else o.m_##p = def;
 
+#define OESMS_VER_READ_MEMBER_DEFAULT(ver,o,p,def)  \
+    if (m_version >= ver) m_in.read_with_default(#p, o.m_##p, def); \
+    else o.m_##p = def;
+
     using std::hex;
     using std::dec;
     using std::endl;
@@ -174,7 +178,7 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_READ_MEMBER(settings, PlanTable          );
     OESMS_VER_READ_MEMBER(1009, settings, CancelQueryDelay, 1);
     OESMS_VER_READ_MEMBER(1010, settings, TopmostCancelQuery, true);
-    OESMS_VER_READ_MEMBER(1016, settings, DbmsXplanDisplayCursor, false);
+    OESMS_VER_READ_MEMBER_DEFAULT(1016, settings, DbmsXplanDisplayCursor, false);
                                 
     OESMS_READ_MEMBER(settings, GridMaxColLength          );
     OESMS_READ_MEMBER(settings, GridMultilineCount        );
