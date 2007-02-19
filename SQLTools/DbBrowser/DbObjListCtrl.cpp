@@ -404,13 +404,49 @@ void CDbObjListCtrl::OnLButtonDblClk (UINT /*nFlags*/, CPoint /*point*/)
         wndOwner->SendMessage(WM_COMMAND, IDC_DS_LOAD);
 }
 
+string CDbObjListCtrl::GetListSelectionAsText()
+{
+    LV_ITEM lvi;
+    memset(&lvi, 0, sizeof lvi);
+    lvi.mask = LVIF_TEXT|LVIF_PARAM;
+	const int NAME_MAX_SIZE = 128+1; // resized to 128+1 because db link name length can be up to 128 chars
+    char szBuff[NAME_MAX_SIZE]; 
+    lvi.pszText = szBuff;
+    lvi.cchTextMax = sizeof szBuff;
+
+	string s_theTextList;
+	string s_delimiter = "";
+
+    int index = -1;
+    while ((index = GetNextItem(index, LVNI_SELECTED))!=-1) 
+    {
+        lvi.iItem      = index;
+        lvi.iSubItem   = 0;
+        lvi.pszText    = szBuff;
+        lvi.cchTextMax = sizeof szBuff;
+        if (!GetItem(&lvi)) {
+            AfxMessageBox("Unknown error!");
+            AfxThrowUserException();
+        }
+
+		s_theTextList += s_delimiter + lvi.pszText;
+		s_delimiter = ", ";
+    }
+
+	return s_theTextList;
+}
+
 void CDbObjListCtrl::OnBeginDrag (NMHDR* pNMHDR, LRESULT* pResult)
 {
     NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
-    const char* pszText = (char*)m_arrObjects.GetCellStr(GetItemData(pNMListView->iItem),
-                                                                                                                 pNMListView->iSubItem);
-    Common::SimpleDragDataSource(pszText).DoDragDrop(DROPEFFECT_COPY);
+	string s_theTextList;
+
+	// const char* pszText = (char*)m_arrObjects.GetCellStr(GetItemData(pNMListView->iItem), pNMListView->iSubItem);
+
+	s_theTextList = GetListSelectionAsText();
+
+	Common::SimpleDragDataSource(s_theTextList.c_str()).DoDragDrop(DROPEFFECT_COPY);
 
     *pResult = 0;
 }

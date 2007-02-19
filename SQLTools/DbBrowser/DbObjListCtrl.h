@@ -141,6 +141,7 @@ public:
   void RefreshList  (bool bValid, bool bInvalid);
   void ExecuteQuery (const CString& strSchema, const CString& strFilter);
   void RefreshRow   (int nItem, int nRow, const char* szOwner, const char* szName);
+  string GetListSelectionAsText();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
