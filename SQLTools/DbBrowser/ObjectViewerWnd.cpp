@@ -53,7 +53,10 @@ CObjectViewerWnd::~CObjectViewerWnd()
 BOOL CObjectViewerWnd::PreTranslateMessage(MSG* pMsg)
 {
 	if (m_accelTable)
-		return TranslateAccelerator(m_hWnd, m_accelTable, pMsg) != 0;
+		if (TranslateAccelerator(m_hWnd, m_accelTable, pMsg) == 0)
+			return CDialog::PreTranslateMessage(pMsg);
+		else
+			return true;
 	else
 		return CDialog::PreTranslateMessage(pMsg);
 }
