@@ -36,6 +36,7 @@ namespace OpenEditor
     using std::dec;
     using std::endl;
     using std::getline;
+	using std::ios_base;
 
 
 Stream::Section::Section (Stream& stream, int section, bool skip)
@@ -327,6 +328,30 @@ void FileInStream::read  (const string& name, int& val)
     _ASSERTE(m_infile.good());
 }
 
+
+void FileInStream::read_with_default  (const string& name, bool& val, bool default_val)
+{
+    _ASSERTE(m_infile.good());
+    string _name;
+    getline(m_infile, _name, '=');
+    if (!isValidEntryName(name, _name))
+	{
+		val = default_val;
+		m_infile.seekg(-_name.length() - 1, ios_base::cur);
+	}
+	else
+	{
+		m_infile >> val; m_infile.get();
+	}
+    _ASSERTE(m_infile.good());
+}
+
+bool FileInStream::isValidEntryName (const string& name, const string& entryName)
+{
+    string key = m_sectionKey.Format(name);
+
+    return ! (stricmp(key.c_str(), entryName.c_str()));
+}
 
 void FileOutStream::write (const string& name, unsigned int val)
 {
