@@ -55,6 +55,8 @@ public:
 
 	void OnSqlObjViewer_Public();
 
+	void ShowControlBar(CControlBar* pBar, BOOL bShow, BOOL bDelay);
+
 	//{{AFX_VIRTUAL(CMDIMainFrame)
 	//}}AFX_VIRTUAL
 

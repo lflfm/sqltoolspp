@@ -102,6 +102,7 @@ CMDIMainFrame::CMDIMainFrame()
 : m_wndDbSourceWnd(((CSQLToolsApp*)AfxGetApp())->GetConnect())
 {
     m_cszProfileName = lpszProfileName;
+	m_wndXPlanEdit = 0;
 }
 
 CMDIMainFrame::~CMDIMainFrame()
@@ -350,10 +351,22 @@ void CMDIMainFrame::OnObjectListCopy ()
 	m_wndDbSourceWnd.OnCopy_Public();
 }
 
+void CMDIMainFrame::ShowControlBar(CControlBar* pBar, BOOL bShow, BOOL bDelay)
+{
+	CFrameWnd::ShowControlBar(pBar, bShow, bDelay);
+
+	if (! bShow)
+	{
+		if (m_pViewActive)
+			m_pViewActive->SetFocus();
+	}
+}
+
 void CMDIMainFrame::OnNewPlanRefresh ()
 {
-	// m_wndXPlanEdit->OnRefreshPlan();
-	AfxMessageBox("OnNewPlanRefresh");
+	if (m_wndXPlanEdit)
+		m_wndXPlanEdit->OnRefreshPlan();
+	// AfxMessageBox("OnNewPlanRefresh");
 }
 
 void CMDIMainFrame::OnUpdate_FileToolbar (CCmdUI* pCmdUI)
