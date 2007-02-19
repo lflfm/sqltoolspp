@@ -1358,6 +1358,8 @@ void CPLSWorksheetDoc::OnCloseDocument()
         }
         _DEFAULT_HANDLER_;
 
+	// TODO: Fix this strange issue when setting active view in OEView::SetFocus
+	((CMDIMainFrame *)AfxGetMainWnd())->SetActiveView(NULL, FALSE);
 
     return COEDocument::OnCloseDocument();
 }

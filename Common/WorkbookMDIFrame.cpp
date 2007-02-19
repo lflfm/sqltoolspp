@@ -29,6 +29,8 @@
 #include "COMMON/ExceptionHelper.h"
 #include "COMMON/WorkbookMDIFrame.h"
 #include "COMMON/GUICommandDictionary.h"
+#include "SQLTools.h"
+#include "MainFrm.h"
 
 using namespace Common;
 
@@ -66,7 +68,7 @@ void CWorkbookControlBar::OnCbar_Docking ()
 
 void CWorkbookControlBar::OnCbar_Hide ()
 {
-    ((CFrameWnd*)AfxGetMainWnd())->ShowControlBar(this, FALSE, TRUE);
+    ((CMDIMainFrame *)AfxGetMainWnd())->ShowControlBar(this, FALSE, TRUE);
 }
 
 
@@ -196,6 +198,9 @@ void CWorkbookMDIFrame::OnClose()
 
     SaveBarState(m_cszProfileName);
     CSizingControlBar::GlobalSaveState(this, m_cszProfileName);
+
+	// TODO: Fix this strange issue when setting active view in OEView::SetFocus
+	m_pViewActive = NULL;
 
     CMDIFrameWnd::OnClose();
 }
