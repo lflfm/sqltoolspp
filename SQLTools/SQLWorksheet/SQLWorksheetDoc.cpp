@@ -352,6 +352,17 @@ void CPLSWorksheetDoc::PrintExecTime (std::ostream& out, double seconds)
         out << seconds << " sec.";
 }
 
+bool CPLSWorksheetDoc::IsBlankLine(const char *linePtr, const int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		if ((*(linePtr + i) != ' ') && (*(linePtr + i) != '\t'))
+			return false;
+	}
+
+	return true;
+}
+
 void CPLSWorksheetDoc::DoSqlExecute (int mode)
 {
     try { EXCEPTION_FRAME;
@@ -369,6 +380,7 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
             OpenEditor::Square sel;
             m_pEditor->GetSelection(sel);
             sel.normalize();
+            int nlines = m_pEditor->GetLineCount();
 
             if (sel.is_empty()) // make default selection
             {
@@ -389,13 +401,39 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
 						if (len == 0)
 							break;
 
+						if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+							if (IsBlankLine(linePtr, len))
+								break;
+						
 						sel.start.line--;
 					}
 				}
 
                 // to the bottom
                 sel.end.column = INT_MAX;
-                sel.end.line   = INT_MAX;
+
+                if (mode == ALL) // from the top
+					sel.end.line   = INT_MAX;
+                else             // search from the current line to top for blank line
+				{
+                    sel.end.line = m_pEditor->GetPosition().line;
+
+					const char *linePtr;
+					int len;
+
+					while (sel.end.line < nlines - sel.start.line - 1)
+					{
+						m_pEditor->GetLine(sel.end.line + 1, linePtr, len);
+						if (len == 0)
+							break;
+
+						if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+							if (IsBlankLine(linePtr, len))
+								break;
+						
+						sel.end.line++;
+					}
+				}
             }
             // convert positions to indexes (because of tabs)
             sel.start.column = m_pEditor->PosToInx(sel.start.line, sel.start.column);
@@ -408,7 +446,6 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
 
             line = sel.start.line;
             int offset = sel.start.column;
-            int nlines = m_pEditor->GetLineCount();
             for (; line < nlines && line <= sel.end.line; line++)
             {
                 int len;

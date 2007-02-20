@@ -105,6 +105,8 @@ protected:
     virtual void GetNewPathName (CString& newName) const;
     void ActivateEditor ();
     void ActivateTab (CView*);
+	
+	bool IsBlankLine(const char *linePtr, const int len);
 
 	CPLSWorksheetDoc();
 	DECLARE_DYNCREATE(CPLSWorksheetDoc)
