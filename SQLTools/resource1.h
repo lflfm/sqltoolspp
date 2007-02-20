@@ -419,7 +419,7 @@
 // #define ID_NP_EDIT_COPY                 40003
 // #define ID_NP_EDIT_SELECT_ALL           40004
 #define IDR_NEWPLAN_OPTIONS             999
-
+#define IDR_OBJECTVIEWER_DUMMY          998
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
