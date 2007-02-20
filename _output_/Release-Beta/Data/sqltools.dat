@@ -1,4 +1,4 @@
-Version=1016
+Version=1017
 DateFormat=
 Autocommit=0
 CommitOnDisconnect=2
@@ -10,7 +10,8 @@ ScanForSubstitution=0
 PlanTable=PLAN_TABLE
 CancelQueryDelay=1
 TopmostCancelQuery=0
-DbmsXplanDisplayCursor=1
+DbmsXplanDisplayCursor=0
+WhitespaceLineDelim=1
 GridMaxColLength=24
 GridMultilineCount=3
 GridNullRepresentation=

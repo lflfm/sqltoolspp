@@ -44,6 +44,7 @@ SQLToolsSettings::SQLToolsSettings ()
     m_CancelQueryDelay    = 1;
     m_TopmostCancelQuery  = true;
     m_DbmsXplanDisplayCursor = false;
+	m_WhitespaceLineDelim = false;
                                  
     m_GridMaxColLength           = 16;
     m_GridMultilineCount         = 3;
@@ -158,7 +159,7 @@ const VisualAttributesSet& SQLToolsSettings::GetVASet (const string& name) const
     using std::endl;
     using std::getline;
 
-    const int TheSettingsVersion = 1016;
+    const int TheSettingsVersion = 1017;
 
 void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
 {
@@ -178,7 +179,8 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_READ_MEMBER(settings, PlanTable          );
     OESMS_VER_READ_MEMBER(1009, settings, CancelQueryDelay, 1);
     OESMS_VER_READ_MEMBER(1010, settings, TopmostCancelQuery, true);
-    OESMS_VER_READ_MEMBER_DEFAULT(1016, settings, DbmsXplanDisplayCursor, false);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, DbmsXplanDisplayCursor, false);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, WhitespaceLineDelim, false);
                                 
     OESMS_READ_MEMBER(settings, GridMaxColLength          );
     OESMS_READ_MEMBER(settings, GridMultilineCount        );
@@ -274,6 +276,7 @@ void SQLToolsSettingsWriter::operator << (const SQLToolsSettings& settings)
     OESMS_WRITE_MEMBER(settings, CancelQueryDelay   );
     OESMS_WRITE_MEMBER(settings, TopmostCancelQuery );
     OESMS_WRITE_MEMBER(settings, DbmsXplanDisplayCursor );
+    OESMS_WRITE_MEMBER(settings, WhitespaceLineDelim );
                                 
     OESMS_WRITE_MEMBER(settings, GridMaxColLength          );
     OESMS_WRITE_MEMBER(settings, GridMultilineCount        );

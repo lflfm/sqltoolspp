@@ -68,6 +68,7 @@ public:
     OES_DECLARE_PROPERTY(int,    CancelQueryDelay   );
     OES_DECLARE_PROPERTY(bool,   TopmostCancelQuery );
     OES_DECLARE_PROPERTY(bool,   DbmsXplanDisplayCursor);
+    OES_DECLARE_PROPERTY(bool,   WhitespaceLineDelim);
 
     OES_DECLARE_PROPERTY(int,    GridMaxColLength        );
     OES_DECLARE_PROPERTY(int,    GridMultilineCount      );
