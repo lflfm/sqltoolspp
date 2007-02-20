@@ -92,7 +92,7 @@ IDR_SQLTYPE             ICON                    "res\\SQLDoc.ico"
 // Dialog
 //
 
-IDD_PROP_SERVER DIALOGEX 0, 0, 256, 164
+IDD_PROP_SERVER DIALOGEX 0, 0, 256, 180
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_DISABLED | WS_CAPTION
 CAPTION "SQLTools::Session"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
@@ -132,9 +132,12 @@ BEGIN
     CONTROL         "&Topmost cancel query window",
                     IDC_SERV_PROP_TOPMOST_CANCEL_QUERY,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,117,143,112,10
-   CONTROL          "Sho&w DISPLAY_CURSOR output (10g)", 
+   CONTROL          "Sho&w DISPLAY_CURSOR output", 
                     IDC_SERV_PROP_DISPLAY_CURSOR, "Button", 
 					BS_AUTOCHECKBOX | WS_TABSTOP,117,155,135,10 
+   CONTROL          "Whitespace line delimits SQL", 
+                    IDC_SERV_PROP_WHITESPACE_DELIM, "Button", 
+					BS_AUTOCHECKBOX | WS_TABSTOP,117,167,135,10 
 END
 
 IDD_PROP_GRID1 DIALOGEX 0, 0, 256, 164
@@ -1523,7 +1526,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Copy",                       IDC_DS_COPY
         MENUITEM SEPARATOR
-        MENUITEM "&Find Object",                ID_SQL_DESCRIBE
+        MENUITEM "Descri&be",                   ID_SQL_DESCRIBE
         MENUITEM SEPARATOR
         MENUITEM "&Enable",                     IDC_DS_ENABLE, GRAYED
         MENUITEM "D&isable",                    IDC_DS_DISABLE, GRAYED
