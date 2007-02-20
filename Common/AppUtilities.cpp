@@ -31,6 +31,40 @@ static char THIS_FILE[] = __FILE__;
 namespace Common
 {
 
+	void CopyTextToClipboard(const string& theText)
+	{
+		if (::OpenClipboard(NULL))
+		{
+			CWaitCursor wait;
+
+			::EmptyClipboard();
+
+			if (theText.size())
+			{
+				HGLOBAL hDataSrc = ::GetClipboardData(CF_TEXT);
+				const char* src = hDataSrc ? (const char*)::GlobalLock(hDataSrc) : NULL;
+				size_t length = src ? strlen(src) : 0; 
+	            
+				HGLOBAL hDataDest = ::GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, length + theText.size() + 1);
+				if (hDataDest)
+				{
+					char* dest = (char*)::GlobalLock(hDataDest);
+					if (dest) 
+					{
+						if (src) memcpy(dest, src, length);
+						memcpy(dest + length, theText.c_str(), theText.size() + 1);
+					}
+					if (hDataSrc) ::GlobalUnlock(hDataSrc);
+					::GlobalUnlock(hDataDest);
+					::EmptyClipboard();
+					::SetClipboardData(CF_TEXT, hDataDest);
+				}
+			}
+
+			::CloseClipboard();
+		}
+	}
+
 void AppRestoreHistory (CComboBox& wndList, const char* szSection, const char* szEntry, int nSize)
 {
     wndList.ResetContent();

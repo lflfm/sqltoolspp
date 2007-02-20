@@ -28,6 +28,7 @@
 namespace Common
 {
 
+	void CopyTextToClipboard(const string& theText);
     void AppRestoreHistory (CComboBox& wndList, const char* szSection, const char* szEntry, int nSize);
     void AppSaveHistory (CComboBox& wndList, const char* szSection, const char* szEntry, int nSize);
 
