@@ -129,14 +129,14 @@ void CTreeViewer::OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult)
 	"test MIXED" NUMBER
    )
  */
-void CTreeViewer::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult) 
+
+string CTreeViewer::GetItemStrippedText(HTREEITEM hItem)
 {
 	int pos, pos_space;
 	CString strText, strTmp;
 	bool lower_items = GetSQLToolsSettings().m_bLowerNames;
 	bool is_alt_pressed = bool((GetAsyncKeyState(VK_MENU) & 0x8000) != 0);
-	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
-    HTREEITEM hChildItem, hItem = pNMTreeView->itemNew.hItem;
+    HTREEITEM hChildItem = hItem;
 
 	if (hItem) {
 		DWORD type = GetItemData(hItem);
@@ -203,11 +203,27 @@ void CTreeViewer::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult)
 				strText = strTmp;
 			}
 		}
+	}
+
+	return string(strText);
+}
+
+void CTreeViewer::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult) 
+{
+	bool is_alt_pressed = bool((GetAsyncKeyState(VK_MENU) & 0x8000) != 0);
+	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
+    HTREEITEM hItem = pNMTreeView->itemNew.hItem;
+
+	string theText;
+
+	if (hItem) {
+		theText = GetItemStrippedText(hItem);
+
 		// differ drag&drop icon depending on keyboard state
 		if(is_alt_pressed == true) {
-			Common::SimpleDragDataSource(strText).DoDragDrop(DROPEFFECT_LINK);
+			Common::SimpleDragDataSource(theText.c_str()).DoDragDrop(DROPEFFECT_LINK);
 		} else {
-			Common::SimpleDragDataSource(strText).DoDragDrop(DROPEFFECT_COPY);
+			Common::SimpleDragDataSource(theText.c_str()).DoDragDrop(DROPEFFECT_COPY);
 		}
 	}
 	*pResult = 0;

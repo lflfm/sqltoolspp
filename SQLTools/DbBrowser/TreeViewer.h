@@ -35,6 +35,7 @@ public:
     BOOL Create (CWnd* pFrameWnd);
     using CTreeCtrl::Create;
     void LoadAndSetImageList (UINT nResId);
+	string GetItemStrippedText(HTREEITEM hItem);
 
 	//{{AFX_VIRTUAL(CTreeViewer)
 	protected:
