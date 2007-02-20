@@ -1523,6 +1523,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Copy",                       IDC_DS_COPY
         MENUITEM SEPARATOR
+        MENUITEM "&Find Object",                ID_SQL_DESCRIBE
+        MENUITEM SEPARATOR
         MENUITEM "&Enable",                     IDC_DS_ENABLE, GRAYED
         MENUITEM "D&isable",                    IDC_DS_DISABLE, GRAYED
         MENUITEM SEPARATOR
@@ -1583,6 +1585,14 @@ BEGIN
     END
 END
 
+IDR_OBJECTVIEWER_DUMMY MENU 
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "&Copy to clipboard",          ID_EDIT_COPY
+        MENUITEM "Hide Object Viewer",          ID_SQL_OBJ_VIEWER
+    END
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //
