@@ -74,4 +74,5 @@ void CPropServerPage::DoDataExchange(CDataExchange* pDX)
 
     DDX_Check(pDX, IDC_SERV_PROP_TOPMOST_CANCEL_QUERY, m_settings.m_TopmostCancelQuery);
     DDX_Check(pDX, IDC_SERV_PROP_DISPLAY_CURSOR, m_settings.m_DbmsXplanDisplayCursor);
+    DDX_Check(pDX, IDC_SERV_PROP_WHITESPACE_DELIM, m_settings.m_WhitespaceLineDelim);
 }
