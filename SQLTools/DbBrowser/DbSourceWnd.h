@@ -30,6 +30,8 @@
 class CDbSourceWnd : public CWnd
 {
     static CPtrList m_thisDialogs;
+	HACCEL m_accelTable;
+
 // Construction
 public:
 	CDbSourceWnd (OciConnect& connect);
@@ -125,6 +127,7 @@ protected:
     afx_msg void OnDblClikList(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnLoad();
     afx_msg void OnCopy();
+	afx_msg void OnSqlDescribe();
     afx_msg void OnLoadAsOne();
     afx_msg void OnCompile();
     afx_msg void OnDelete();
@@ -148,6 +151,7 @@ protected:
     afx_msg void OnQuery ();
     afx_msg void OnDataDelete ();
     afx_msg void OnTruncate ();
+    virtual BOOL PreTranslateMessage(MSG* pMsg);
 
     DECLARE_MESSAGE_MAP()
 };
