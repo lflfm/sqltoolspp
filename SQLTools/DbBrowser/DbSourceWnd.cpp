@@ -44,6 +44,7 @@
 #include "SQLWorksheet/2PaneSplitter.h"
 #include "OCI8/BCursor.h"
 #include <math.h>
+#include "COMMON/GUICommandDictionary.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -80,6 +81,7 @@ CDbSourceWnd::CDbSourceWnd (OciConnect& connect)
 
     for (int i(0); i < (sizeof m_wndTabLists/ sizeof m_wndTabLists[0]); i++)
         m_wndTabLists[i] = 0;
+	m_accelTable = 0;
 }
 
 CDbSourceWnd::~CDbSourceWnd ()
@@ -90,6 +92,9 @@ CDbSourceWnd::~CDbSourceWnd ()
                 delete m_wndTabLists[i];
     } 
     _DESTRUCTOR_HANDLER_
+
+	if (m_accelTable)
+		DestroyAcceleratorTable(m_accelTable);
 }
 
 CDbObjListCtrl* CDbSourceWnd::GetCurSel () const
@@ -161,7 +166,9 @@ BOOL CDbSourceWnd::Create (CWnd* pParentWnd)
 
     EnableToolTips();
 
-    return TRUE;
+	m_accelTable = Common::GUICommandDictionary::GetSingleCommandAccelTable(ID_SQL_DESCRIBE);
+	
+	return TRUE;
 }
 
 void CDbSourceWnd::DoDataExchange (CDataExchange* pDX)
@@ -215,6 +222,7 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_COMMAND(ID_DS_QUERY, OnQuery)
     ON_COMMAND(ID_DS_DELETE, OnDataDelete)
     ON_COMMAND(ID_DS_TRUNCATE, OnTruncate)
+    ON_COMMAND(ID_SQL_DESCRIBE, OnSqlDescribe)
 END_MESSAGE_MAP()
 
 
@@ -1050,11 +1058,49 @@ void CDbSourceWnd::OnCompile ()
     }
 }
 
+BOOL CDbSourceWnd::PreTranslateMessage(MSG* pMsg)
+{
+	if (m_accelTable)
+		if (TranslateAccelerator(m_hWnd, m_accelTable, pMsg) == 0)
+			return CWnd::PreTranslateMessage(pMsg);
+		else
+			return true;
+	else
+		return CWnd::PreTranslateMessage(pMsg);
+}
+
 void CDbSourceWnd::OnCopy_Public()
 {
 	OnCopy();
 }
 
+
+void CDbSourceWnd::OnSqlDescribe()
+{
+    try { EXCEPTION_FRAME;
+
+    if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
+    {
+		// string s_theTextList = wndListCtrl->GetListSelectionAsText();
+
+		int index = wndListCtrl->GetSelectionMark();
+
+		if (index >= 0)
+	    {
+			string s_theTextList = wndListCtrl->GetItemText(index, 0);
+
+			CObjectViewerWnd& viewer = CPLSWorksheetDoc::GetMainFrame()->ShowTreeViewer();
+
+			viewer.ShowObject(string(m_strSchema) + string(".") + s_theTextList);
+
+			// R#1078900 - 'Find object' (F12) and focus of editor cursor
+			if (COEDocument::GetSettingsManager().GetGlobalSettings()->GetFindObjectMoveCursor() == true)
+				viewer.SetFocus();
+		}
+	}
+	}
+	_DEFAULT_HANDLER_
+}
 
 void CDbSourceWnd::OnCopy ()
 {
@@ -1062,38 +1108,9 @@ void CDbSourceWnd::OnCopy ()
     {
 		string s_theTextList = wndListCtrl->GetListSelectionAsText();
 
+		Common::CopyTextToClipboard(s_theTextList);
+
 		// AfxMessageBox(s_theTextList.c_str());
-
-		if (::OpenClipboard(NULL))
-		{
-			CWaitCursor wait;
-
-			::EmptyClipboard();
-
-			if (s_theTextList.size())
-			{
-				HGLOBAL hDataSrc = ::GetClipboardData(CF_TEXT);
-				const char* src = hDataSrc ? (const char*)::GlobalLock(hDataSrc) : NULL;
-				size_t length = src ? strlen(src) : 0; 
-	            
-				HGLOBAL hDataDest = ::GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, length + s_theTextList.size() + 1);
-				if (hDataDest)
-				{
-					char* dest = (char*)::GlobalLock(hDataDest);
-					if (dest) 
-					{
-						if (src) memcpy(dest, src, length);
-						memcpy(dest + length, s_theTextList.c_str(), s_theTextList.size() + 1);
-					}
-					if (hDataSrc) ::GlobalUnlock(hDataSrc);
-					::GlobalUnlock(hDataDest);
-					::EmptyClipboard();
-					::SetClipboardData(CF_TEXT, hDataDest);
-				}
-			}
-
-			::CloseClipboard();
-		}
 
 		Global::SetStatusText("Copied to clipboard: " + s_theTextList);
     }
