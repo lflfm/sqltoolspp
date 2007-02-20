@@ -61,4 +61,5 @@ protected:
     afx_msg void OnInput_SelChange ();
     afx_msg void OnInput_CloseUp ();
 	afx_msg void OnSqlObjViewer();
+	afx_msg void OnEditCopy();
 };

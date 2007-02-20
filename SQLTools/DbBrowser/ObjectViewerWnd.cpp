@@ -61,6 +61,15 @@ BOOL CObjectViewerWnd::PreTranslateMessage(MSG* pMsg)
 		return CDialog::PreTranslateMessage(pMsg);
 }
 
+void CObjectViewerWnd::OnEditCopy()
+{
+    // ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
+	string theText = m_treeViewer.GetItemStrippedText(m_treeViewer.GetSelectedItem());
+	Common::CopyTextToClipboard(theText);
+
+	Global::SetStatusText("Copied to clipboard: " + theText);
+}
+
 void CObjectViewerWnd::OnSqlObjViewer()
 {
     // ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
@@ -70,7 +79,14 @@ void CObjectViewerWnd::OnSqlObjViewer()
 BOOL CObjectViewerWnd::Create (CWnd* pParentWnd)
 {
 	if (! m_accelTable)
-		m_accelTable = Common::GUICommandDictionary::GetSingleCommandAccelTable(ID_SQL_OBJ_VIEWER);
+	{
+		CMenu menu;
+		VERIFY(menu.LoadMenu(IDR_OBJECTVIEWER_DUMMY));
+		CMenu* pPopup = menu.GetSubMenu(0);
+		ASSERT(pPopup != NULL);
+		Common::GUICommandDictionary::AddAccelDescriptionToMenu(pPopup->m_hMenu);
+		m_accelTable = Common::GUICommandDictionary::GetMenuAccelTable(pPopup->m_hMenu);
+	}
 
 	return CDialog::Create(IDD_OBJ_INFO_TREE, pParentWnd);
 }
@@ -173,6 +189,7 @@ BEGIN_MESSAGE_MAP(CObjectViewerWnd, CDialog)
     ON_CBN_SELCHANGE(IDC_OIT_INPUT, OnInput_SelChange)
     ON_CBN_CLOSEUP(IDC_OIT_INPUT, OnInput_CloseUp)
 	ON_COMMAND(ID_SQL_OBJ_VIEWER, OnSqlObjViewer)
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 END_MESSAGE_MAP()
 
 // CObjectViewerWnd message handlers
