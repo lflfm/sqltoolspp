@@ -200,7 +200,7 @@ void CWorkbookMDIFrame::OnClose()
     CSizingControlBar::GlobalSaveState(this, m_cszProfileName);
 
 	// TODO: Fix this strange issue when setting active view in OEView::SetFocus
-	m_pViewActive = NULL;
+	// m_pViewActive = NULL;
 
     CMDIFrameWnd::OnClose();
 }
