@@ -166,7 +166,15 @@ BOOL CDbSourceWnd::Create (CWnd* pParentWnd)
 
     EnableToolTips();
 
-	m_accelTable = Common::GUICommandDictionary::GetSingleCommandAccelTable(ID_SQL_DESCRIBE);
+	if (! m_accelTable)
+	{
+		CMenu menu;
+		VERIFY(menu.LoadMenu(IDR_OBJECTLIST_DUMMY));
+		CMenu* pPopup = menu.GetSubMenu(0);
+		ASSERT(pPopup != NULL);
+		Common::GUICommandDictionary::AddAccelDescriptionToMenu(pPopup->m_hMenu);
+		m_accelTable = Common::GUICommandDictionary::GetMenuAccelTable(pPopup->m_hMenu);
+	}
 	
 	return TRUE;
 }
@@ -198,6 +206,7 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_COMMAND(IDC_DS_LOAD_ALL_IN_ONE, OnLoadAsOne)
     ON_COMMAND(IDC_DS_COMPILE, OnCompile)
     ON_COMMAND(IDC_DS_COPY, OnCopy)
+    ON_COMMAND(ID_EDIT_COPY, OnCopy)
     ON_COMMAND(IDC_DS_DELETE, OnDelete)
     ON_COMMAND(IDC_DS_DISABLE, OnDisable)
     ON_COMMAND(IDC_DS_ENABLE, OnEnable)
