@@ -55,6 +55,9 @@ public:
 
 	void OnSqlObjViewer_Public();
 
+	CView* GetMyActiveView() const { return m_pMyViewActive; } // active view or NULL
+	void SetMyActiveView(CView* pViewNew) { m_pMyViewActive = pViewNew; }
+
 	void ShowControlBar(CControlBar* pBar, BOOL bShow, BOOL bDelay);
 
 	//{{AFX_VIRTUAL(CMDIMainFrame)
@@ -83,6 +86,7 @@ protected:  // control bar embedded members
     CString m_orgTitle;
 
 	cXPlanEdit*			m_wndXPlanEdit;
+	CView*              m_pMyViewActive;       // current active view
 
 // Generated message map functions
 protected:
