@@ -257,6 +257,7 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
             OpenEditor::Square sel;
             m_pEditor->GetSelection(sel);
             sel.normalize();
+            int nlines = m_pEditor->GetLineCount();
 
             if (sel.is_empty()) // make default selection
             {
@@ -277,7 +278,22 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
 				}
                 // to the bottom
                 sel.end.column = INT_MAX;
-                sel.end.line   = INT_MAX;
+
+                // search from the current line to bottom for blank line
+                sel.end.line = m_pEditor->GetPosition().line;
+
+				while (sel.end.line < nlines - 1)
+				{
+					m_pEditor->GetLine(sel.end.line + 1, linePtr, len);
+					if (len == 0)
+						break;
+
+					if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+						if (IsBlankLine(linePtr, len))
+							break;
+					
+					sel.end.line++;
+				}
             }
             // convert positions to indexes (because of tabs)
             sel.start.column = m_pEditor->PosToInx(sel.start.line, sel.start.column);
@@ -291,7 +307,6 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
 
             int line = sel.start.line;
             int offset = sel.start.column;
-            int nlines = m_pEditor->GetLineCount();
             for (; line < nlines && line <= sel.end.line; line++)
             {
                 int len;
@@ -414,14 +429,14 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
 
                 if (mode == ALL) // from the top
 					sel.end.line   = INT_MAX;
-                else             // search from the current line to top for blank line
+                else             // search from the current line to bottom for blank line
 				{
                     sel.end.line = m_pEditor->GetPosition().line;
 
 					const char *linePtr;
 					int len;
 
-					while (sel.end.line < nlines - sel.start.line - 1)
+					while (sel.end.line < nlines - 1)
 					{
 						m_pEditor->GetLine(sel.end.line + 1, linePtr, len);
 						if (len == 0)
@@ -1396,7 +1411,7 @@ void CPLSWorksheetDoc::OnCloseDocument()
         _DEFAULT_HANDLER_;
 
 	// TODO: Fix this strange issue when setting active view in OEView::SetFocus
-	((CMDIMainFrame *)AfxGetMainWnd())->SetActiveView(NULL, FALSE);
+	// ((CMDIMainFrame *)AfxGetMainWnd())->SetActiveView(NULL, FALSE);
 
     return COEDocument::OnCloseDocument();
 }
