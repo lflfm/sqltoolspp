@@ -79,8 +79,8 @@ Edit.GetRandomBookmark.6      Ctrl+6
 Edit.GetRandomBookmark.7      Ctrl+7
 Edit.GetRandomBookmark.8      Ctrl+8
 Edit.GetRandomBookmark.9      Ctrl+9
-Edit.FindMatch                Ctrl+]
-Edit.FindMatchSelect          Ctrl+Shift+]
+Edit.FindMatch                Ctrl+-
+Edit.FindMatchSelect          Ctrl+Shift+-
 Edit.FindInFile               Ctrl+Shift+F
 #Format
 Edit.Sort                     Ctrl+K,S
@@ -97,17 +97,15 @@ Edit.InvertCase               Ctrl+K,I
 Edit.CommentLine              Ctrl+>
 Edit.UncommentLine            Ctrl+<
 Edit.ExpandTemplate           Ctrl+Space
-Edit.OpenFileUnderCursor      Ctrl+K,F
 Edit.DatetimeStamp            Ctrl+T
 #Text
 Edit.StreamSelection          F8
 Edit.ColumnSelection          Ctrl+Shift+F8
 Edit.ToggleSelectionMode      Ctrl+Q,B
 Edit.VisibleSpaces            Ctrl+Q,I
-Edit.LineNumbers              Ctrl+Q,L
 Edit.Ruler                    Ctrl+Q,U
 Edit.ColumnMarkers            Ctrl+Q,M
-Edit.IndentGuide              Ctrl+Q,G
+Edit.LineNumbers              Ctrl+Q,L
 Edit.FileSettings             Ctrl+Q,F
 Edit.PermanentSettings        Ctrl+Q,P
 #View
@@ -139,6 +137,7 @@ Session.Commit                Ctrl+D,T
 Session.Rollback              Ctrl+D,R
 Session.EnableDbmsOutput
 Session.EnableSessionStatistics
+Session.DbmsXplanDisplayCursor
 #Script
 Script.Execute                F5
 Script.ExecuteCurrent         F10
@@ -170,3 +169,4 @@ Window.LastWindow             Ctrl+Tab
 Help.Help                     F1
 Help.SqlHelp                  Ctrl+F1
 Help.ContextHelp              Shift+F1
+PlanView.Refresh              Shift+F5
