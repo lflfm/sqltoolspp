@@ -572,6 +572,7 @@ Connect::Connect ()
     m_OutputEnable = false;
     m_bypassTns = false;
     m_OutputSize = 20000L;
+	m_GetSIDFailed = false;
 }
 
 Connect::~Connect ()
@@ -586,6 +587,7 @@ void Connect::Open (const char* uid, const char* pswd, const char* alias, EConne
     m_strHost.clear();
     m_strPort.clear();
     m_strSid.clear();
+    m_GetSIDFailed = false;
 
     m_strGlobalName.erase();
     m_strVersion.erase();
@@ -613,6 +615,7 @@ void Connect::Open (const char* uid, const char* pswd, const char* host, const c
     m_strHost = host;
     m_strPort = port;
     m_strSid  = sid;
+    m_GetSIDFailed = false;
 
     m_strGlobalName.erase();
     m_strVersion.erase();
@@ -736,7 +739,7 @@ const char* Connect::GetGlobalName () // throw Exception
 
 const char* Connect::GetSessionSid () // throw Exception
 {
-	if (! m_sessionSid.size())
+	if (! m_sessionSid.size() && (! m_GetSIDFailed))
 	{
         try
         {
@@ -749,7 +752,8 @@ const char* Connect::GetSessionSid () // throw Exception
         catch (const Exception& x)
         {
             MessageBeep(MB_ICONHAND);
-			AfxMessageBox((string("Error: ") + x.what() + string("reading sid from v$mystat.")).c_str());
+			AfxMessageBox((string("Error: ") + x.what() + string(" reading sid from v$mystat.")).c_str());
+			m_GetSIDFailed = true;
 		}
 	}
 
