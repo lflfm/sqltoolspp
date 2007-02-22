@@ -1597,6 +1597,14 @@ BEGIN
     END
 END
 
+IDR_OBJECTLIST_DUMMY MENU 
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "&Copy to clipboard",           ID_EDIT_COPY
+        MENUITEM "&Describe",                    ID_SQL_DESCRIBE
+    END
+END
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar
