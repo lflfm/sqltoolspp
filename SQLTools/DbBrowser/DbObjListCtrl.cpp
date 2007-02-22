@@ -416,7 +416,16 @@ string CDbObjListCtrl::GetListSelectionAsText()
 
 	string s_theTextList;
 	string s_delimiter = "";
+    string s_schema = "";
+	bool lower_items = GetSQLToolsSettings().m_bLowerNames;
+    bool b_schema_name = GetSQLToolsSettings().m_bShemaName;
 
+    if (b_schema_name)
+        s_schema = string(((CDbSourceWnd *) GetOwner())->m_strSchema) + ".";
+
+    if (lower_items)
+        s_schema = string(CString(s_schema.c_str()).MakeLower());
+    
     int index = -1;
     while ((index = GetNextItem(index, LVNI_SELECTED))!=-1) 
     {
@@ -429,7 +438,7 @@ string CDbObjListCtrl::GetListSelectionAsText()
             AfxThrowUserException();
         }
 
-		s_theTextList += s_delimiter + lvi.pszText;
+        s_theTextList += s_delimiter + s_schema + string(lower_items ? CString(lvi.pszText).MakeLower() : CString(lvi.pszText));
 		s_delimiter = ", ";
     }
 
