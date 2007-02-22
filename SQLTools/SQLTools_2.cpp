@@ -222,7 +222,7 @@ void CSQLToolsApp::InitGUICommand ()
     GUICommandDictionary::InsertCommand("Help.SqlHelp",                    ID_SQL_HELP);
     GUICommandDictionary::InsertCommand("Help.ContextHelp",                ID_CONTEXT_HELP);
 //Object List Accelerators
-	GUICommandDictionary::InsertCommand("ObjectList.Copy",                 IDC_DS_COPY);
+	// GUICommandDictionary::InsertCommand("ObjectList.Copy",                 IDC_DS_COPY);
 	GUICommandDictionary::InsertCommand("PlanView.Refresh",                ID_NP_REFRESH);
     }
 }
