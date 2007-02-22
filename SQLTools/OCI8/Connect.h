@@ -280,6 +280,7 @@ protected:
 	string m_CurrentSqlHashValue;
 	string m_CurrentSqlChildNumber;
 	string m_CurrentSqlID;
+    bool m_GetSIDFailed;
 
     // NLS parameters
     void LoadSessionNlsParameters ();
