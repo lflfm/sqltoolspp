@@ -548,7 +548,7 @@ void COEditorView::OnSetFocus (CWnd* pOldWnd)
 {
 	CView::OnSetFocus(pOldWnd);
 
-	((CMDIMainFrame *)AfxGetMainWnd())->SetActiveView(this, FALSE);
+	((CMDIMainFrame *)AfxGetMainWnd())->SetMyActiveView(this);
 
     ShowCaret(TRUE);
 }
