@@ -273,11 +273,14 @@ bool GUICommandDictionary::BuildAcceleratorTable (const char* filename, HACCEL& 
 
 HACCEL GUICommandDictionary::GetSingleCommandAccelTable (Command command)
 {
-    ACCEL AccelTable[MAX_MENU_ITEMS_NUMBER];
+    ACCEL AccelTable[MAX_MENU_ITEMS_NUMBER], AccelTable2[MAX_MENU_ITEMS_NUMBER];
     memset(AccelTable, 0, sizeof(AccelTable));
+    memset(AccelTable2, 0, sizeof(AccelTable2));
 
 	HACCEL theAccelTable = 0;
 
+	int n_count = 0;
+		
 	if (g_accelTable)
     {
 		int size = CopyAcceleratorTable(g_accelTable, AccelTable, sizeof AccelTable/ sizeof AccelTable[0]);
@@ -285,8 +288,13 @@ HACCEL GUICommandDictionary::GetSingleCommandAccelTable (Command command)
 		for (int i = 0; i < size; i++)
 		{
 			if (AccelTable[i].cmd == command)
-				theAccelTable = CreateAcceleratorTable(&AccelTable[i], 1);
+				AccelTable2[n_count++] = AccelTable[i];
 		}
+	}
+
+	if (n_count > 0)
+    {
+		theAccelTable = CreateAcceleratorTable(AccelTable2, n_count);
 	}
 
 	return theAccelTable;
@@ -442,13 +450,25 @@ HACCEL GUICommandDictionary::GetMenuAccelTable (HMENU& hMenu)
     memset(AccelTable, 0, sizeof(AccelTable));
     int size = CopyAcceleratorTable(g_accelTable, AccelTable, sizeof AccelTable/ sizeof AccelTable[0]);
 
-	typedef std::map<WORD, ACCEL> accelMap;
+	typedef std::vector<ACCEL> accelVector;
+	typedef std::map<WORD, accelVector> accelMap;
 
 	accelMap theAccelMap;
 
 	for (int i = 0; i < size; i++)
 	{
-		theAccelMap.insert(accelMap::value_type(AccelTable[i].cmd, AccelTable[i]));
+		accelMap::iterator am_it = theAccelMap.find(AccelTable[i].cmd);
+
+		if (am_it == theAccelMap.end())
+		{
+			accelVector theAccelVector;
+			theAccelVector.push_back(AccelTable[i]);
+			theAccelMap.insert(accelMap::value_type(AccelTable[i].cmd, theAccelVector));
+		}
+		else
+		{
+			(am_it->second).push_back(AccelTable[i]);
+		}
 	}
 
     memset(AccelTable, 0, sizeof(AccelTable));
@@ -459,12 +479,17 @@ HACCEL GUICommandDictionary::GetMenuAccelTable (HMENU& hMenu)
     {
         MenuItem& menuitem = *it;
 
-		accelMap::iterator am_it = theAccelMap.find(menuitem.m_command);
+		accelMap::const_iterator am_it = theAccelMap.find(menuitem.m_command);
 
 		if (am_it != theAccelMap.end())
-	    {
-			AccelTable[i] = am_it->second;
-			i += 1;
+		{
+			accelVector::const_iterator as_it = (am_it->second).begin();
+			while (as_it != (am_it->second).end())
+			{
+				AccelTable[i] = *as_it;
+				i += 1;
+				++as_it;
+			}
 		}
 	}
 
