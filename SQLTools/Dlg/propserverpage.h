@@ -38,6 +38,12 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
+
+protected:
+	//{{AFX_MSG(CPropServerPage)
+	afx_msg void OnServPropSesstat();
+	//}}AFX_MSG
+	DECLARE_MESSAGE_MAP()
 };
 
 //{{AFX_INSERT_LOCATION}}

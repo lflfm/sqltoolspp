@@ -49,6 +49,7 @@ void CPropServerPage::DoDataExchange(CDataExchange* pDX)
     DDX_CBIndex(pDX, IDC_SERV_PROP_ACTION_ON_DISCONNECT, m_settings.m_CommitOnDisconnect);
     DDX_Check(pDX, IDC_SERV_PROP_OUTPUT_ENABLE, m_settings.m_OutputEnable);
     DDX_Check(pDX, IDC_SERV_PROP_SESSTAT,       m_settings.m_SessionStatistics);
+    DDX_CBString(pDX, IDC_SERV_PROP_SESSTAT_MODE, m_settings.m_SessionStatisticsMode);
     DDX_Check(pDX, IDC_SERV_PROP_SAVE_PASSWORD, m_settings.m_SavePassword);
     DDX_Text(pDX, IDC_SERV_PROP_DATE_FORMAT,    m_settings.m_DateFormat);
     DDX_Text(pDX, IDC_SERV_PROP_PLAN_TABLE,     m_settings.m_PlanTable);
@@ -75,4 +76,21 @@ void CPropServerPage::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, IDC_SERV_PROP_TOPMOST_CANCEL_QUERY, m_settings.m_TopmostCancelQuery);
     DDX_Check(pDX, IDC_SERV_PROP_DISPLAY_CURSOR, m_settings.m_DbmsXplanDisplayCursor);
     DDX_Check(pDX, IDC_SERV_PROP_WHITESPACE_DELIM, m_settings.m_WhitespaceLineDelim);
+
+    OnServPropSesstat();
+}
+
+BEGIN_MESSAGE_MAP(CPropServerPage, CPropertyPage)
+	//{{AFX_MSG_MAP(CPropServerPage)
+	ON_BN_CLICKED(IDC_SERV_PROP_SESSTAT, OnServPropSesstat)
+	//}}AFX_MSG_MAP
+END_MESSAGE_MAP()
+
+void CPropServerPage::OnServPropSesstat() 
+{
+    if (m_hWnd) {
+        HWND hCheck = ::GetDlgItem(m_hWnd, IDC_SERV_PROP_SESSTAT);
+        HWND hText = ::GetDlgItem(m_hWnd, IDC_SERV_PROP_SESSTAT_MODE);
+        ::EnableWindow(hText, ::SendMessage(hCheck, BM_GETCHECK, 0, 0) == BST_CHECKED);
+    }
 }
