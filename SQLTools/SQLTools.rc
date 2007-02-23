@@ -104,6 +104,8 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,117,46,80,10
     CONTROL         "&Session statistics",IDC_SERV_PROP_SESSTAT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,117,57,83,10
+    COMBOBOX        IDC_SERV_PROP_SESSTAT_MODE,201,55,58,12,
+                    CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
     CONTROL         "&Autocommit",IDC_SERV_PROP_AUTOCOMMIT,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,117,70,80,10
     RTEXT           "Commit/rollback on &disconnect:",IDC_STATIC,7,84,105,8,
@@ -1105,6 +1107,16 @@ BEGIN
 0x6c41, 0x6177, 0x7379, 0x6320, 0x6d6f, 0x696d, 0x0074, 
     IDC_SERV_PROP_ACTION_ON_DISCONNECT, 0x403, 12, 0
 0x7355, 0x7265, 0x6320, 0x6f68, 0x6369, 0x0065, 
+    IDC_SERV_PROP_SESSTAT_MODE, 0x403, 5, 0
+0x7541, 0x6f74, "\000" 
+    IDC_SERV_PROP_SESSTAT_MODE, 0x403, 7, 0
+0x7543, 0x7473, 0x6d6f, "\000" 
+    IDC_SERV_PROP_SESSTAT_MODE, 0x403, 6, 0
+0x744f, 0x6568, 0x0072, 
+    IDC_SERV_PROP_SESSTAT_MODE, 0x403, 5, 0
+0x6939, 0x3252, "\000" 
+    IDC_SERV_PROP_SESSTAT_MODE, 0x403, 6, 0
+0x3031, 0x5267, 0x0032, 
     0
 END
 
@@ -1745,6 +1757,7 @@ BEGIN
     ID_SQL_EXTRACT_SCHEMA   "Extract Schema DDL"
     ID_SQL_SESSION_STATISTICS 
                             "Enable/Disable show session statistics\nStatistics"
+    ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR "Enable/disable automatic execution of DBMS_XPLAN.DISPLAY_CURSOR after statement execution\nDBMS_XPLAN.DISPLAY_CURSOR output"
 END
 
 STRINGTABLE 
