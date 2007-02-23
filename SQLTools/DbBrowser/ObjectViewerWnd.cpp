@@ -64,7 +64,7 @@ BOOL CObjectViewerWnd::PreTranslateMessage(MSG* pMsg)
 void CObjectViewerWnd::OnEditCopy()
 {
     // ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
-	string theText = m_treeViewer.GetItemStrippedText(m_treeViewer.GetSelectedItem());
+    string theText = m_treeViewer.GetSelectedItemsAsText(true);
 	Common::CopyTextToClipboard(theText);
 
 	Global::SetStatusText("Copied to clipboard: " + theText);
