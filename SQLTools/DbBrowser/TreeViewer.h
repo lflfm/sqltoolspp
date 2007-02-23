@@ -21,8 +21,9 @@
 #define __TREEVIEWER_H__
 #pragma once
 
+#include "TreeCtrlEx.h"
 
-class CTreeViewer : public CTreeCtrl
+class CTreeViewer : public CTreeCtrlEx
 {
     CImageList m_Images;
 public:
@@ -33,9 +34,10 @@ public:
 public:
     CSQLToolsApp* GetApp () const            { return (CSQLToolsApp*)AfxGetApp(); }
     BOOL Create (CWnd* pFrameWnd);
-    using CTreeCtrl::Create;
+    using CTreeCtrlEx::Create;
     void LoadAndSetImageList (UINT nResId);
-	string GetItemStrippedText(HTREEITEM hItem);
+	const string GetItemStrippedText(HTREEITEM hItem, const bool b_force_alt = false);
+    const string GetSelectedItemsAsText(const bool b_force_alt = false);
 
 	//{{AFX_VIRTUAL(CTreeViewer)
 	protected:
