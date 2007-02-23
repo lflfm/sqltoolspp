@@ -33,7 +33,7 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // CTreeViewer
 
-IMPLEMENT_DYNCREATE(CTreeViewer, CTreeCtrl)
+IMPLEMENT_DYNCREATE(CTreeViewer, CTreeCtrlEx)
 /*
 CTreeViewer::CTreeViewer()
 {
@@ -47,7 +47,7 @@ BOOL CTreeViewer::Create (CWnd* pFrameWnd)
 {
     CRect rect;
     pFrameWnd->GetClientRect(rect);
-    return CTreeCtrl::Create(WS_CHILD|WS_VISIBLE, rect, pFrameWnd, 1);
+    return CTreeCtrlEx::Create(WS_CHILD|WS_VISIBLE, rect, pFrameWnd, 1);
 }
 
 void CTreeViewer::LoadAndSetImageList (UINT nResId)
@@ -57,7 +57,7 @@ void CTreeViewer::LoadAndSetImageList (UINT nResId)
 }
 
 
-BEGIN_MESSAGE_MAP(CTreeViewer, CTreeCtrl)
+BEGIN_MESSAGE_MAP(CTreeViewer, CTreeCtrlEx)
 	//{{AFX_MSG_MAP(CTreeViewer)
 	ON_NOTIFY_REFLECT(TVN_ITEMEXPANDING, OnItemExpanding)
 	ON_NOTIFY_REFLECT(TVN_BEGINDRAG, OnBeginDrag)
@@ -71,12 +71,12 @@ END_MESSAGE_MAP()
 #ifdef _DEBUG
 void CTreeViewer::AssertValid() const
 {
-	CTreeCtrl::AssertValid();
+	CTreeCtrlEx::AssertValid();
 }
 
 void CTreeViewer::Dump(CDumpContext& dc) const
 {
-	CTreeCtrl::Dump(dc);
+	CTreeCtrlEx::Dump(dc);
 }
 #endif //_DEBUG
 
@@ -130,12 +130,12 @@ void CTreeViewer::OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult)
    )
  */
 
-string CTreeViewer::GetItemStrippedText(HTREEITEM hItem)
+const string CTreeViewer::GetItemStrippedText(HTREEITEM hItem, const bool b_force_alt)
 {
 	int pos, pos_space;
 	CString strText, strTmp;
 	bool lower_items = GetSQLToolsSettings().m_bLowerNames;
-	bool is_alt_pressed = bool((GetAsyncKeyState(VK_MENU) & 0x8000) != 0);
+	bool is_alt_pressed = bool((GetAsyncKeyState(VK_MENU) & 0x8000) != 0) || b_force_alt;
     HTREEITEM hChildItem = hItem;
 
 	if (hItem) {
@@ -200,7 +200,13 @@ string CTreeViewer::GetItemStrippedText(HTREEITEM hItem)
 					strText += strTmp;
 				}
 			} else {
-				strText = strTmp;
+				if(lower_items) {
+					strTmp.MakeLower();
+				} else {
+					strTmp.MakeUpper();
+				}
+				
+                strText += strTmp;
 			}
 		}
 	}
@@ -208,17 +214,50 @@ string CTreeViewer::GetItemStrippedText(HTREEITEM hItem)
 	return string(strText);
 }
 
-void CTreeViewer::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult) 
+const string CTreeViewer::GetSelectedItemsAsText(const bool b_force_alt)
+{
+    bool b_schema_name = GetSQLToolsSettings().m_bShemaName;
+	bool lower_items = GetSQLToolsSettings().m_bLowerNames;
+
+    HTREEITEM hItem = GetFirstSelectedItem();
+
+    string theText, theDelimiter, theOwner;
+
+    if (b_schema_name)
+    {
+        theOwner = GetItemText(GetRootItem());
+
+        string::size_type nIndex = theOwner.find('.');
+
+        if (nIndex != string::npos)
+        {
+            theOwner = theOwner.substr(nIndex + 1) + ".";
+            if (lower_items)
+                theOwner = CString(theOwner.c_str()).MakeLower();
+    	}
+        else
+            theOwner = "";
+	}
+
+	if (hItem) 
+    {
+        for (; hItem != NULL; hItem = GetNextSelectedItem(hItem))
+        {
+    		theText += theDelimiter + theOwner + GetItemStrippedText(hItem, b_force_alt);
+            theDelimiter = ", ";
+		}
+	}
+
+    return theText;
+}
+
+void CTreeViewer::OnBeginDrag(NMHDR* /*pNMHDR*/, LRESULT* pResult) 
 {
 	bool is_alt_pressed = bool((GetAsyncKeyState(VK_MENU) & 0x8000) != 0);
-	NM_TREEVIEW* pNMTreeView = (NM_TREEVIEW*)pNMHDR;
-    HTREEITEM hItem = pNMTreeView->itemNew.hItem;
 
-	string theText;
+    string theText = GetSelectedItemsAsText();
 
-	if (hItem) {
-		theText = GetItemStrippedText(hItem);
-
+    if (theText.size()) {
 		// differ drag&drop icon depending on keyboard state
 		if(is_alt_pressed == true) {
 			Common::SimpleDragDataSource(theText.c_str()).DoDragDrop(DROPEFFECT_LINK);
@@ -231,7 +270,7 @@ void CTreeViewer::OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult)
 
 int CTreeViewer::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	if (CTreeCtrl::OnCreate(lpCreateStruct) == -1)
+	if (CTreeCtrlEx::OnCreate(lpCreateStruct) == -1)
 		return -1;
 	
 	ModifyStyle(0, /*TVS_FULLROWSELECT|*/TVS_HASBUTTONS|TVS_HASLINES, 0);
