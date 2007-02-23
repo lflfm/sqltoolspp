@@ -93,7 +93,8 @@ namespace OpenEditor
         virtual void read  (const string&, unsigned int&)  = 0;
         virtual void read  (const string&, int&)           = 0;
         virtual void read  (const string&, bool&)          = 0;
-        virtual void read_with_default  (const string&, bool&, bool)          = 0;
+        virtual void read_with_default  (const string&, bool&, const bool&)          = 0;
+        virtual void read_with_default  (const string&, string&, const string&)          = 0;
 
         template <class T> void read (const string&, vector<T>&);
         void read (const string&, vector<vector<string> >&);
@@ -136,7 +137,8 @@ namespace OpenEditor
         virtual void read  (const string&, unsigned int&);
         virtual void read  (const string&, int&);
         virtual void read  (const string&, bool&);
-        virtual void read_with_default  (const string&, bool&, bool);
+        virtual void read_with_default  (const string&, bool&, const bool&);
+        virtual void read_with_default  (const string&, string&, const string&);
 
     private:
         void validateEntryName (const string&, const string&);

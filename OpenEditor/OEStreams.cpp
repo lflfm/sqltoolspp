@@ -260,6 +260,28 @@ void FileInStream::read (const string& name, string& val)
     Common::to_unprintable_str(_val.c_str(), val);
 }
 
+void FileInStream::read_with_default (const string& name, string& val, const string& default_val)
+{
+    string _name, _val;
+    getline(m_infile, _name);
+    string::size_type n_entrysize = _name.size();
+    string::size_type pos = _name.find('=');
+
+    if (pos && pos != string::npos) {
+        _val = _name.substr(pos + 1);
+        _name.resize(pos);
+    } else
+        swap(_name, _val);
+
+    if (!isValidEntryName(name, _name))
+	{
+		_val = default_val;
+		m_infile.seekg(-n_entrysize - 2, ios_base::cur);
+	}
+
+    _ASSERTE(m_infile.good());
+    Common::to_unprintable_str(_val.c_str(), val);
+}
 
 void FileOutStream::write (const string& name,  double val)
 {
@@ -329,7 +351,7 @@ void FileInStream::read  (const string& name, int& val)
 }
 
 
-void FileInStream::read_with_default  (const string& name, bool& val, bool default_val)
+void FileInStream::read_with_default  (const string& name, bool& val, const bool& default_val)
 {
     _ASSERTE(m_infile.good());
     string _name;
