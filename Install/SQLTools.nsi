@@ -97,7 +97,10 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 	Delete "$INSTDIR\Data\ultraedit.keymap"
 	Delete "$INSTDIR\Licence.txt"
 	Delete "$INSTDIR\License.txt"
-	Delete "$INSTDIR\sesstat.dat"
+	Delete "$INSTDIR\sesstat_9iR2.dat"
+	Delete "$INSTDIR\sesstat_10gR2.dat"
+	Delete "$INSTDIR\sesstat_Custom.dat"
+	Delete "$INSTDIR\sesstat_Other.dat"
 	Delete "$INSTDIR\Bugs.txt"
 
 	Delete "$SMPROGRAMS\${DEST_NAME}\SQLTools Home Page.lnk"
@@ -112,8 +115,17 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 	SetOutPath "$INSTDIR\Data"
 
 	; add new files to existing
-	IfFileExists "$INSTDIR\Data\sesstat.dat" +2
-		File "${SRCDIR}\Settings\sesstat.dat"
+	IfFileExists "$INSTDIR\Data\sesstat_9iR2.dat" +2
+		File "${SRCDIR}\Settings\sesstat_9iR2.dat"
+
+	IfFileExists "$INSTDIR\Data\sesstat_10gR2.dat" +2
+		File "${SRCDIR}\Settings\sesstat_10gR2.dat"
+
+	IfFileExists "$INSTDIR\Data\sesstat_Custom.dat" +2
+		File "${SRCDIR}\Settings\sesstat_Custom.dat"
+
+	IfFileExists "$INSTDIR\Data\sesstat_Other.dat" +2
+		File "${SRCDIR}\Settings\sesstat_Other.dat"
 
 	IfFileExists "$INSTDIR\Data\sqltools.dat" +2
 		File "${SRCDIR}\Settings\sqltools.dat"
@@ -126,7 +138,10 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 	StrCmp ${TEMP} "1" "" SkipReplaceSettings
 		File "${SRCDIR}\Settings\settings.dat"
 		File "${SRCDIR}\Settings\sqltools.dat"
-		File "${SRCDIR}\Settings\sesstat.dat"
+		File "${SRCDIR}\Settings\sesstat_9iR2.dat"
+		File "${SRCDIR}\Settings\sesstat_10gR2.dat"
+		File "${SRCDIR}\Settings\sesstat_Custom.dat"
+		File "${SRCDIR}\Settings\sesstat_Other.dat"
 		File "${SRCDIR}\Settings\schemaddl.dat"
 
 	SkipReplaceSettings:
@@ -153,7 +168,10 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 		File "${SRCDIR}\Settings\settings.dat"
 		File "${SRCDIR}\Settings\sqltools.dat"
 		File "${SRCDIR}\Settings\templates.dat"
-		File "${SRCDIR}\Settings\sesstat.dat"
+		File "${SRCDIR}\Settings\sesstat_9iR2.dat"
+		File "${SRCDIR}\Settings\sesstat_10gR2.dat"
+		File "${SRCDIR}\Settings\sesstat_Custom.dat"
+		File "${SRCDIR}\Settings\sesstat_Other.dat"
 		File "${SRCDIR}\Settings\schemaddl.dat"
 
 	CreateAppFiles:
@@ -313,8 +331,14 @@ Section Uninstall
 	Delete "$INSTDIR\Data\sqltools.dat.old"
 	Delete "$INSTDIR\Data\templates.dat"
 	Delete "$INSTDIR\Data\templates.dat.old"
-	Delete "$INSTDIR\Data\sesstat.dat"
-	Delete "$INSTDIR\Data\sesstat.dat.old"
+	Delete "$INSTDIR\Data\sesstat_9iR2.dat"
+	Delete "$INSTDIR\Data\sesstat_10gR2.dat"
+	Delete "$INSTDIR\Data\sesstat_Custom.dat"
+	Delete "$INSTDIR\Data\sesstat_Other.dat"
+	Delete "$INSTDIR\Data\sesstat_9iR2.dat.old"
+	Delete "$INSTDIR\Data\sesstat_10gR2.dat.old"
+	Delete "$INSTDIR\Data\sesstat_Custom.dat.old"
+	Delete "$INSTDIR\Data\sesstat_Other.dat.old"
 	Delete "$INSTDIR\Data\schemaddl.dat"
 	Delete "$INSTDIR\Data\schemaddl.dat.old"
 	RMDir "$INSTDIR\Data"
