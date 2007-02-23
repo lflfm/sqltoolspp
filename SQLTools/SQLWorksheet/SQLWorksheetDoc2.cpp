@@ -128,22 +128,39 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 {
 	if (m_connect.GetVersion() >= OCI8::esvServer10X)
 	{
-		string text, buff;
-		OciCursor explan_curs(m_connect, expl_xplan_display_cursor);
-		explan_curs.Bind(":sql_id", m_connect.GetCurrentSqlID().c_str());
-		explan_curs.Bind(":child_number", m_connect.GetCurrentSqlChildNumber().c_str());
+        string text, buff;
 
-		explan_curs.ExecuteShadow();
-		while (explan_curs.Fetch()) 
-		{
-			explan_curs.GetString(0, buff);
-			text += buff;
-			text += "\r\n";
+        if (m_connect.GetCurrentSqlID().size())
+        {
+            OciCursor explan_curs(m_connect);
+
+		    try
+		    {
+                explan_curs.Prepare(expl_xplan_display_cursor);
+			    explan_curs.Bind(":sql_id", m_connect.GetCurrentSqlID().c_str());
+			    explan_curs.Bind(":child_number", m_connect.GetCurrentSqlChildNumber().c_str());
+
+			    explan_curs.ExecuteShadow();
+			    while (explan_curs.Fetch()) 
+			    {
+				    explan_curs.GetString(0, buff);
+				    text += buff;
+				    text += "\r\n";
+			    }
+
+			    explan_curs.Close();
+            }
+            catch (const OCI8::Exception& x)
+            {
+			    //if (explan_curs.IsOpen())
+			    //	explan_curs.Close();
+			    text = string("Error: ") + x.what() + string(" occurred selecting from dbms_xplan.display_cursor().");
+		    }
+
+		    m_connect.SetSession();
 		}
-
-        explan_curs.Close();
-
-		m_connect.SetSession();
+        else
+            text = "Could not read sql statement info for this session, therefore impossible to call DBMS_XPLAN.DISPLAY_CURSOR()";
 
 		m_pXPlan->SetWindowText(text.c_str());
 		m_pXPlan->SetIsDisplayCursor(true);
