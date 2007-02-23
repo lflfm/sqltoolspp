@@ -63,6 +63,7 @@ public:
     OES_DECLARE_PROPERTY(bool,   OutputEnable       );
     OES_DECLARE_PROPERTY(int,    OutputSize         );
     OES_DECLARE_PROPERTY(bool,   SessionStatistics  );
+    OES_DECLARE_PROPERTY(string, SessionStatisticsMode );
     OES_DECLARE_PROPERTY(bool,   ScanForSubstitution);
     OES_DECLARE_PROPERTY(string, PlanTable          );
     OES_DECLARE_PROPERTY(int,    CancelQueryDelay   );

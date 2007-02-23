@@ -39,6 +39,7 @@ SQLToolsSettings::SQLToolsSettings ()
     m_OutputEnable        = true;
     m_OutputSize          = 100000;
     m_SessionStatistics   = false;
+    m_SessionStatisticsMode   = "Auto";
     m_ScanForSubstitution = false;
     m_PlanTable           = "PLAN_TABLE";
     m_CancelQueryDelay    = 1;
@@ -175,6 +176,7 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_READ_MEMBER(settings, OutputEnable       );
     OESMS_READ_MEMBER(settings, OutputSize         );
     OESMS_READ_MEMBER(settings, SessionStatistics  );
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, SessionStatisticsMode, "Auto");
     OESMS_READ_MEMBER(settings, ScanForSubstitution);
     OESMS_READ_MEMBER(settings, PlanTable          );
     OESMS_VER_READ_MEMBER(1009, settings, CancelQueryDelay, 1);
@@ -271,6 +273,7 @@ void SQLToolsSettingsWriter::operator << (const SQLToolsSettings& settings)
     OESMS_WRITE_MEMBER(settings, OutputEnable       );
     OESMS_WRITE_MEMBER(settings, OutputSize         );
     OESMS_WRITE_MEMBER(settings, SessionStatistics  );
+    OESMS_WRITE_MEMBER(settings, SessionStatisticsMode  );
     OESMS_WRITE_MEMBER(settings, ScanForSubstitution);
     OESMS_WRITE_MEMBER(settings, PlanTable          );
     OESMS_WRITE_MEMBER(settings, CancelQueryDelay   );
