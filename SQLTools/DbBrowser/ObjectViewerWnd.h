@@ -45,7 +45,7 @@ public:
 
     void ShowObject (const std::string&);
 
-    CTreeCtrl& GetTreeCtrl ()               { return m_treeViewer; }
+    CTreeCtrlEx& GetTreeCtrl ()               { return m_treeViewer; }
     void LoadAndSetImageList (UINT nResId)  { m_treeViewer.LoadAndSetImageList(nResId); }
     virtual BOOL PreTranslateMessage(MSG* pMsg);
 
