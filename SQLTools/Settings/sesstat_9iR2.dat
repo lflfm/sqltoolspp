@@ -1,0 +1,279 @@
+logons cumulative
+logons current
+opened cursors cumulative
+opened cursors current
+user commits
+user rollbacks
+user calls
+recursive calls
+recursive cpu usage
+session logical reads
+session stored procedure space
+CPU used when call started
+CPU used by this session
+session connect time
+process last non-idle time
+session uga memory
+session uga memory max
+messages sent
+messages received
+background timeouts
+session pga memory
+session pga memory max
+enqueue timeouts
+enqueue waits
+enqueue deadlocks
+enqueue requests
+enqueue conversions
+enqueue releases
+global lock sync gets
+global lock async gets
+global lock get time
+global lock sync converts
+global lock async converts
+global lock convert time
+global lock releases
+total file opens
+opens requiring cache replacement
+opens of replaced files
+gcs messages sent
+ges messages sent
+db block gets
+consistent gets
+physical reads
+db block changes
+consistent changes
+recovery blocks read
+physical writes
+physical writes non checkpoint
+summed dirty queue length
+DBWR checkpoint buffers written
+DBWR transaction table writes
+DBWR undo block writes
+DBWR revisited being-written buffer
+DBWR make free requests
+DBWR free buffers found
+DBWR lru scans
+DBWR summed scan depth
+DBWR buffers scanned
+DBWR checkpoints
+DBWR cross instance writes
+DBWR fusion writes
+remote instance undo block writes
+remote instance undo header writes
+prefetch clients - keep
+prefetch clients - recycle
+prefetch clients - default
+prefetch clients - 2k
+prefetch clients - 4k
+prefetch clients - 8k
+prefetch clients - 16k
+prefetch clients - 32k
+change write time
+redo synch writes
+redo synch time
+exchange deadlocks
+free buffer requested
+dirty buffers inspected
+pinned buffers inspected
+hot buffers moved to head of LRU
+free buffer inspected
+commit cleanout failures: write disabled
+commit cleanout failures: block lost
+commit cleanout failures: cannot pin
+commit cleanout failures: hot backup in progress
+commit cleanout failures: buffer being written
+commit cleanout failures: callback failure 
+commit cleanouts
+commit cleanouts successfully completed
+recovery array reads
+recovery array read time
+CR blocks created
+current blocks converted for CR
+switch current to new buffer
+write clones created in foreground
+write clones created in background
+prefetched blocks
+prefetched blocks aged out before use
+physical reads direct
+physical writes direct
+physical reads direct (lob)
+physical writes direct (lob)
+cold recycle reads
+consistent gets - examination
+shared hash latch upgrades - no wait
+shared hash latch upgrades - wait
+calls to kcmgcs
+calls to kcmgrs
+calls to kcmgas
+next scns gotten without going to GES
+Unnecesary process cleanup for SCN batching
+calls to get snapshot scn: kcmgss
+kcmgss waited for batching
+kcmgss read scn without going to GES
+kcmccs called get current scn
+redo entries
+redo size
+redo buffer allocation retries
+redo wastage
+redo writer latching time
+redo writes
+redo blocks written
+redo write time
+redo log space requests
+redo log space wait time
+redo log switch interrupts
+redo ordering marks
+global cache gets
+global cache get time
+global cache converts
+global cache convert time
+global cache cr blocks received
+global cache cr block receive time
+global cache current blocks received
+global cache current block receive time
+global cache cr blocks served
+global cache cr block build time
+global cache cr block flush time
+global cache cr block send time
+global cache current blocks served
+global cache current block pin time
+global cache current block flush time
+global cache current block send time
+global cache freelist waits
+global cache defers
+global cache convert timeouts
+global cache blocks lost
+global cache claim blocks lost
+global cache blocks corrupt
+global cache prepare failures
+global cache skip prepare failures
+total number of slots
+instance recovery database freeze count
+background checkpoints started
+background checkpoints completed
+number of map operations
+number of map misses
+serializable aborts
+transaction lock foreground requests
+transaction lock foreground wait time
+transaction lock background gets
+transaction lock background get time
+transaction tables consistent reads - undo records applied
+transaction tables consistent read rollbacks
+data blocks consistent reads - undo records applied
+no work - consistent read gets
+cleanouts only - consistent read gets
+rollbacks only - consistent read gets
+cleanouts and rollbacks - consistent read gets
+RowCR attempts
+RowCR hits
+RowCR - row contention
+rollback changes - undo records applied
+transaction rollbacks
+immediate (CURRENT) block cleanout applications
+immediate (CR) block cleanout applications
+deferred (CURRENT) block cleanout applications
+commit txn count during cleanout
+active txn count during cleanout
+cleanout - number of ktugct calls
+immediate CR cleanouts (index blocks)
+deferred CUR cleanouts (index blocks)
+Commit SCN cached
+Cached Commit SCN referenced
+number of auto extends on undo tablespace
+number of drop segment calls under space pressure
+total number of undo segments dropped
+table scans (short tables)
+table scans (long tables)
+table scans (rowid ranges)
+table scans (cache partitions)
+table scans (direct read)
+table scan rows gotten
+table scan blocks gotten
+table fetch by rowid
+table fetch continued row
+cluster key scans
+cluster key scan block gets
+rows fetched via callback
+index crx upgrade (prefetch)
+index crx upgrade (found)
+index crx upgrade (positioned)
+leaf node splits
+leaf node 90-10 splits
+branch node splits
+failed probes on index block reclamation
+recursive aborts on index block reclamation
+native hash arithmetic execute
+native hash arithmetic fail
+index fast full scans (full)
+index fast full scans (rowid ranges)
+index fast full scans (direct read)
+index fetch by key
+index scans kdiixs1
+session cursor cache hits
+session cursor cache count
+cursor authentications
+queries parallelized
+DML statements parallelized
+DDL statements parallelized
+DFO trees parallelized
+Parallel operations not downgraded
+Parallel operations downgraded to serial
+Parallel operations downgraded 75 to 99 pct
+Parallel operations downgraded 50 to 75 pct
+Parallel operations downgraded 25 to 50 pct
+Parallel operations downgraded 1 to 25 pct
+PX local messages sent
+PX local messages recv'd
+PX remote messages sent
+PX remote messages recv'd
+buffer is pinned count
+buffer is not pinned count
+no buffer to keep pinned count
+table lookup prefetch client count
+workarea memory allocated
+workarea executions - optimal
+workarea executions - onepass
+workarea executions - multipass
+parse time cpu
+parse time elapsed
+parse count (total)
+parse count (hard)
+parse count (failures)
+execute count
+bytes sent via SQL*Net to client
+bytes received via SQL*Net from client
+SQL*Net roundtrips to/from client
+bytes sent via SQL*Net to dblink
+bytes received via SQL*Net from dblink
+SQL*Net roundtrips to/from dblink
+sorts (memory)
+sorts (disk)
+sorts (rows)
+OTC commit optimization attempts
+OTC commit optimization hits
+OTC commit optimization failure - setup
+OS User level CPU time
+OS System call CPU time
+OS Other system trap CPU time
+OS Text page fault sleep time
+OS Data page fault sleep time
+OS Kernel page fault sleep time
+OS User lock wait sleep time
+OS All other sleep time
+OS Wait-cpu (latency) time
+OS Minor page faults
+OS Major page faults
+OS Swaps
+OS Input blocks
+OS Output blocks
+OS Messages sent
+OS Messages received
+OS Signals received
+OS Voluntary context switches
+OS Involuntary context switches
+OS System calls
+OS Chars read and written
+OS Process heap size
+OS Process stack size
