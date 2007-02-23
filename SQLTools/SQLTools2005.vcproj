@@ -2399,6 +2399,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DbBrowser\TreeCtrlEx.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\DbBrowser\TreeViewer.cpp"
 				>
 			</File>
@@ -3004,6 +3008,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\DbBrowser\TreeCtrlEx.h"
+				>
+			</File>
 			<File
 				RelativePath=".\SQLWorksheet\XPlanView.h"
 				>
