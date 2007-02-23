@@ -37,11 +37,34 @@ static char THIS_FILE[] = __FILE__;
 
 StatSet StatGauge::m_StatSet;
 
-void StatSet::Load ()
+void StatSet::Load (OciConnect& connect)
 {
     std::string path;
     Global::GetSettingsPath(path);
-    path += "\\sesstat.dat";
+    std::string stat_mode = GetSQLToolsSettings().GetSessionStatisticsMode();
+    m_stat_mode = stat_mode;
+    std::string postfix = "_";
+
+    if (stat_mode == "Auto")
+    {
+        switch (connect.GetVersion())
+        {
+        case OCI8::esvServer10X:
+            postfix += "10gR2";
+            break;
+        case OCI8::esvServer9X:
+            postfix += "9iR2";
+            break;
+        default:
+            postfix += "Other";
+        }
+    }
+    else
+    {
+        postfix += stat_mode;
+    }
+
+    path += "\\sesstat" + postfix + ".dat";
     
     m_StatNames.clear();
     m_MapNameToLine.clear();
@@ -67,11 +90,14 @@ StatGauge::StatGauge ()
 
 void StatGauge::Open (OciConnect& connect)
 {
-    LoadStatSet();
+    LoadStatSet(connect, true);
 
     try 
     {
-        /*
+		m_SID = connect.GetSessionSid();
+
+        // if we do not get a SID from connection (via v$mystat), try v$session here
+        if (! m_SID.size())
 		{
             OciCursor curs(connect, "select sid from v$session where audsid = userenv('SESSIONID')", 1);
             
@@ -82,9 +108,6 @@ void StatGauge::Open (OciConnect& connect)
 
             curs.Close();
         }
-		*/
-
-		m_SID = connect.GetSessionSid();
 
         m_MapRowToNum.clear();
 
@@ -234,7 +257,7 @@ void CStatView::OpenAll (OciConnect& connect)
     std::set<CStatView*>::iterator it = m_GridFamily.begin();
 
     for (; it != m_GridFamily.end(); ++it)
-        (*it)->LoadStatNames();
+        (*it)->LoadStatNames(connect);
 }
 
 void CStatView::CloseAll ()
@@ -247,12 +270,12 @@ void CStatView::CloseAll ()
         (*it)->Clear();
 }
 
-void CStatView::LoadStatNames ()
+void CStatView::LoadStatNames (OciConnect& connect)
 {
     if (m_pStrSource->GetCount(edVert))
         Clear();
 
-    m_StatGauge.LoadStatSet();
+    m_StatGauge.LoadStatSet(connect);
     int count = m_StatGauge.GetRows();
 
     for (int i(0); i < count; i++) 
@@ -325,7 +348,7 @@ CStatView::CStatView ()
     m_pStrSource->SetImageList(&m_imageList, FALSE);
 
     if (GetSQLToolsSettings().GetSessionStatistics())
-        LoadStatNames();
+        LoadStatNames(*(GetApp()->m_connect));
 
     m_GridFamily.insert(this);
 }
@@ -343,3 +366,18 @@ BEGIN_MESSAGE_MAP(CStatView, StrGridView)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 */
+
+void CStatView::OnSettingsChanged ()
+{
+    SQLToolsSettings settings = GetSQLToolsSettings();
+    if (settings.GetSessionStatistics())
+    {
+        if (m_StatGauge.GetStatMode() != settings.GetSessionStatisticsMode())
+        {
+            CloseAll();
+            OpenAll(*(GetApp()->m_connect));
+        }
+    }
+
+    StrGridView::OnSettingsChanged();
+}

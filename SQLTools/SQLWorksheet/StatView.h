@@ -38,12 +38,14 @@
     {
         vector<string>  m_StatNames;
         map<string,int> m_MapNameToLine;
+        std::string     m_stat_mode;
 
         bool IsEmpty () const                   { return m_StatNames.empty(); }
         int  GetRows () const                   { return m_StatNames.size(); }
         const char* GetStatName (int row) const { return m_StatNames[row].c_str(); }
+        const string& GetStatMode() const       { return m_stat_mode; }
 
-        void Load  ();
+        void Load  (OciConnect& connect);
         void Flush ();
     };
 
@@ -52,12 +54,13 @@
     public:
         StatGauge ();
 
-        void LoadStatSet (bool force = false)         { if (force || m_StatSet.IsEmpty()) m_StatSet.Load(); };
+        void LoadStatSet (OciConnect& connect, bool force = false)         { if (force || m_StatSet.IsEmpty()) m_StatSet.Load(connect); };
         void OnChangeStatSet ();
 
         bool StatisticAccessible ()                   { return m_StatisticAccessible; }
         int  GetRows () const                         { return m_StatSet.GetRows(); }
         const char* GetStatName (int row) const       { return m_StatSet.GetStatName(row); }
+        const string& GetStatMode() const             { return m_StatSet.GetStatMode(); }
 
         void Open  (OciConnect& connect);
         void Close ();
@@ -92,7 +95,7 @@ public:
 
     CSQLToolsApp* GetApp () const              { return (CSQLToolsApp*)AfxGetApp(); }
 
-    void LoadStatNames ();
+    void LoadStatNames (OciConnect& connect);
     void BeginMeasure (OciConnect& connect)    { m_StatGauge.BeginMeasure(connect); }
     void EndMeasure (OciConnect& connect)      { m_StatGauge.EndMeasure(connect); }
     void ShowStatistics ();
@@ -112,6 +115,8 @@ protected:
 //    DECLARE_MESSAGE_MAP()
 	DECLARE_DYNCREATE(CStatView)
 
+    // SettingsSubscriber
+    virtual void OnSettingsChanged ();
 private:
     static StatGauge m_StatGauge;
     static CImageList m_imageList;
