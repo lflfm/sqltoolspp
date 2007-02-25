@@ -23,6 +23,8 @@
 #include "stdafx.h"
 #include "COMMON/WorkbookBar.h"
 #include "COMMON/GUICommandDictionary.h"
+#include "SQLTools.h"
+#include "MainFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -251,7 +253,7 @@ void CWorkbookBar::OnContextMenu (CWnd*, CPoint point)
 
 void CWorkbookBar::OnCbar_Hide ()
 {
-    ((CFrameWnd*)AfxGetMainWnd())->ShowControlBar(this, FALSE, TRUE);
+    ((CMDIMainFrame*)AfxGetMainWnd())->ShowControlBar(this, FALSE, TRUE);
 }
 
 LRESULT CWorkbookBar::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
