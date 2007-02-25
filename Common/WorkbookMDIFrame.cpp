@@ -443,6 +443,19 @@ void CWorkbookMDIFrame::OnUpdateViewWorkbook (CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(m_wndWorkbookBar.IsVisible());
 }
 
+void CWorkbookMDIFrame::ShowControlBar(CControlBar* pBar, BOOL bShow, BOOL bDelay)
+{
+	CFrameWnd::ShowControlBar(pBar, bShow, bDelay);
+
+	if (! bShow)
+	{
+        CView* myActiveView = ((CMDIMainFrame *)AfxGetMainWnd())->GetMyActiveView();
+
+        if (myActiveView)
+			myActiveView->SetFocus();
+	}
+}
+
 void CWorkbookMDIFrame::OnViewFilePanel()
 {
     ShowControlBar(&m_wndFilePanelBar, !m_wndFilePanelBar.IsVisible(), TRUE);

@@ -87,6 +87,7 @@ public:
 
     void SetCloseFileOnTabDblClick (BOOL closeFileOnTabDblClick) { m_bCloseFileOnTabDblClick = closeFileOnTabDblClick; }
     void SetDefaultFileExtension (const char* ext)  { m_defaultFileExtension = ext; }
+	void ShowControlBar(CControlBar* pBar, BOOL bShow, BOOL bDelay);
 
     afx_msg void OnClose();
     afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
