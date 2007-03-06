@@ -354,14 +354,24 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
 
 void CPLSWorksheetDoc::PrintExecTime (std::ostream& out, double seconds)
 {
-    if (seconds >= 3600) 
-        out << setw(2) << setfill('0') << int(seconds /3600) 
-            << ':' << setw(2) << setfill('0') << (int(seconds /60) - (int(seconds)/3600)*60)
-            << ':' << setw(2) << setfill('0') << (seconds - (int(seconds)/60)*60)
+    int n_hours = int(seconds)/3600;
+    int n_minutes = (int(seconds) - n_hours*3600)/60;
+    int n_seconds = int(seconds) - n_hours*3600 - n_minutes*60;
+    double n_fraction = seconds - n_hours*3600 - n_minutes*60 - n_seconds;
+    char s_fraction[20];
+
+    sprintf_s(s_fraction, sizeof(s_fraction), "%.3f", n_fraction);
+
+    if (n_hours > 0)
+        out << setw(2) << setfill('0') << n_hours 
+            << ':' << setw(2) << setfill('0') << n_minutes
+            << ':' << setw(2) << setfill('0') << n_seconds
+            << &s_fraction[1]
             << " (" << seconds << " sec.)";
-    else if (seconds >= 60)
-        out << setw(2) << setfill('0') << int(seconds /60) 
-            << ':' << setw(2) << setfill('0') << (seconds - (int(seconds)/60)*60)
+    else if (n_minutes > 0)
+        out << setw(2) << setfill('0') << n_minutes
+            << ':' << setw(2) << setfill('0') << n_seconds
+            << &s_fraction[1]
             << " (" << seconds << " sec.)";
     else
         out << seconds << " sec.";
