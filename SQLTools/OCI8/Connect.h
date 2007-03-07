@@ -269,6 +269,8 @@ public:
 	const string& GetCurrentSqlHashValue() const {return m_CurrentSqlHashValue;}
 	const string& GetCurrentSqlChildNumber() const {return m_CurrentSqlChildNumber;}
 	const string& GetCurrentSqlID() const {return m_CurrentSqlID;}
+    // NLS parameters
+    void LoadSessionNlsParameters ();
 protected:
     bool m_OutputEnable;
     unsigned long m_OutputSize;
@@ -282,8 +284,6 @@ protected:
 	string m_CurrentSqlID;
     bool m_GetSIDFailed;
 
-    // NLS parameters
-    void LoadSessionNlsParameters ();
 
 #define NLS_PARAMETER(param) \
     protected: \
