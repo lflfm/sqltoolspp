@@ -35,6 +35,7 @@
 #include "COMMON/AppGlobal.h"
 #include <COMMON/StrHelpers.h>
 #include "InputDlg.h"
+#include "OCI8/SQLFunctionCodes.h"
 
     static
     void make_title (const string& src, int titleLength, string& dest)
@@ -138,6 +139,8 @@ void CommandPerformerImpl::DoExecuteSql (CommandParser& commandParser, const str
         ostringstream message;
         message << m_cursor->GetSQLFunctionDescription();
 
+        ub2 n_SqlFunctionCode = m_cursor->GetSQLFunctionCode();
+
         switch (m_cursor->GetType())
         {
         case OCI8::StmtInsert:
@@ -171,6 +174,11 @@ void CommandPerformerImpl::DoExecuteSql (CommandParser& commandParser, const str
             string name, owner, type;
             commandParser.GetCodeName(owner, name, type);
             m_Errors |= m_doc.LoadErrors(owner.c_str(), name.c_str(), type.c_str(), commandParser.GetErrorBaseLine()) > 0;
+        }
+
+        if (n_SqlFunctionCode == OCI8::OFN_ALTER_SESSION)
+        {
+            connect.LoadSessionNlsParameters();
         }
 
         m_doc.AddStatementToHistory(startTime, connect.GetDisplayString(), sql);
