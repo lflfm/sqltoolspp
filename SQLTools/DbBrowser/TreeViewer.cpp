@@ -23,6 +23,8 @@
 #include "ObjectTreeBuilder.h"
 #include <COMMON\SimpleDragDataSource.h>         // for Drag & Drop
 #include <COMMON\ExceptionHelper.h>
+#include "MainFrm.h"
+#include "OpenEditor/OEView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -62,6 +64,7 @@ BEGIN_MESSAGE_MAP(CTreeViewer, CTreeCtrlEx)
 	ON_NOTIFY_REFLECT(TVN_ITEMEXPANDING, OnItemExpanding)
 	ON_NOTIFY_REFLECT(TVN_BEGINDRAG, OnBeginDrag)
 	ON_WM_CREATE()
+	ON_WM_LBUTTONDBLCLK()
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -82,6 +85,35 @@ void CTreeViewer::Dump(CDumpContext& dc) const
 
 /////////////////////////////////////////////////////////////////////////////
 // CTreeViewer message handlers
+
+void CTreeViewer::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+    CTreeCtrlEx::OnLButtonDblClk(nFlags, point);
+
+	UINT nHitFlags = 0;
+	HTREEITEM hClickedItem = HitTest( point, &nHitFlags );
+
+    HTREEITEM hNextItem = GetChildItem( hClickedItem );
+
+	DWORD type = GetItemData(hClickedItem);
+
+    if ((! hNextItem) && (type == titColumn))
+    {
+        string sText = GetItemStrippedText(hClickedItem, true);
+
+        COEditorView* pView = ((COEditorView *)((CMDIMainFrame *)AfxGetMainWnd())->GetMyActiveView());
+        
+        if (pView)
+        {
+            try { EXCEPTION_FRAME;
+                pView->DeleteBlock();
+                pView->InsertBlock(sText.c_str(), !pView->GetBlockKeepMarkingAfterDragAndDrop_Public()/*hideSelection*/);
+                pView->SetFocus();
+            } 
+            _DEFAULT_HANDLER_
+        }
+    }
+}
 
 void CTreeViewer::OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult) 
 {

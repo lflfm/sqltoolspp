@@ -56,6 +56,7 @@ protected:
 	afx_msg void OnItemExpanding(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnBeginDrag(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
