@@ -229,6 +229,7 @@ COEditorView::~COEditorView ()
     _DESTRUCTOR_HANDLER_;
 
 	// ((CMDIMainFrame *)AfxGetMainWnd())->SetActiveView(NULL, FALSE);
+	((CMDIMainFrame *)AfxGetMainWnd())->SetMyActiveView(NULL);
 }
 
 void COEditorView::AttachSibling (COEditorView* sibling, UINT ruler)
