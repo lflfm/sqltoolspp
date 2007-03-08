@@ -177,8 +177,14 @@ void C2PaneSplitter::NextPane()
     {
         CView* pView;
         VERIFY(m_pwndBooklet->GetActiveTab(pView));
+        int nActiveTab;
+        m_pwndBooklet->GetActiveTab(nActiveTab);
+
         SetActiveView((CView*)pView);
         pView->SetFocus();
+
+        if (nActiveTab == 2)
+            m_pwndBooklet->OnPlan();
     }
 }
 
@@ -194,8 +200,14 @@ void C2PaneSplitter::PrevPane()
     {
         CView* pView;
         VERIFY(m_pwndBooklet->GetActiveTab(pView));
+        int nActiveTab;
+        m_pwndBooklet->GetActiveTab(nActiveTab);
+
         SetActiveView((CView*)pView);
         pView->SetFocus();
+
+        if (nActiveTab == 2)
+            m_pwndBooklet->OnPlan();
     }
 }
 
