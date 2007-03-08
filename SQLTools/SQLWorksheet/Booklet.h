@@ -58,7 +58,6 @@ protected:
 	afx_msg void OnSize (UINT nType, int cx, int cy);
 	afx_msg void OnQuery      ();
     afx_msg void OnStatistics ();
-    afx_msg void OnPlan       ();
     afx_msg void OnOutput     ();
     afx_msg void OnHistory    ();
 	afx_msg void OnBinds      ();
@@ -77,6 +76,7 @@ private:
 public:
     virtual void OnInitialUpdate();
     afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+    afx_msg void OnPlan       ();
 protected:
     virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 };
