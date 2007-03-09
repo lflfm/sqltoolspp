@@ -609,7 +609,7 @@ void GridView::OnGridPopup ()
         pszClassName = AfxRegisterWndClass(CS_VREDRAW | CS_HREDRAW,
           ::LoadCursor(NULL, IDC_ARROW),
           (HBRUSH) ::GetStockObject(WHITE_BRUSH),
-          ::LoadIcon(NULL, IDI_APPLICATION));
+          AfxGetApp()->LoadIcon(IDR_MAINFRAME));
 
         char MsgBuf[255];
         DWORD nError = ::GetLastError();
