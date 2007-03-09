@@ -1483,6 +1483,8 @@ BEGIN
         MENUITEM "Size Columns to &Headers",    ID_OCIGRID_COLS_TO_HEADERS
         , GRAYED
         MENUITEM SEPARATOR
+        MENUITEM "Popup Ed&itor",               ID_GRID_POPUP, GRAYED
+        MENUITEM SEPARATOR
         MENUITEM "&Copy",                       ID_EDIT_COPY, GRAYED
         MENUITEM "Copy &All",                   ID_GRID_COPY_ALL, GRAYED
         MENUITEM "Copy &Row",                   ID_GRID_COPY_ROW, GRAYED
