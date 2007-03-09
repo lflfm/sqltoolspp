@@ -140,7 +140,7 @@ void cXPlanEdit::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 */
 
-// cXPlanView message handlers
+// cXPlanEdit message handlers
 
 void cXPlanEdit::OnEditCopy()
 {
@@ -261,20 +261,53 @@ void cXPlanEdit::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
 
 IMPLEMENT_DYNCREATE(CPopupFrameWnd, CFrameWnd)
 
+void CPopupFrameWnd::SetGridPopupWordWrap(bool bWordWrap)
+{
+    CString theText;
+    CRect theRect = CFrameWnd::rectDefault;
+
+    if (m_EditBox)
+    {
+        m_EditBox->GetWindowText(theText);
+        m_EditBox->GetWindowRect(theRect);
+        ScreenToClient(theRect);
+
+        delete m_EditBox;
+    }
+
+    m_EditBox = new CGridPopupEdit(bWordWrap);
+
+    DWORD nStyle = WS_CHILD|WS_VISIBLE|WS_VSCROLL|ES_AUTOVSCROLL|ES_MULTILINE|ES_READONLY|ES_NOHIDESEL;
+
+    if (! bWordWrap)
+        nStyle |= WS_HSCROLL|ES_AUTOHSCROLL;
+
+    if (!m_EditBox->Create(nStyle,
+		    theRect, this, IDC_STATIC)) 
+    {
+	    MessageBox("The edit control was not created");
+	}
+
+    m_EditBox->SetWindowText(theText);
+    m_EditBox->SetFocus();
+}
+
 CPopupFrameWnd::CPopupFrameWnd()
 {
-
+    m_EditBox = 0;
 }
 
 CPopupFrameWnd::~CPopupFrameWnd()
 {
-
+    if (m_EditBox)
+        delete m_EditBox;
 }
 
 BEGIN_MESSAGE_MAP(CPopupFrameWnd, CFrameWnd)
 	ON_WM_CREATE()
     ON_WM_SIZE()
     ON_WM_DESTROY()
+    ON_WM_SETFOCUS()
 END_MESSAGE_MAP()
 
 
@@ -297,10 +330,149 @@ void CPopupFrameWnd::Dump(CDumpContext& dc) const
 
 // CPopupFrameWnd message handlers
 
+void CPopupFrameWnd::OnSetFocus(CWnd *)
+{
+    m_EditBox->SetFocus();
+}
+
 int  CPopupFrameWnd::OnCreate (LPCREATESTRUCT lpCreateStruct)
 {
 	int retval = CFrameWnd::OnCreate(lpCreateStruct);
 
+    /*
+    VisualAttribute attr;
+
+	m_Font.CreateFont(
+          -attr.PointToPixel(9), 0, 0, 0,
+          FW_NORMAL,
+          0,
+          0,
+          0, ANSI_CHARSET,//DEFAULT_CHARSET,
+          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
+          "Courier New"
+        );
+    */
+
+    m_EditBox = new CGridPopupEdit;
+
+    if (!m_EditBox->Create(WS_CHILD|WS_VISIBLE|WS_VSCROLL|ES_AUTOVSCROLL|ES_MULTILINE|ES_READONLY|ES_NOHIDESEL,
+		    CFrameWnd::rectDefault, this, IDC_STATIC)) 
+    {
+	    MessageBox("The edit control was not created");
+	    return -1;
+	}
+    // m_EditBox.SetFont(&m_Font);
+    m_EditBox->SetWindowText("This is the edit control;\r\nobviously it was created");
+
+	return retval;
+}
+
+void CPopupFrameWnd::OnSize(UINT nType, int cx, int cy)
+{
+    if (nType==SIZE_RESTORED || nType==SIZE_MAXIMIZED) 
+    {
+        m_EditBox->MoveWindow(0, 0, cx, cy);
+    }
+}
+
+void CPopupFrameWnd::OnDestroy()
+{
+    ((GridView *)GetParent())->SetPopupToNull();
+}
+
+CGridPopupEdit::CGridPopupEdit(bool bWordWrap)
+{
+	m_accelTable = 0;
+    m_bWordWrap = bWordWrap;
+}
+
+CGridPopupEdit::CGridPopupEdit()
+{
+	m_accelTable = 0;
+    m_bWordWrap = true;
+}
+
+CGridPopupEdit::~CGridPopupEdit()
+{
+	if (m_accelTable)
+		DestroyAcceleratorTable(m_accelTable);
+}
+
+BEGIN_MESSAGE_MAP(CGridPopupEdit, CEdit)
+	ON_WM_CREATE()
+	ON_COMMAND(ID_GRIDPOPUP_WORDWRAP, OnGridPopupWordWrap)
+	ON_WM_CONTEXTMENU()
+    ON_WM_INITMENUPOPUP()
+	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_COMMAND(ID_EDIT_SELECT_ALL, OnEditSelectAll)
+
+	// ON_CONTROL_REFLECT(STN_DBLCLK, &CGridPopupEdit::OnStnDblclick)
+END_MESSAGE_MAP()
+
+
+// CGridPopupEdit diagnostics
+
+/*
+#ifdef _DEBUG
+void CGridPopupEdit::AssertValid() const
+{
+	CGridPopupEdit::AssertValid();
+}
+
+#ifndef _WIN32_WCE
+void CGridPopupEdit::Dump(CDumpContext& dc) const
+{
+	CEdit::Dump(dc);
+}
+#endif
+#endif //_DEBUG
+*/
+
+// CGridPopupEdit message handlers
+
+void CGridPopupEdit::OnGridPopupWordWrap()
+{
+    m_bWordWrap = ! m_bWordWrap;
+
+    /* Stupid windows, changing these styles just does not work, you need to recreate the control...
+    LONG nStyle = GetWindowLong(m_hWnd, GWL_STYLE);
+    if (! m_bWordWrap)
+        nStyle |= WS_HSCROLL|ES_AUTOHSCROLL;
+    else
+        nStyle &= ~(WS_HSCROLL|ES_AUTOHSCROLL);
+
+    SetWindowLong(m_hWnd, GWL_STYLE, nStyle);
+
+    LONG nStyle = WS_HSCROLL|ES_AUTOHSCROLL;
+
+    ModifyStyle(m_bWordWrap ? nStyle : 0, m_bWordWrap ? 0 : nStyle, SWP_NOSIZE);
+
+    Invalidate();
+    */
+
+    ((CPopupFrameWnd *)GetParent())->SetGridPopupWordWrap(m_bWordWrap);
+}
+
+void CGridPopupEdit::OnEditCopy()
+{
+	int nStart, nEnd;
+	CEdit::GetSel(nStart, nEnd);
+
+	if (nStart >= nEnd)
+		OnEditSelectAll();
+
+	CEdit::Copy();
+}
+
+void CGridPopupEdit::OnEditSelectAll()
+{
+	CEdit::SetSel(0, -1, TRUE);
+}
+
+int  CGridPopupEdit::OnCreate (LPCREATESTRUCT lpCreateStruct)
+{
+    int retval = CEdit::OnCreate(lpCreateStruct);
+		
     VisualAttribute attr;
 
 	m_Font.CreateFont(
@@ -313,27 +485,44 @@ int  CPopupFrameWnd::OnCreate (LPCREATESTRUCT lpCreateStruct)
           "Courier New"
         );
 
-    if (!m_EditBox.Create(WS_CHILD|WS_VISIBLE|/*WS_HSCROLL|WS_VSCROLL|*/ES_MULTILINE|ES_READONLY,
-		    CFrameWnd::rectDefault, this, IDC_STATIC)) 
-    {
-	    MessageBox("The edit control was not created");
-	    return -1;
-	}
-    m_EditBox.SetFont(&m_Font);
-    m_EditBox.SetWindowText("This is the edit control;\r\nobviously it was created");
+	SetFont(&m_Font);
+
+    CMenu menu;
+    VERIFY(menu.LoadMenu(IDR_GRIDPOPUP_OPTIONS));
+    CMenu* pPopup = menu.GetSubMenu(0);
+    ASSERT(pPopup != NULL);
+    Common::GUICommandDictionary::AddAccelDescriptionToMenu(pPopup->m_hMenu);
+
+	m_accelTable = Common::GUICommandDictionary::GetMenuAccelTable(pPopup->m_hMenu);
 
 	return retval;
 }
 
-void CPopupFrameWnd::OnSize(UINT nType, int cx, int cy)
+BOOL CGridPopupEdit::PreTranslateMessage(MSG* pMsg)
 {
-    if (nType==SIZE_RESTORED || nType==SIZE_MAXIMIZED) 
-    {
-        m_EditBox.MoveWindow(0, 0, cx, cy);
-    }
+	if (m_accelTable)
+		if (TranslateAccelerator(m_hWnd, m_accelTable, pMsg) == 0)
+			return CEdit::PreTranslateMessage(pMsg);
+		else
+			return true;
+	else
+		return CEdit::PreTranslateMessage(pMsg);
 }
 
-void CPopupFrameWnd::OnDestroy()
+void CGridPopupEdit::OnContextMenu (CWnd* , CPoint pos)
 {
-    ((GridView *)GetParent())->SetPopupToNull();
+    CMenu menu;
+    VERIFY(menu.LoadMenu(IDR_GRIDPOPUP_OPTIONS));
+    CMenu* pPopup = menu.GetSubMenu(0);
+    ASSERT(pPopup != NULL);
+    Common::GUICommandDictionary::AddAccelDescriptionToMenu(pPopup->m_hMenu);
+    pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, pos.x, pos.y, this);
 }
+
+void CGridPopupEdit::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
+{
+    CEdit::OnInitMenuPopup(pPopupMenu, nIndex, bSysMenu);
+
+    pPopupMenu->CheckMenuItem(ID_GRIDPOPUP_WORDWRAP, MF_BYCOMMAND|((m_bWordWrap) ? MF_CHECKED : MF_UNCHECKED));
+}
+
