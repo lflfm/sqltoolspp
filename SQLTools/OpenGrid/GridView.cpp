@@ -61,6 +61,7 @@ namespace OG2 /* OG = OpenGrid V2 */
 {
 
     UINT GridView::m_uWheelScrollLines; // cached value for MS Weel support
+    CPopupFrameWnd* GridView::pTextPopupWnd = 0;
     static const char g_szClassName[] = "Kochware.OpenGrid.V2";
 
     IMPLEMENT_DYNCREATE(GridView, CView)
@@ -167,6 +168,7 @@ BEGIN_MESSAGE_MAP(GridView, CView)
     ON_WM_SETTINGCHANGE()
     ON_WM_INITMENUPOPUP()
 
+	ON_COMMAND(ID_GRID_POPUP, OnGridPopup)
     ON_COMMAND(ID_GRID_OUTPUT_OPTIONS, OnGridOutputOptions)
 	ON_COMMAND(ID_GRID_OUTPUT_SAVE, OnFileSave)
     ON_COMMAND(ID_GRID_OUTPUT_SAVE_AND_OPEN, OnGridOutputSaveAndOpen)
@@ -299,7 +301,7 @@ int GridView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
     SetTimer(1, 100, NULL);
 
-	return 0;
+    return 0;
 }
 
 void GridView::OnDestroy()
@@ -571,6 +573,7 @@ void GridView::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
     && GetGridSourceCount(edHorz) > 0
     && GetGridSourceCount(edVert) > 0)
     {
+        pPopupMenu->EnableMenuItem(ID_GRID_POPUP,                MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_EDIT_COPY,                 MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_COPY_COL_HEADER,      MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_COPY_HEADERS,         MF_BYCOMMAND|MF_ENABLED);
@@ -579,6 +582,76 @@ void GridView::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
         pPopupMenu->EnableMenuItem(ID_GRID_OUTPUT_SAVE,          MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_OUTPUT_OPEN,          MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_OUTPUT_SAVE_AND_OPEN, MF_BYCOMMAND|MF_ENABLED);
+    }
+}
+
+void GridView::OnGridPopup ()
+{
+    if (! pTextPopupWnd)
+    {
+        pTextPopupWnd = new CPopupFrameWnd;
+
+        DWORD Style;
+        CRect Rect;
+
+        SystemParametersInfo(SPI_GETWORKAREA, 0, &Rect, 0);
+        
+        Rect.left += 100;
+        Rect.top += 100;
+        Rect.right = (Rect.right >> 1);
+        Rect.bottom = (Rect.bottom >> 1);
+        
+        Style = WS_POPUPWINDOW|WS_CAPTION|WS_THICKFRAME/*|WS_VISIBLE*/;
+        Style |= WS_MAXIMIZEBOX|WS_MINIMIZEBOX;
+        
+        const char* pszClassName;
+
+        pszClassName = AfxRegisterWndClass(CS_VREDRAW | CS_HREDRAW,
+          ::LoadCursor(NULL, IDC_ARROW),
+          (HBRUSH) ::GetStockObject(WHITE_BRUSH),
+          ::LoadIcon(NULL, IDI_APPLICATION));
+
+        char MsgBuf[255];
+        DWORD nError = ::GetLastError();
+
+        if (nError != 0)
+        {
+            ::FormatMessage( 
+                FORMAT_MESSAGE_FROM_SYSTEM | 
+                FORMAT_MESSAGE_IGNORE_INSERTS,
+                NULL,
+                nError,
+                0, // Default language
+                MsgBuf,
+                sizeof(MsgBuf),
+                NULL 
+            );
+            // Process any inserts in lpMsgBuf.
+            // ...
+            // Display the string.
+            // ::MessageBox( NULL, MsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
+        }
+
+        if (!pTextPopupWnd->CreateEx(0, pszClassName, "Popup Editor", Style, Rect, this, 0)) 
+        {
+	        MessageBox("The Popup Frame window was not created");
+	        // return -1;
+	    }
+    }
+
+    if (pTextPopupWnd)
+    {
+        if (GetGridSource())
+        {
+            int row = m_pManager->m_Rulers[edVert].GetCurrent();
+            int col = m_pManager->m_Rulers[edHorz].GetCurrent();
+
+            string theText = ((GridStringSource *) GetGridSource())->GetCellStr(row, col);
+
+            pTextPopupWnd->SetPopupText(theText);
+            pTextPopupWnd->ShowWindow(SW_SHOW);
+            pTextPopupWnd->SetFocus();
+        }
     }
 }
 

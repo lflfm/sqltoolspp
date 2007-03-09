@@ -37,6 +37,7 @@
 #include <OpenEditor/OESettings.h>
 #include "SQLTools.h" // it should be replaced with grid own settings
 
+#include "SQLWorksheet/XPlanView.h"
 
 namespace OG2 /* OG = OpenGrid */
 {
@@ -68,6 +69,8 @@ public:
     virtual bool IsEmpty () const;
     bool CanMoveUp () const;
     bool CanMoveDown () const;
+
+    void SetPopupToNull() {pTextPopupWnd = 0;}
 
 	//{{AFX_VIRTUAL(GridView)
 	public:
@@ -109,7 +112,9 @@ protected:
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint pos);
     afx_msg void OnSettingChange (UINT uFlags, LPCTSTR lpszSection);
 
-	DECLARE_MESSAGE_MAP()
+	afx_msg void OnGridPopup();
+
+    DECLARE_MESSAGE_MAP()
 
 protected:
     static UINT m_uWheelScrollLines;   // cached value for MS Weel support
@@ -122,6 +127,8 @@ protected:
     std::string m_visualAttributeSetName;
     // SettingsSubscriber
     virtual void OnSettingsChanged ();
+
+    static CPopupFrameWnd* pTextPopupWnd;
 
 private:
     BOOL m_Erase;
