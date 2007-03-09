@@ -1619,6 +1619,18 @@ BEGIN
         MENUITEM "&Describe",                    ID_SQL_DESCRIBE
     END
 END
+
+IDR_GRIDPOPUP_OPTIONS MENU 
+BEGIN
+    POPUP ""
+    BEGIN
+        MENUITEM "&Copy",                       ID_EDIT_COPY
+        MENUITEM "Select &All",                 ID_EDIT_SELECT_ALL
+        MENUITEM SEPARATOR
+        MENUITEM "&Wordwrap",                   ID_GRIDPOPUP_WORDWRAP
+    END
+END
+
 /////////////////////////////////////////////////////////////////////////////
 //
 // Toolbar

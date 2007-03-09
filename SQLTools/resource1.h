@@ -419,11 +419,13 @@
 #define ID_NP_SWITCH_OLD_VIEW           40001
 #define ID_NP_REFRESH                   40002
 #define ID_GRID_POPUP                   40005
+#define ID_GRIDPOPUP_WORDWRAP           40006
 // #define ID_NP_EDIT_COPY                 40003
 // #define ID_NP_EDIT_SELECT_ALL           40004
 #define IDR_NEWPLAN_OPTIONS             999
 #define IDR_OBJECTVIEWER_DUMMY          998
 #define IDR_OBJECTLIST_DUMMY            997
+#define IDR_GRIDPOPUP_OPTIONS           996
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
