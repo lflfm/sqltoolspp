@@ -5,7 +5,7 @@
 #include "SQLTools.h"
 #include "XPlanView.h"
 #include "COMMON/GUICommandDictionary.h"
-
+#include "OpenGrid/GridView.h"
 
 // cXPlanView
 
@@ -257,3 +257,83 @@ void cXPlanEdit::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
 	pPopupMenu->EnableMenuItem(ID_NP_REFRESH,                MF_BYCOMMAND|((m_IsDisplayCursor) ? MF_ENABLED : MF_GRAYED));
 }
 
+// CPopupFrameWnd
+
+IMPLEMENT_DYNCREATE(CPopupFrameWnd, CFrameWnd)
+
+CPopupFrameWnd::CPopupFrameWnd()
+{
+
+}
+
+CPopupFrameWnd::~CPopupFrameWnd()
+{
+
+}
+
+BEGIN_MESSAGE_MAP(CPopupFrameWnd, CFrameWnd)
+	ON_WM_CREATE()
+    ON_WM_SIZE()
+    ON_WM_DESTROY()
+END_MESSAGE_MAP()
+
+
+// CPopupFrameWnd diagnostics
+
+#ifdef _DEBUG
+void CPopupFrameWnd::AssertValid() const
+{
+	CFrameWnd::AssertValid();
+}
+
+#ifndef _WIN32_WCE
+void CPopupFrameWnd::Dump(CDumpContext& dc) const
+{
+	CFrameWnd::Dump(dc);
+}
+#endif
+#endif //_DEBUG
+
+
+// CPopupFrameWnd message handlers
+
+int  CPopupFrameWnd::OnCreate (LPCREATESTRUCT lpCreateStruct)
+{
+	int retval = CFrameWnd::OnCreate(lpCreateStruct);
+
+    VisualAttribute attr;
+
+	m_Font.CreateFont(
+          -attr.PointToPixel(9), 0, 0, 0,
+          FW_NORMAL,
+          0,
+          0,
+          0, ANSI_CHARSET,//DEFAULT_CHARSET,
+          OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH,
+          "Courier New"
+        );
+
+    if (!m_EditBox.Create(WS_CHILD|WS_VISIBLE|/*WS_HSCROLL|WS_VSCROLL|*/ES_MULTILINE|ES_READONLY,
+		    CFrameWnd::rectDefault, this, IDC_STATIC)) 
+    {
+	    MessageBox("The edit control was not created");
+	    return -1;
+	}
+    m_EditBox.SetFont(&m_Font);
+    m_EditBox.SetWindowText("This is the edit control;\r\nobviously it was created");
+
+	return retval;
+}
+
+void CPopupFrameWnd::OnSize(UINT nType, int cx, int cy)
+{
+    if (nType==SIZE_RESTORED || nType==SIZE_MAXIMIZED) 
+    {
+        m_EditBox.MoveWindow(0, 0, cx, cy);
+    }
+}
+
+void CPopupFrameWnd::OnDestroy()
+{
+    ((GridView *)GetParent())->SetPopupToNull();
+}
