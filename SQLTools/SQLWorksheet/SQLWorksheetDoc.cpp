@@ -1149,7 +1149,8 @@ void CPLSWorksheetDoc::OnSqlDescribe()
 		string::size_type pos = delims.find('.');
 		if (pos != string::npos) delims.erase(pos, 1);
 
-		CObjectViewerWnd& viewer = GetMainFrame()->ShowTreeViewer();
+		// CObjectViewerWnd& viewer = GetMainFrame()->ShowTreeViewer();
+        CObjectViewerWnd& viewer = ((CMDIMainFrame *)AfxGetMainWnd())->ShowTreeViewer();
 
 		if (m_pEditor->GetBlockOrWordUnderCursor(buff,  sel, true/*only one line*/, delims.c_str()))
 			viewer.ShowObject(buff);

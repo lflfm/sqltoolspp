@@ -1098,7 +1098,8 @@ void CDbSourceWnd::OnSqlDescribe()
 	    {
 			string s_theTextList = wndListCtrl->GetItemText(index, 0);
 
-			CObjectViewerWnd& viewer = CPLSWorksheetDoc::GetMainFrame()->ShowTreeViewer();
+			// CObjectViewerWnd& viewer = CPLSWorksheetDoc::GetMainFrame()->ShowTreeViewer();
+            CObjectViewerWnd& viewer = ((CMDIMainFrame *)AfxGetMainWnd())->ShowTreeViewer();
 
 			viewer.ShowObject(string(m_strSchema) + string(".") + s_theTextList);
 
