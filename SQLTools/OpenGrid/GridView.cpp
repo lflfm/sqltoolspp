@@ -648,6 +648,14 @@ void GridView::OnGridPopup ()
 
             string theText = ((GridStringSource *) GetGridSource())->GetCellStr(row, col);
 
+            CString theReplaceText(theText.c_str());
+
+            theReplaceText.Replace("\r\n", "\n");
+
+            theReplaceText.Replace("\n", "\r\n");
+
+            theText = theReplaceText;
+
             pTextPopupWnd->SetPopupText(theText);
             pTextPopupWnd->ShowWindow(SW_SHOW);
             pTextPopupWnd->SetFocus();
