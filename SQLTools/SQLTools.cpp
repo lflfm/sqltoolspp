@@ -320,7 +320,7 @@ void CSQLToolsApp::OnSqlHelp()
 
 void CSQLToolsApp::OnSQLToolsOnTheWeb()
 {
-    HINSTANCE result = ShellExecute( NULL, "open", "http://www.sqltools.net", NULL, NULL, SW_SHOW);
+    HINSTANCE result = ShellExecute( NULL, "open", "http://www.sqltools-plusplus.org:7676", NULL, NULL, SW_SHOW);
 
     if((UINT)result <= HINSTANCE_ERROR)
     {
