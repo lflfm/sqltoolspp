@@ -38,6 +38,7 @@ static char THIS_FILE[] = __FILE__;
 static const char* REPORT_TITLE = 
     "Please make a post about this problem in the forum:"
     "\n\thttp://www.sqltools.net/cgi-bin/yabb2/YaBB.pl"
+    "\nIn addition mail this information to <errors@sqltools-plusplus.org>."
     "\nWe need the stack trace (see below) and short description"
     "\nwhat were you doing when this problem occurred (optional).\n\n";
 

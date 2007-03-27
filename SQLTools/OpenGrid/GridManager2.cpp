@@ -301,7 +301,8 @@ void PaintGridManager::Paint (CDC& dc, bool erase_flag, const CRect& rect)
         ostringstream o;
         o << "Unexpected exception \"" << x.what() << "\" is being caught in PaintGridManager::Paint.\n\n"
              "Due to this problem, I recommend save the file and open it in a new window.\n"
-             "Please make a post about this problem in <http://www.sqltools.net/cgi-bin/yabb2/YaBB.pl>."
+             "Please make a post about this problem in <http://www.sqltools.net/cgi-bin/yabb2/YaBB.pl>.\n"
+             "In addition mail this information to <errors@sqltools-plusplus.org>.\n"
              "Thank you\n";
         string text = o.str();
         dc.SetBkColor(RGB(255,255,255));
