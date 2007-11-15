@@ -1117,6 +1117,8 @@ BEGIN
 0x6939, 0x3252, "\000" 
     IDC_SERV_PROP_SESSTAT_MODE, 0x403, 6, 0
 0x3031, 0x5267, 0x0032, 
+    IDC_SERV_PROP_SESSTAT_MODE, 0x403, 4, 0
+0x3131, 0x0067, 
     0
 END
 
@@ -1233,6 +1235,8 @@ BEGIN
         MENUITEM "&SQL Short Reference",        ID_SQL_HELP
         MENUITEM SEPARATOR
         MENUITEM "SQLTools on the &Web",        ID_SQLTOOLS_ON_THE_WEB
+        MENUITEM SEPARATOR
+        MENUITEM "Check for &Updates",          ID_SQLTOOLS_UPDATE
         MENUITEM SEPARATOR
         MENUITEM "&About...",                   ID_APP_ABOUT
     END
@@ -1471,6 +1475,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "SQLTools on the &Web",        ID_SQLTOOLS_ON_THE_WEB
         MENUITEM SEPARATOR
+        MENUITEM "Check for &Updates",          ID_SQLTOOLS_UPDATE
+        MENUITEM SEPARATOR
         MENUITEM "&About...",                   ID_APP_ABOUT
     END
 END
@@ -1628,6 +1634,7 @@ BEGIN
         MENUITEM "Select &All",                 ID_EDIT_SELECT_ALL
         MENUITEM SEPARATOR
         MENUITEM "&Wordwrap",                   ID_GRIDPOPUP_WORDWRAP
+        MENUITEM "Cl&ose",                      ID_GRIDPOPUP_CLOSE
     END
 END
 
