@@ -224,6 +224,7 @@ void CSQLToolsApp::InitGUICommand ()
 //Object List Accelerators
 	// GUICommandDictionary::InsertCommand("ObjectList.Copy",                 IDC_DS_COPY);
 	GUICommandDictionary::InsertCommand("PlanView.Refresh",                ID_NP_REFRESH);
+	GUICommandDictionary::InsertCommand("PopupEditor.Close",               ID_GRIDPOPUP_CLOSE);
     }
 }
 
