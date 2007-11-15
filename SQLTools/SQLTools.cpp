@@ -73,6 +73,7 @@ BEGIN_MESSAGE_MAP(CSQLToolsApp, CWinApp)
 	ON_COMMAND(ID_SQL_EXTRACT_SCHEMA, OnSqlExtractSchema)
 	ON_COMMAND(ID_SQL_TABLE_TRANSFORMER, OnSqlTableTransformer)
 	ON_COMMAND(ID_SQLTOOLS_ON_THE_WEB, OnSQLToolsOnTheWeb)
+	ON_COMMAND(ID_SQLTOOLS_UPDATE, OnSQLToolsUpdate)
 	//}}AFX_MSG_MAP
     ON_UPDATE_COMMAND_UI_RANGE(ID_SQL_DISCONNECT, ID_SQL_TABLE_TRANSFORMER, OnUpdate_SqlGroup)
     ON_UPDATE_COMMAND_UI(ID_INDICATOR_OCIGRID, OnUpdate_EditIndicators)
@@ -321,6 +322,31 @@ void CSQLToolsApp::OnSqlHelp()
 void CSQLToolsApp::OnSQLToolsOnTheWeb()
 {
     HINSTANCE result = ShellExecute( NULL, "open", "http://www.sqltools-plusplus.org:7676", NULL, NULL, SW_SHOW);
+
+    if((UINT)result <= HINSTANCE_ERROR)
+    {
+        MessageBeep((UINT)-1);
+        AfxMessageBox("Cannot open a default browser.");
+    }
+}
+
+void CSQLToolsApp::OnSQLToolsUpdate()
+{
+    string s_URL;
+
+    s_URL = string("http://www.sqltools-plusplus.org:7676/checkforupdate_") + string(SQLTOOLS_VERSION_SHORT) + string(".html");
+
+    string::size_type n_pos = 0;
+
+    for (;;)
+    {
+        n_pos = s_URL.find(" ", n_pos + 1);
+        if (n_pos == string::npos)
+            break;
+        s_URL.replace(n_pos, 1, "_");
+    }
+
+    HINSTANCE result = ShellExecute( NULL, "open", s_URL.c_str(), NULL, NULL, SW_SHOW);
 
     if((UINT)result <= HINSTANCE_ERROR)
     {

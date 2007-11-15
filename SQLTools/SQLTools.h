@@ -111,6 +111,7 @@ public:
 	afx_msg void OnSqlExtractSchema();
 	afx_msg void OnSqlTableTransformer();
 	afx_msg void OnSQLToolsOnTheWeb();
+    afx_msg void OnSQLToolsUpdate();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 	afx_msg void OnUpdate_SqlGroup(CCmdUI* pCmdUI);
