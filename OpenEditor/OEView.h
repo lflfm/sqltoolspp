@@ -121,6 +121,8 @@ class COEditorView : public CView, protected OpenEditor::EditContext
 	//  implementations of this methods are stored in OEView_3.cpp
 	//
 public:
+    const OpenEditor::Settings& GetEditorSettings () {return GetSettings();}
+    
     bool GetBlockKeepMarkingAfterDragAndDrop_Public() {return GetBlockKeepMarkingAfterDragAndDrop();}
     void EnableSyntaxHighlight (BOOL);
 
