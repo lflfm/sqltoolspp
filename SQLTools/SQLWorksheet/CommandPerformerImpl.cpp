@@ -146,6 +146,7 @@ void CommandPerformerImpl::DoExecuteSql (CommandParser& commandParser, const str
         case OCI8::StmtInsert:
         case OCI8::StmtUpdate:
         case OCI8::StmtDelete:
+        case OCI8::StmtMerge:
             message << " - " << m_cursor->GetRowCount() << " row(s)";
         }
         message << ", executed in ";
@@ -375,6 +376,7 @@ SqlPlanPerformerImpl::SqlPlanPerformerImpl (CPLSWorksheetDoc& doc)
     m_doc(doc),
     m_abortCtrl(*GetAbortThread(), &doc.GetConnect())
 {
+    m_abortCtrl.SetActionText("Explain plan...");
 }
 
 void SqlPlanPerformerImpl::DoExecuteSql (CommandParser&, const string& sql, const vector<string>&)
