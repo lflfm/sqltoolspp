@@ -1,6 +1,54 @@
  History
 ~~~~~~~~~
 
+SQLTools++ Version 1.10RC2:
+    Improvements:
+    - Tested with Oracle 11g Server and Client, recognizes 11g as server/client version
+    - 11g session statistics supported
+    - DBMS_OUTPUT now allows max. linesize of 32767 beginning with 10g
+    - Unlimited DBMS_OUTPUT supported on 10g or later (not reflected in the GUI yet, set output size
+      to > 1.000.000 to get support for unlimited output size in 10g onwards)
+    - DBMS_XPLAN.DISPLAY_CURSOR emulation now available for Oracle9i, see "Data\display_cursor_9i.sql"
+      You may change the contents of the file to meet your needs, or even save the code in a persistent
+      procedure/package and change the file contents to just call this procedure/package.
+      The file content is re-read each time the DISPLAY_CURSOR functionality is called
+    - MERGE sql statement now recognized and appropriate feedback provided (no. of rows merged)
+    - Popup Editor window can now be closed using the ESC key as shortcut
+    - Handle Oracle error ORA-28002 ("password expires in next <x> days") more gracefully
+    - Check for update on web site with a single click. Although not yet automated, you will be redirected
+      to a web page using the default browser of your system that shows you if there is a newer version
+      available for download.
+    - Installation cleanup, default settings, files and web links updated
+    Bugfixes:
+    - Fixed issue with background session connection (timing issue while establishing the connection)
+    - Explain plan did not adhere to "whitespace line" setting
+    - Auto-fit columns is now executed even if the column descriptions stay the same (there was a caching
+      active that compared the current columns of the result set with the previous and in case they were the 
+      same no resizing took place. I deactivated that comparison because it annoyed me)
+
+SQLTools++ Version 1.02RC1 (28-MAR-2007):
+    Improvements (for detailed description see http://www.sqltools-plusplus.org:7676/sqltools_pp.html):
+    - Scan for beginning of SQL statement (empty line or additionally lines only consisting of whitesplace
+      are considered as statement delimiters)
+    - Scan for end of SQL statement, same as above. So you don't need to separate statements by semicolons,
+      if you are lazy like me
+    - Improved output in status bar when executing statements (separate information about execution and fetch
+      time)
+    - In Oracle9i and onwards use DBMS_XPLAN.DISPLAY to show execution plan. Old plan output is still available
+    - Enable "Describe" in object list, so that an object is opened in the object viewer when pressing "F12" key
+    - Pressing "Ctrl+C" in the object list and object viewer copies a comma separated list of the selected 
+      objects into the clipboard
+    - Drag&Drop in object list and object viewer supports multi-selection, double-click in object viewer
+    - Support for cardinality feedback tuning using DBMS_XPLAN.DISPLAY_CURSOR output in 10g onwards
+    - Background session support for session statistics and DISPLAY_CURSOR output
+    - Improved session statistics (Auto detection, 9iR2, 10gR2 statistics sets)
+    - Popup window for large grid cell contents supporting optional wordwrap
+    - Reload NLS settings after executing "ALTER SESSION"
+    Bugfixes:
+    - Correct formatting of execution times greater than one minute
+    - Various keybaord accelerator and handling issues improved
+
+
 Version 1.4.2 RC3 stable (2006-11-1)
     B#XXXXXXX - invalid path in tooltip after tab reorganization 
     B#XXXXXXX - pls/sql match searching has been disabled because 
