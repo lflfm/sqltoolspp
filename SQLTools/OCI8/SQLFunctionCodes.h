@@ -160,6 +160,7 @@ namespace OCI8
         OFN_DROP_OUTLINE            = 181,
         OFN_UPDATE_INDEXES          = 182,
         OFN_ALTER_OPERATOR          = 183,
+        OFN_MERGE                   = 189,
 
     };
 

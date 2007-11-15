@@ -47,6 +47,7 @@ const char* GetSQLFunctionDescription (int code)
     case OFN_INSERT:                  return "Insert";
     case OFN_SELECT:                  return "Select";
     case OFN_UPDATE:                  return "Update";
+    case OFN_MERGE:                   return "Merge";
     case OFN_DROP_ROLE:               return "Drop role";
     case OFN_DROP_VIEW:               return "Drop view";
     case OFN_DROP_TABLE:              return "Drop table";
