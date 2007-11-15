@@ -223,8 +223,11 @@ void OciGridView::SetCursor (std::auto_ptr<OCI8::AutoCursor>& cursor)
     m_pManager->MoveToHome(edVert);
 
     // 12.10.2002 bug fix, grid column autofit has been brocken since build 38
-    if (!same)
-	    ApplyColumnFit();
+
+    // RG: I don't like this mode if the result set differs but the columns
+    // stay the same columns weren't resized, but now I do it always
+    // if (!same)
+    ApplyColumnFit();
 
 #pragma message("\nCHECK: grid refresh\n")
     //m_pManager->Refresh(); 
