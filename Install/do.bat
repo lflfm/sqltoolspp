@@ -1,2 +1,2 @@
-C:\Programme\NSIS\makensis.exe /DSQLTOOLSVER=1.02RC1  /DSQLTOOLS_BUILDDIR=Release-Beta SQLTools.nsi
+C:\Programme\NSIS\makensis.exe /DSQLTOOLSVER=1.10RC2  /DSQLTOOLS_BUILDDIR=Release-Beta SQLTools.nsi
 @rem "c:\program files\NSIS\makensis.exe" /DSQLTOOLSVER=%1D /DSQLTOOLS_BUILDDIR=Release-Beta SQLTools.nsi
