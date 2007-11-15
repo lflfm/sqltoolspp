@@ -121,7 +121,8 @@ private:
         esvServer80X,
         esvServer81X,
         esvServer9X,
-        esvServer10X
+        esvServer10X,
+        esvServer11X
     };
 
     enum EClentVersion
@@ -130,7 +131,8 @@ private:
         ecvClient80X,
         ecvClient81X,
         ecvClient9X,
-        ecvClient10X
+        ecvClient10X,
+        ecvClient11X
     };
 
 
@@ -149,7 +151,7 @@ public:
     virtual void Rollback ();
     virtual void Break (bool purge);
 
-	void CheckShadowSession();
+	void CheckShadowSession(const bool bForceConnectShadow = false);
 	void SetSession();
 	void SetShadowSession();
 
@@ -304,7 +306,7 @@ protected:
 
 public:
     void AlterSessionNlsParams (); // changes session NLS_DATE_FORMAT only
-	void CheckShadowSession();
+	void CheckShadowSession(const bool bForceConnectShadow = false);
 	void SetShadowClientInfo();
 
 private:
