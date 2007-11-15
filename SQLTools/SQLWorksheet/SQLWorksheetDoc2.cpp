@@ -30,11 +30,13 @@
 #include "COMMON\StrHelpers.h"
 #include "COMMON\ExceptionHelper.h"
 #include "SQLToolsSettings.h"
+#include <OCI8/ACursor.h>
 #include <OCI8/BCursor.h>
 #include "ExplainPlanView.h"
 
 #include "XPlanView.h"
 #include "Booklet.h"
+#include <COMMON\AppGlobal.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -126,6 +128,113 @@ CTypeMap typeMap = { sizeof _typeMap / sizeof _typeMap[0], _typeMap };
 
 void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 {
+	if (m_connect.GetVersion() == OCI8::esvServer9X)
+	{
+        string text;
+        if (m_connect.GetCurrentSqlAddress().size())
+        {
+            std::string path;
+            Global::GetSettingsPath(path);
+            path += "\\display_cursor_9i.sql";
+            std::ifstream is(path.c_str());
+            std::string buffer;
+            string s_display_cursor;
+            for (int row = 0; std::getline(is, buffer); row++)
+                s_display_cursor += buffer + "\n";
+
+            OciAutoCursor explan_curs(m_connect);
+            OciStatement cursor(m_connect);
+
+	        try
+	        {
+                cursor.Prepare("BEGIN dbms_output.enable(1000000); END;");
+		        cursor.ExecuteShadow(1, true);
+
+                cursor.Close();
+
+                /*string::size_type n_pos = 0;
+                vector<string>  a_Replaces;
+                a_Replaces.push_back(m_connect.GetCurrentSqlHashValue());
+                a_Replaces.push_back(m_connect.GetCurrentSqlAddress());
+
+                for (;;)
+                {
+                    n_pos = s_display_cursor.find("%s", n_pos + 2);
+                    if (n_pos == string::npos)
+                        break;
+                    s_display_cursor.replace(n_pos, 2, a_Replaces.back());
+                    a_Replaces.pop_back();
+                }
+                */
+                explan_curs.Prepare(s_display_cursor.c_str());
+                OciStringVar currentSqlAddress(m_connect.GetCurrentSqlAddress());
+                OciStringVar currentSqlHashValue(m_connect.GetCurrentSqlHashValue());
+		        explan_curs.Bind(&currentSqlAddress, ":sql_address");
+                explan_curs.Bind(&currentSqlHashValue, ":hash_value");
+
+		        explan_curs.ExecuteShadow(); //(1, true);
+
+                const int cnArraySize = 100;
+
+                OciNumberVar linesV(m_connect);
+                linesV.Assign(cnArraySize);
+                int nLineSize = 255;
+
+                OciStringArray output(nLineSize, cnArraySize);
+
+                cursor.Prepare("BEGIN dbms_output.get_lines(:lines,:numlines); END;");
+                cursor.Bind(":lines", output);
+                cursor.Bind(":numlines", linesV);
+
+                string buffer;
+                cursor.ExecuteShadow(1, true/*guaranteedSafe*/);
+                int lines = linesV.ToInt();
+
+                while (lines > 0)
+                {
+                    for (int i(0); i < lines; i++)
+                    {
+                        output.GetString(i, buffer);
+				        text += buffer;
+				        text += "\r\n";
+                    }
+
+                    cursor.ExecuteShadow(1, true);
+                    lines = linesV.ToInt();
+                }
+
+                cursor.Close();
+
+                cursor.Prepare("BEGIN dbms_output.disable; END;");
+		        cursor.ExecuteShadow(1, true);
+
+                cursor.Close();
+            }
+            catch (const OCI8::Exception& x)
+            {
+		        //if (explan_curs.IsOpen())
+		        //	explan_curs.Close();
+                string::size_type n_pos = 0;
+
+		        text = string("Error: ") + x.what() + string("\r\noccurred executing script from 'display_cursor_9i.sql'.");
+                // text += string("\r\nProbably you are lacking SELECT privileges on V$SQL and/or V$SQL_PLAN_STATISTICS_ALL");
+                for (;;)
+                {
+                    n_pos = text.find("\n", n_pos + 2);
+                    if (n_pos == string::npos)
+                        break;
+                    text.replace(n_pos, 1, "\r\n");
+                }
+	        }
+
+	        m_connect.SetSession();
+		}
+        else
+            text = "Could not read sql statement info for this session (no SELECT privilege on V$SESSION?), therefore impossible to call DBMS_XPLAN.DISPLAY_CURSOR()";
+
+		m_pXPlan->SetWindowText(text.c_str());
+    }
+
 	if (m_connect.GetVersion() >= OCI8::esvServer10X)
 	{
         string text, buff;
@@ -149,6 +258,7 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 			    }
 
 			    explan_curs.Close();
+        		m_pXPlan->SetIsDisplayCursor(true);
             }
             catch (const OCI8::Exception& x)
             {
@@ -160,10 +270,9 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 		    m_connect.SetSession();
 		}
         else
-            text = "Could not read sql statement info for this session, therefore impossible to call DBMS_XPLAN.DISPLAY_CURSOR()";
+            text = "Could not read sql statement info for this session (no SELECT privilege on V$SESSION?), therefore impossible to call DBMS_XPLAN.DISPLAY_CURSOR()";
 
 		m_pXPlan->SetWindowText(text.c_str());
-		m_pXPlan->SetIsDisplayCursor(true);
 	}
 }
 
