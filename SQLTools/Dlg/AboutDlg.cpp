@@ -28,7 +28,7 @@ CAboutDlg::CAboutDlg(CWnd* pParent /*=NULL*/)
 //    , m_license(_T(""))
 {
     m_license = SQLTOOLS_VERSION
-        "\r\nDevelopment tools for Oracle 8/8i/9i/10g"
+        "\r\nDevelopment tools for Oracle 8/8i/9i/10g/11g"
         "\r\n\r\n" SQLTOOLS_COPYRIGHT
         "\r\nwww.sqltools.net"
         "\r\nPlusPlus-Version Homepage: http://www.sqltools-plusplus.org:7676"
