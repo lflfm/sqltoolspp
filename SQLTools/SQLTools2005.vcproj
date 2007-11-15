@@ -1670,6 +1670,38 @@
 				>
 			</File>
 			<File
+				RelativePath="..\Common\ListCtrlDataProvider.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ListCtrlDataProvider.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ManagedListCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ManagedListCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ManagedListCtrlFilterDlg-1.bmp"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ManagedListCtrlFilterDlg.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ManagedListCtrlFilterDlg.h"
+				>
+			</File>
+			<File
+				RelativePath="..\Common\ManagedListCtrlFilterDlg.rc"
+				>
+			</File>
+			<File
 				RelativePath="..\Common\MemoryMappedFile.cpp"
 				>
 			</File>
