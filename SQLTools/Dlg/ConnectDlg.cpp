@@ -66,6 +66,16 @@ static char THIS_FILE[] = __FILE__;
     const char* cszSortColumnKey       = "SortColumn";
     const char* cszSortDirectionKey    = "SortDirection";
 
+    const char* cszUserFilterKey       = "UserFilter";
+    const char* cszAliasFilterKey      = "AliasFilter";
+    const char* cszCounterFilterKey    = "CounterFilter";
+    const char* cszLastUsageFilterKey  = "LastUsageFilter";
+
+    const char* cszUserFilterOpKey     = "UserFilterOp";
+    const char* cszAliasFilterOpKey    = "AliasFilterOp";
+    const char* cszCounterFilterOpKey  = "CounterFilterOp";
+    const char* cszLastUsageFilterOpKey= "LastUsageFilterOp";
+
     const int   cnUserColumn        = 0;
     const int   cnAliasColumn       = 1;
     const int   cnCounterColumn     = 2;
@@ -74,7 +84,8 @@ static char THIS_FILE[] = __FILE__;
 
 CConnectDlg::CConnectDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CConnectDlg::IDD, pParent),
-    m_sortColumn(-1), m_direction(0)
+    m_sortColumn(-1), m_direction(Common::ListCtrlManager::ESortDir::ASC), m_adapter(m_data), 
+    m_profiles(m_adapter)
 {
     SetHelpID(CConnectDlg::IDD);
     //{{AFX_DATA_INIT(CConnectDlg)
@@ -114,7 +125,6 @@ void CConnectDlg::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CConnectDlg, CDialog)
     //{{AFX_MSG_MAP(CConnectDlg)
-    ON_NOTIFY(LVN_COLUMNCLICK, IDC_C_PROFILES, OnColumnClick_Profiles)
     ON_NOTIFY(LVN_GETDISPINFO, IDC_C_PROFILES, OnGetDispInfo_Profiles)
     ON_NOTIFY(LVN_ITEMCHANGED, IDC_C_PROFILES, OnItemChanged_Profiles)
     ON_BN_CLICKED(IDC_C_TEST, OnTest)
@@ -151,41 +161,7 @@ BOOL CConnectDlg::OnInitDialog()
 
     try { EXCEPTION_FRAME;
 
-        struct 
-        {
-            const char* title;
-            int width;
-            int format;
-        }
-        columns[] =
-        {
-            { "User",       100, LVCFMT_LEFT  },
-            { "Alias",      130, LVCFMT_LEFT  },
-            { "Counter",     70, LVCFMT_RIGHT },
-            { "Last usage", 100, LVCFMT_RIGHT },
-        };
-
-        LV_COLUMN lvcolumn;
-        lvcolumn.mask = LVCF_FMT | LVCF_SUBITEM | LVCF_TEXT | LVCF_WIDTH;
-
-        _ASSERTE(cnColumns == sizeof columns/sizeof columns[0]);
-
-        for (int i = 0; i < sizeof columns/sizeof columns[0]; i++) 
-        {
-            lvcolumn.pszText  = (LPSTR)(LPCSTR)columns[i].title;
-            lvcolumn.iSubItem = i;
-            lvcolumn.fmt      = columns[i].format;
-            lvcolumn.cx       = columns[i].width;
-            m_profiles.InsertColumn(i, &lvcolumn);
-        }
-
-        if (m_sortImages.m_hImageList == NULL)
-            m_sortImages.Create(IDB_SORTDIRECTIONS, 8, 16, RGB(0,255,0));
-
-        CHeaderCtrl* header = m_profiles.GetHeaderCtrl();
-        header->SetImageList(&m_sortImages);
-
-        m_profiles.SetExtendedStyle(LVS_EX_FULLROWSELECT);
+        m_profiles.Init();
 
         m_directConnection 
             = AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszDirectConnectionKey, 0) 
@@ -327,22 +303,10 @@ BOOL CConnectDlg::OnInitDialog()
                     filetime_to_string (lastWriteTime, entry.lastUsage);
                     m_data.push_back(entry);
 
-                    lvitem.iItem    =
-                    lvitem.lParam   = m_data.size() - 1;
-                    lvitem.iSubItem = 0;
-                    lvitem.mask     = LVIF_TEXT|LVIF_PARAM;
-                    lvitem.pszText  = LPSTR_TEXTCALLBACK;
-            
-                    lvitem.iItem = m_profiles.InsertItem(&lvitem);
-
-                    lvitem.mask = LVIF_TEXT;
-                    for (lvitem.iSubItem = 1; lvitem.iSubItem < 4; lvitem.iSubItem++)
-                        m_profiles.SetItem(&lvitem);
-
                     if (!m_directConnection)
                     {
                         if (!stricmp(m_user, entry.user) && !stricmp(m_tnsAlias, entry.tnsAlias))
-                            selectedProfile = lvitem.iItem;
+                            selectedProfile = m_data.size() - 1;
                     }
                     else
                     {
@@ -353,18 +317,43 @@ BOOL CConnectDlg::OnInitDialog()
                             && !stricmp(m_tcpPort , entry.tcpPort)
                             && !stricmp(m_sid , entry.sid)
                         )
-                            selectedProfile = lvitem.iItem;
+                            selectedProfile = m_data.size() - 1;
                     }
                 }
 
                 RegCloseKey(hkey);
 
                 if (selectedProfile != -1)
-                    m_profiles.SetItemState(selectedProfile, LVIS_SELECTED, LVIS_SELECTED);
+                    m_profiles.SelectEntry(selectedProfile);
 
-                sortProfiles(AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszSortColumnKey, cnColumns - 1),
-                             AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszSortDirectionKey, -1));
+                m_profiles.SetSortColumn(AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszSortColumnKey, cnColumns - 1),
+                                         (Common::ListCtrlManager::ESortDir) AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszSortDirectionKey, -1));
 
+                m_filter.clear();
+
+                m_filter.push_back(Common::ListCtrlManager::FilterComponent(
+                    AfxGetApp()->GetProfileString(cszCurrProfileKey,cszUserFilterKey), 
+                    static_cast<Common::ListCtrlManager::EFilterOperation>(AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszUserFilterOpKey, 0))
+                    ));
+
+                m_filter.push_back(Common::ListCtrlManager::FilterComponent(
+                    AfxGetApp()->GetProfileString(cszCurrProfileKey,cszAliasFilterKey), 
+                    static_cast<Common::ListCtrlManager::EFilterOperation>(AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszAliasFilterOpKey, 0))
+                    ));
+
+                m_filter.push_back(Common::ListCtrlManager::FilterComponent(
+                    AfxGetApp()->GetProfileString(cszCurrProfileKey,cszCounterFilterKey), 
+                    static_cast<Common::ListCtrlManager::EFilterOperation>(AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszCounterFilterOpKey, 0))
+                    ));
+
+                m_filter.push_back(Common::ListCtrlManager::FilterComponent(
+                    AfxGetApp()->GetProfileString(cszCurrProfileKey,cszLastUsageFilterKey), 
+                    static_cast<Common::ListCtrlManager::EFilterOperation>(AfxGetApp()->GetProfileInt(cszCurrProfileKey, cszLastUsageFilterOpKey, 0))
+                    ));
+
+                m_profiles.SetFilter(m_filter);
+
+                m_profiles.Refresh(true);
             }
         }
 
@@ -394,110 +383,27 @@ BOOL CConnectDlg::OnInitDialog()
     return TRUE;
 }
 
-void CConnectDlg::sortProfiles (int col, int dir)
+void CConnectDlg::writeProfileListConfig(void)
 {
-    _ASSERTE((m_sortColumn < cnColumns) && (dir == 1 || dir == -1));
-    m_sortColumn = (m_sortColumn < cnColumns) ? col : 0;
-    m_direction  = (dir == -1) ? -1 : 1;
-    
-    m_profiles.SortItems(CConnectDlg::comp_proc, (LPARAM)this);
-
-    CHeaderCtrl* header = m_profiles.GetHeaderCtrl();
-
-    HDITEM hditem;
-
-    for (int i = 0, count = header->GetItemCount(); i < count; i++)
-    {
-        hditem.mask = HDI_FORMAT;
-        header->GetItem(i, &hditem);
-        hditem.fmt &= ~HDF_IMAGE;
-        header->SetItem(i, &hditem);
-    }
-    
-    hditem.mask = HDI_FORMAT;
-    header->GetItem(m_sortColumn, &hditem);
-    hditem.mask = HDI_IMAGE | HDI_FORMAT;
-    hditem.iImage= (m_direction == 1) ? 0 : 1;
-    hditem.fmt |= HDF_IMAGE;
-    header->SetItem(m_sortColumn, &hditem);
-
-    int selectedProfile = m_profiles.GetNextItem(-1, LVNI_SELECTED);
-    if (selectedProfile != -1) 
-        m_profiles.EnsureVisible(selectedProfile, FALSE);
-
+    m_profiles.GetSortColumn(m_sortColumn, m_direction);
     AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszSortColumnKey, m_sortColumn);
     AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszSortDirectionKey, m_direction);
-}
 
-int CALLBACK CConnectDlg::comp_proc (LPARAM row1, LPARAM row2, LPARAM this_prt)
-{
-    try { EXCEPTION_FRAME;
+    m_profiles.GetFilter(m_filter);
 
-        const CConnectDlg* m_This = (CConnectDlg*)this_prt;
+    _ASSERTE(m_filter.size() == 4);
 
-        LPCSTR str1; LPCSTR str2;
+    AfxGetApp()->WriteProfileString(cszCurrProfileKey,cszUserFilterKey, m_filter.at(0).value.c_str()); 
+    AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszUserFilterOpKey, m_filter.at(0).operation);
 
-        const ListEntry& entry1 = m_This->m_data.at(row1),
-                         entry2 = m_This->m_data.at(row2);
-    
-        switch (m_This->m_sortColumn)
-        {
-        case cnUserColumn: 
-            str1 = entry1.user; 
-            str2 = entry2.user; 
-            break;
-        case cnLastUsageColumn: 
-            str1 = entry1.lastUsage;
-            str2 = entry2.lastUsage;
-            break;
+    AfxGetApp()->WriteProfileString(cszCurrProfileKey,cszAliasFilterKey, m_filter.at(1).value.c_str()); 
+    AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszAliasFilterOpKey, m_filter.at(1).operation);
 
-        case cnCounterColumn: 
-            return m_This->m_direction 
-                * (atoi(entry1.counter) - atoi(entry2.counter));
+    AfxGetApp()->WriteProfileString(cszCurrProfileKey,cszCounterFilterKey, m_filter.at(2).value.c_str()); 
+    AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszCounterFilterOpKey, m_filter.at(2).operation);
 
-        case cnAliasColumn: 
-            {
-                CString buff1, buff2;
-
-                if (!entry1.directConnection) str1 = entry1.tnsAlias;   
-                else
-                {
-                    buff1.Format("%s:%s", (LPCSTR)entry1.sid, (LPCSTR)entry1.host);
-                    str1 = buff1;
-                }
-            
-                if (!entry2.directConnection) str2 = entry2.tnsAlias;   
-                else
-                {
-                    buff2.Format("%s:%s", (LPCSTR)entry2.sid, (LPCSTR)entry2.host);
-                    str2 = buff2;
-                }
-
-                return m_This->m_direction * stricmp(str1, str2);
-            }
-        
-        default:
-            _ASSERTE(0);
-            return 0;
-        }
-
-        return m_This->m_direction * stricmp(str1, str2);
-    }
-    _DEFAULT_HANDLER_
-
-    return 0;
-}
-
-void CConnectDlg::OnColumnClick_Profiles (NMHDR* pNMHDR, LRESULT* pResult) 
-{
-    NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
-
-    int col = pNMListView->iSubItem;
-    int defDir = (col == cnUserColumn || col == cnAliasColumn) ? 1 : -1;
-
-    sortProfiles(pNMListView->iSubItem, (m_sortColumn != col) ? defDir : -m_direction);
-
-    *pResult = 0;
+    AfxGetApp()->WriteProfileString(cszCurrProfileKey,cszLastUsageFilterKey, m_filter.at(3).value.c_str()); 
+    AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszLastUsageFilterOpKey, m_filter.at(3).operation);
 }
 
 void CConnectDlg::OnGetDispInfo_Profiles (NMHDR* pNMHDR, LRESULT* pResult) 
@@ -731,9 +637,23 @@ void CConnectDlg::OnOK ()
 
         int counter = AfxGetApp()->GetProfileInt(keyName, cszCounterKey, 0);
         AfxGetApp()->WriteProfileInt(keyName, cszCounterKey, ++counter);
+
+        writeProfileListConfig();
     }
     _DEFAULT_HANDLER_
 }
+
+void CConnectDlg::OnCancel()
+{
+    try { EXCEPTION_FRAME;
+
+        CDialog::OnCancel();
+
+        writeProfileListConfig();
+    }
+    _DEFAULT_HANDLER_
+}
+
 
 void CConnectDlg::OnDblClk_Profiles (NMHDR*, LRESULT* pResult) 
 {
