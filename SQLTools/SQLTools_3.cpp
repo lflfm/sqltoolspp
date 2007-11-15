@@ -324,9 +324,10 @@ void CSQLToolsApp::OnSqlSubstitutionVariables()
 
 void CSQLToolsApp::OnSqlDbmsXplanDisplayCursor()
 {
-    GetSQLToolsSettingsForUpdate().SetDbmsXplanDisplayCursor(!GetSQLToolsSettings().GetDbmsXplanDisplayCursor());
+	m_connect->CheckShadowSession(!GetSQLToolsSettings().GetDbmsXplanDisplayCursor() ||
+                                   GetSQLToolsSettings().GetSessionStatistics());
 
-	m_connect->CheckShadowSession();
+    GetSQLToolsSettingsForUpdate().SetDbmsXplanDisplayCursor(!GetSQLToolsSettings().GetDbmsXplanDisplayCursor());
 }
 
 void CSQLToolsApp::OnUpdate_SqlSubstitutionVariables (CCmdUI* pCmdUI)
@@ -371,9 +372,10 @@ void CSQLToolsApp::OnSqlSessionStatistics()
 {
     try { EXCEPTION_FRAME;
 
-        GetSQLToolsSettingsForUpdate().SetSessionStatistics(!GetSQLToolsSettings().GetSessionStatistics());
+		m_connect->CheckShadowSession(!GetSQLToolsSettings().GetSessionStatistics() || 
+                                       GetSQLToolsSettings().GetDbmsXplanDisplayCursor());
 
-		m_connect->CheckShadowSession();
+        GetSQLToolsSettingsForUpdate().SetSessionStatistics(!GetSQLToolsSettings().GetSessionStatistics());
 
         if (GetSQLToolsSettings().GetSessionStatistics())
             CStatView::OpenAll(*m_connect);
