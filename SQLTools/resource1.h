@@ -372,6 +372,7 @@
 #define ID_ES_AS_DB_BKS_SCHEMA          38147
 #define ID_SQL_LOAD                     38149
 #define ID_SQLTOOLS_ON_THE_WEB          38150
+#define ID_SQLTOOLS_UPDATE              40008
 #define ID_GRID_OUTPUT_SAVE             38151
 #define ID_GRID_OUTPUT_OPEN             38152
 #define ID_GRID_OUTPUT_OPTIONS          38153
@@ -420,6 +421,7 @@
 #define ID_NP_REFRESH                   40002
 #define ID_GRID_POPUP                   40005
 #define ID_GRIDPOPUP_WORDWRAP           40006
+#define ID_GRIDPOPUP_CLOSE              40007
 // #define ID_NP_EDIT_COPY                 40003
 // #define ID_NP_EDIT_SELECT_ALL           40004
 #define IDR_NEWPLAN_OPTIONS             999
