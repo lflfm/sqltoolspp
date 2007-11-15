@@ -96,6 +96,10 @@ void Exception::CHECK (ConnectBase* conn, sword status)
             throw UserCancel(errcode, (const char*)message);
         case 1406: // ORA-01406: fetched column value was truncated
             break;
+        case 28002: // ORA-28002: the password will expire within <x> days
+            MessageBeep(MB_ICONHAND);
+            Global::SetStatusText((const char*)message);
+            break;
         }
     }
 }
@@ -212,7 +216,8 @@ ConnectBase::ConnectBase (unsigned mode)
 
             if (!version.empty())
             {
-                if (!strncmp(version.c_str(),"10", sizeof("10")-1))        m_clientVersoon = ecvClient10X;
+                if (!strncmp(version.c_str(),"11", sizeof("11")-1))        m_clientVersoon = ecvClient11X;
+                else if (!strncmp(version.c_str(),"10", sizeof("10")-1))   m_clientVersoon = ecvClient10X;
                 else if (!strncmp(version.c_str(),"9", sizeof("9")-1))     m_clientVersoon = ecvClient9X;
                 else if (!strncmp(version.c_str(),"8.1", sizeof("8.1")-1)) m_clientVersoon = ecvClient81X;
                 else if (!strncmp(version.c_str(),"8.0", sizeof("8.0")-1)) m_clientVersoon = ecvClient80X;
@@ -359,9 +364,9 @@ void ConnectBase::Open (const char* uid, const char* pswd, const char* alias, EC
 	m_open = true;
 }
 
-void ConnectBase::CheckShadowSession()
+void ConnectBase::CheckShadowSession(const bool bForceConnectShadow)
 {
-	if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
+	if (bForceConnectShadow) // || GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
 	{
 		if (! m_openShadow)
 		{
@@ -710,7 +715,11 @@ void Connect::EnableOutput (bool enable, unsigned long size, bool connectInit)
             if (enable)
             {
                 char buffer[80];
-                sprintf(buffer, "BEGIN dbms_output.enable(%ld); END;", m_OutputSize);
+                // Version 10 and above support unlimited output buffer size
+                if ((GetVersion() >= OCI8::esvServer10X) && (GetClientVersion() >= OCI8::ecvClient10X) && (m_OutputSize > 1000000))
+                    sprintf(buffer, "BEGIN dbms_output.enable(NULL); END;");
+                else
+                    sprintf(buffer, "BEGIN dbms_output.enable(%ld); END;", m_OutputSize);
                 ExecuteStatement(buffer, true);
             }
             else
@@ -752,7 +761,9 @@ const char* Connect::GetSessionSid () // throw Exception
         catch (const Exception& x)
         {
             MessageBeep(MB_ICONHAND);
-			AfxMessageBox((string("Error: ") + x.what() + string(" reading sid from v$mystat.")).c_str());
+			// AfxMessageBox((string("Error: ") + x.what() + string(" reading sid from v$mystat.")).c_str());
+        	Global::SetStatusText((string("Error: ") + x.what() + string(" reading sid from v$mystat.")).c_str());
+
 			m_GetSIDFailed = true;
 		}
 	}
@@ -799,7 +810,8 @@ EServerVersion Connect::GetVersion ()
 
     if (!m_strVersion.empty())
     {
-        if (!strncmp(m_strVersion.c_str(),"10", sizeof("10")-1))        version = esvServer10X;
+        if (!strncmp(m_strVersion.c_str(),"11", sizeof("11")-1))        version = esvServer11X;
+        else if (!strncmp(m_strVersion.c_str(),"10", sizeof("10")-1))        version = esvServer10X;
         else if (!strncmp(m_strVersion.c_str(),"9", sizeof("9")-1))     version = esvServer9X;
         else if (!strncmp(m_strVersion.c_str(),"8.1", sizeof("8.1")-1)) version = esvServer81X;
         else if (!strncmp(m_strVersion.c_str(),"8.0", sizeof("8.0")-1)) version = esvServer80X;
@@ -931,9 +943,9 @@ void Connect::AlterSessionNlsParams ()
     }
 }
 
-void Connect::CheckShadowSession()
+void Connect::CheckShadowSession(const bool bForceConnectShadow)
 {
-	ConnectBase::CheckShadowSession();
+	ConnectBase::CheckShadowSession(bForceConnectShadow);
 
 	if (IsOpenShadow())
 		SetShadowClientInfo();
