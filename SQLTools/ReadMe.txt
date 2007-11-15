@@ -4,8 +4,8 @@ Operating Systems:
         - Windows NT4/SP6,2000,XP (it can work on 95/98/ME but there are some limitations)
         - 2.5M disk space
 Oracle Software:
-        - Net 8/8i/9i/10g
-        - Server 7.3/8.0/8i/9i/10g
+        - Net 8/8i/9i/10g/11g
+        - Server 7.3/8.0/8i/9i/10g/11g
 
 See the History.txt and Bugs.txt for information about releases, known and fixed bugs.
 
