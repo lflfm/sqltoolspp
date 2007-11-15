@@ -99,8 +99,10 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 	Delete "$INSTDIR\License.txt"
 	Delete "$INSTDIR\sesstat_9iR2.dat"
 	Delete "$INSTDIR\sesstat_10gR2.dat"
+	Delete "$INSTDIR\sesstat_11g.dat"
 	Delete "$INSTDIR\sesstat_Custom.dat"
 	Delete "$INSTDIR\sesstat_Other.dat"
+	Delete "$INSTDIR\display_cursor_9i.sql"
 	Delete "$INSTDIR\Bugs.txt"
 
 	Delete "$SMPROGRAMS\${DEST_NAME}\SQLTools Home Page.lnk"
@@ -121,11 +123,17 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 	IfFileExists "$INSTDIR\Data\sesstat_10gR2.dat" +2
 		File "${SRCDIR}\Settings\sesstat_10gR2.dat"
 
+	IfFileExists "$INSTDIR\Data\sesstat_11g.dat" +2
+		File "${SRCDIR}\Settings\sesstat_11g.dat"
+
 	IfFileExists "$INSTDIR\Data\sesstat_Custom.dat" +2
 		File "${SRCDIR}\Settings\sesstat_Custom.dat"
 
 	IfFileExists "$INSTDIR\Data\sesstat_Other.dat" +2
 		File "${SRCDIR}\Settings\sesstat_Other.dat"
+
+	IfFileExists "$INSTDIR\Data\display_cursor_9i.sql" +2
+		File "${SRCDIR}\Settings\display_cursor_9i.sql"
 
 	IfFileExists "$INSTDIR\Data\sqltools.dat" +2
 		File "${SRCDIR}\Settings\sqltools.dat"
@@ -140,8 +148,10 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 		File "${SRCDIR}\Settings\sqltools.dat"
 		File "${SRCDIR}\Settings\sesstat_9iR2.dat"
 		File "${SRCDIR}\Settings\sesstat_10gR2.dat"
+		File "${SRCDIR}\Settings\sesstat_11g.dat"
 		File "${SRCDIR}\Settings\sesstat_Custom.dat"
 		File "${SRCDIR}\Settings\sesstat_Other.dat"
+		File "${SRCDIR}\Settings\display_cursor_9i.sql"
 		File "${SRCDIR}\Settings\schemaddl.dat"
 
 	SkipReplaceSettings:
@@ -170,8 +180,10 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 		File "${SRCDIR}\Settings\templates.dat"
 		File "${SRCDIR}\Settings\sesstat_9iR2.dat"
 		File "${SRCDIR}\Settings\sesstat_10gR2.dat"
+		File "${SRCDIR}\Settings\sesstat_11g.dat"
 		File "${SRCDIR}\Settings\sesstat_Custom.dat"
 		File "${SRCDIR}\Settings\sesstat_Other.dat"
+		File "${SRCDIR}\Settings\display_cursor_9i.sql"
 		File "${SRCDIR}\Settings\schemaddl.dat"
 
 	CreateAppFiles:
@@ -183,6 +195,7 @@ Section $(DESC_SectionProgramFilesName) SecCopyProgramFiles
 		File "${SRCDIR}\ReadME.TXT"
 		; File "${SRCDIR}\LICENSE.TXT"
 		File "${SRCDIR}\History.TXT"
+		File "${SRCDIR}\Bugs.TXT"
 
 		WriteRegStr HKEY_LOCAL_MACHINE "SOFTWARE\${DEST_NAME}" "" "$INSTDIR"
 		WriteRegStr HKEY_LOCAL_MACHINE "Software\Microsoft\Windows\CurrentVersion\Uninstall\${DEST_NAME}" "DisplayName" "${DEST_NAME} (remove only)"
@@ -235,12 +248,16 @@ Section $(DESC_SectionMenuName) SecCreateMenuGroup
                 "InternetShortcut" "URL" "http://www.sqltools.net"
     WriteINIStr "$SMPROGRAMS\${DEST_NAME}\SQLTools on the SourceForge.url" \
                 "InternetShortcut" "URL" "http://www.sourceforge.net/projects/sqlt"
+    WriteINIStr "$SMPROGRAMS\${DEST_NAME}\SQLTools++ Home Page.url" \
+                "InternetShortcut" "URL" "http://www.sqltools-plusplus.org:7676/"
     CreateShortCut "$SMPROGRAMS\${DEST_NAME}\ReadME.lnk" \
                    "$INSTDIR\ReadME.TXT"
     CreateShortCut "$SMPROGRAMS\${DEST_NAME}\Licence.lnk" \
                    "$INSTDIR\Licence.TXT"
     CreateShortCut "$SMPROGRAMS\${DEST_NAME}\History.lnk" \
                    "$INSTDIR\History.txt"
+    CreateShortCut "$SMPROGRAMS\${DEST_NAME}\Bugs.lnk" \
+                   "$INSTDIR\Bugs.txt"
     CreateShortCut "$SMPROGRAMS\${DEST_NAME}\Uninstall SQLTools.lnk" \
                    "$INSTDIR\Uninst.exe"
     SetOutPath $INSTDIR
@@ -333,12 +350,16 @@ Section Uninstall
 	Delete "$INSTDIR\Data\templates.dat.old"
 	Delete "$INSTDIR\Data\sesstat_9iR2.dat"
 	Delete "$INSTDIR\Data\sesstat_10gR2.dat"
+	Delete "$INSTDIR\Data\sesstat_11g.dat"
 	Delete "$INSTDIR\Data\sesstat_Custom.dat"
 	Delete "$INSTDIR\Data\sesstat_Other.dat"
+	Delete "$INSTDIR\Data\display_cursor_9i.sql"
 	Delete "$INSTDIR\Data\sesstat_9iR2.dat.old"
 	Delete "$INSTDIR\Data\sesstat_10gR2.dat.old"
+	Delete "$INSTDIR\Data\sesstat_11g.dat.old"
 	Delete "$INSTDIR\Data\sesstat_Custom.dat.old"
 	Delete "$INSTDIR\Data\sesstat_Other.dat.old"
+	Delete "$INSTDIR\Data\display_cursor_9i.sql.old"
 	Delete "$INSTDIR\Data\schemaddl.dat"
 	Delete "$INSTDIR\Data\schemaddl.dat.old"
 	RMDir "$INSTDIR\Data"
