@@ -170,3 +170,4 @@ Help.Help                     F1
 Help.SqlHelp                  Ctrl+F1
 Help.ContextHelp              Shift+F1
 PlanView.Refresh              Shift+F5
+PopupEditor.Close             Escape
