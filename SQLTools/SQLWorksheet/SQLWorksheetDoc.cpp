@@ -274,7 +274,11 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
 					if (len == 0)
 						break;
 
-					sel.start.line--;
+					if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+						if (IsBlankLine(linePtr, len))
+							break;
+
+                    sel.start.line--;
 				}
                 // to the bottom
                 sel.end.column = INT_MAX;
@@ -710,7 +714,12 @@ void CPLSWorksheetDoc::FetchDbmsOutputLines ()
 
         OciNumberVar linesV(m_connect);
         linesV.Assign(cnArraySize);
-        OciStringArray output(255, cnArraySize);
+        int nLineSize = 255;
+        // Version 10 and above support line size of 32767
+        if ((m_connect.GetVersion() >= OCI8::esvServer10X) && (m_connect.GetClientVersion() >= OCI8::ecvClient10X))
+            nLineSize = 32767;
+
+        OciStringArray output(nLineSize, cnArraySize);
 
         OciStatement cursor(m_connect);
         cursor.Prepare("BEGIN dbms_output.get_lines(:lines,:numlines); END;");
