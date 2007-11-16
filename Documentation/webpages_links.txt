@@ -44,3 +44,7 @@ http://www.2-downloads.com/sqltools/details/3509
 
 15. SharewarePlaza
 http://www.sharewareplaza.com/SQLTools-download_23530.html
+
+16. SQLTools++ Homepage
+http://www.sqltools-plusplus.org:7676/
+
