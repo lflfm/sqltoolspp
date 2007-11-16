@@ -49,6 +49,9 @@ void StatSet::Load (OciConnect& connect)
     {
         switch (connect.GetVersion())
         {
+        case OCI8::esvServer11X:
+            postfix += "11g";
+            break;
         case OCI8::esvServer10X:
             postfix += "10gR2";
             break;
