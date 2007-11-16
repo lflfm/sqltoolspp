@@ -50,6 +50,7 @@
 #define HID_SQL_DBMS_OUTPUT                     0x19305
 #define HID_SQL_EXTRACT_SCHEMA                  0x19306
 #define HID_SQL_SESSION_STATISTICS              0x19307
+#define HID_SQL_DBMS_XPLAN_DISPLAY_CURSOR       0x19999
 #define HID_SQL_TABLE_TRANSFORMER               0x19308
 #define HID_SQL_EXPLAIN_PLAN                    0x19408
 #define HID_SQL_DESCRIBE                        0x19409
@@ -67,6 +68,7 @@
 #define HID_ES_AS_DB_BKS_SCHEMA                 0x19503
 #define HID_SQL_LOAD                            0x19505
 #define HID_SQLTOOLS_ON_THE_WEB                 0x19506
+#define HID_SQLTOOLS_UPDATE                     0x19C48
 #define HID_GRID_OUTPUT_SAVE                    0x19507
 #define HID_GRID_OUTPUT_OPEN                    0x19508
 #define HID_GRID_OUTPUT_OPTIONS                 0x19509
@@ -111,6 +113,11 @@
 #define HID_BOOKLET_PIN                         0x19531
 #define HID_BOOKLET_UNPIN                       0x19532
 #define HID_BOOKLET_BINDS                       0x19533
+#define HID_NP_SWITCH_OLD_VIEW                  0x19C41
+#define HID_NP_REFRESH                          0x19C42
+#define HID_GRID_POPUP                          0x19C45
+#define HID_GRIDPOPUP_WORDWRAP                  0x19C46
+#define HID_GRIDPOPUP_CLOSE                     0x19C47
  
 // Prompts (IDP_*) 
  
@@ -126,6 +133,10 @@
 #define HIDR_LS_OPTIONS_POPUP                   0x20089
 #define HIDR_LS_OTHER_POPUP                     0x2008A
 #define HIDR_ES_FOLDER_OPTIONS                  0x200A9
+#define HIDR_NEWPLAN_OPTIONS                    0x203E7
+#define HIDR_OBJECTVIEWER_DUMMY                 0x203E6
+#define HIDR_OBJECTLIST_DUMMY                   0x203E5
+#define HIDR_GRIDPOPUP_OPTIONS                  0x203E4
  
 // Dialogs (IDD_*) 
 #define HIDD_PROP_GRID1                         0x20065
