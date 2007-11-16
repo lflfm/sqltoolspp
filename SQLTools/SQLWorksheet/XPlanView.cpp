@@ -6,6 +6,7 @@
 #include "XPlanView.h"
 #include "COMMON/GUICommandDictionary.h"
 #include "OpenGrid/GridView.h"
+// #include "OpenEditor/OEView.h"
 
 // cXPlanView
 
@@ -405,6 +406,7 @@ BEGIN_MESSAGE_MAP(CGridPopupEdit, CEdit)
     ON_WM_INITMENUPOPUP()
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_COMMAND(ID_EDIT_SELECT_ALL, OnEditSelectAll)
+    ON_COMMAND(ID_GRIDPOPUP_CLOSE, OnGridPopupClose)
 
 	// ON_CONTROL_REFLECT(STN_DBLCLK, &CGridPopupEdit::OnStnDblclick)
 END_MESSAGE_MAP()
@@ -475,7 +477,13 @@ int  CGridPopupEdit::OnCreate (LPCREATESTRUCT lpCreateStruct)
 		
     VisualAttribute attr;
 
-	m_Font.CreateFont(
+    /*const VisualAttributesSet& set = ((COEditorView *) ((CMDIMainFrame *)AfxGetMainWnd())->GetActiveView())->GetEditorSettings().GetVisualAttributesSet();
+    const VisualAttribute& textAttr = set.FindByName("Text");
+
+    SetFont(textAttr.NewFont());
+    */
+
+    m_Font.CreateFont(
           -attr.PointToPixel(9), 0, 0, 0,
           FW_NORMAL,
           0,
@@ -524,5 +532,10 @@ void CGridPopupEdit::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMe
     CEdit::OnInitMenuPopup(pPopupMenu, nIndex, bSysMenu);
 
     pPopupMenu->CheckMenuItem(ID_GRIDPOPUP_WORDWRAP, MF_BYCOMMAND|((m_bWordWrap) ? MF_CHECKED : MF_UNCHECKED));
+}
+
+void CGridPopupEdit::OnGridPopupClose()
+{
+    ((CPopupFrameWnd *)GetParent())->SendMessage(WM_CLOSE);
 }
 

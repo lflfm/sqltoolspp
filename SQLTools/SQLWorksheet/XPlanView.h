@@ -116,6 +116,7 @@ public:
 	afx_msg void OnEditCopy();
 	afx_msg void OnEditSelectAll();
 	afx_msg void OnGridPopupWordWrap();
+	afx_msg void OnGridPopupClose();
     virtual BOOL PreTranslateMessage(MSG* pMsg);
 	// afx_msg void OnStnDblclick();
 };
