@@ -262,6 +262,7 @@ EStatementType Statement::GetType ()
     case StmtBegin:
     case StmtDeclare:
     case StmtExplain:
+    case StmtMerge:
         return static_cast<EStatementType>(type);
         break;
     default:

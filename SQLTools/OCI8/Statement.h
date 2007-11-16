@@ -42,6 +42,7 @@ namespace OCI8
         StmtBegin   = OCI_STMT_BEGIN,
         StmtDeclare = OCI_STMT_DECLARE,
         StmtExplain = 15,
+        StmtMerge   = 16,
     };
 
 class Statement : public Object
