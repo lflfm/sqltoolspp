@@ -30,6 +30,7 @@
 #define SQLTOOLS_COPYRIGHT      "Copyright © 1997-2006 Aleksey Kochetov\r\n"\
                                 "Contributors: Tomasz Drzewiecki, Ken Clubok\r\n"\
                                 "PlusPlus Enhancements by: Randolf Geist"
-#define SQLTOOLS_VERSION        "SQLTools_pp 1.0.2 RC1" SQLTOOLS_BUILD_TYPE
-#define SQLTOOLS_VERSION_ID     1, 0, 2, 1
-#define SQLTOOLS_VERSION_STR    "1, 0, 2, 1"
+#define SQLTOOLS_VERSION        "SQLTools_pp 1.10 RC2" SQLTOOLS_BUILD_TYPE
+#define SQLTOOLS_VERSION_SHORT  "v1.10RC2"
+#define SQLTOOLS_VERSION_ID     1, 1, 0, 0
+#define SQLTOOLS_VERSION_STR    "1, 1, 0, 0"
