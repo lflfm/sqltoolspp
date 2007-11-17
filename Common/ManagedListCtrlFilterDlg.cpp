@@ -14,6 +14,7 @@ m_operation(0)
 {
     listCtrlManager.GetFilter(m_filter);
     m_value = m_filter.at(m_filterColumn).value.c_str();
+    m_operation = m_filter.at(m_filterColumn).operation;
 }
 
 CManagedListCtrlFilterDlg::~CManagedListCtrlFilterDlg()
@@ -52,7 +53,7 @@ BOOL CManagedListCtrlFilterDlg::OnInitDialog()
         m_operationList.AddString("Contains");
         m_operationList.AddString("Starts with");
         m_operationList.AddString("Exactly matches");
-        m_operationList.SetCurSel(0);
+        m_operationList.SetCurSel(m_operation);
 
         std::vector<std::string> headers; 
         m_listCtrlManager.GetColumnHeaders(headers);
@@ -132,7 +133,9 @@ void CManagedListCtrlFilterDlg::OnBnClicked_Clear()
     try { EXCEPTION_FRAME;
 
         m_filter.at(m_filterColumn).value.clear();
+        m_filter.at(m_filterColumn).operation = ListCtrlManager::CONTAIN;
         m_value.Empty();
+        m_operation = ListCtrlManager::CONTAIN;
         UpdateData(FALSE);
 
         updateColumnListIcons();
@@ -146,9 +149,13 @@ void CManagedListCtrlFilterDlg::OnBnClicked_ClearAll()
 
         ListCtrlManager::FilterCollection::iterator it = m_filter.begin();
         for (; it != m_filter.end(); ++it)
+        {
             it->value.clear();
+            it->operation = ListCtrlManager::CONTAIN;
+        }
         
         m_value.Empty();
+        m_operation = ListCtrlManager::CONTAIN;
         UpdateData(FALSE);
 
         updateColumnListIcons();
