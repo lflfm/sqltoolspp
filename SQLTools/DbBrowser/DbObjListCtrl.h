@@ -23,6 +23,8 @@
 
 #include <COMMON\RecArray.h>
 #include <OCI8/Connect.h>
+#include "COMMON\ListCtrlDataProvider.h"
+#include "COMMON\ManagedListCtrl.h"
 
 #define IDII_FUNCTION     0
 #define IDII_PROCEDURE    1
@@ -45,16 +47,10 @@
 #define IDII_PK_CONSTRAINT  18
 #define IDII_UK_CONSTRAINT  19
 #define IDII_FK_CONSTRAINT  20
+#define IDII_RECYCLEBIN   21
 
 class CDbSourceWnd;
 
-
-class CDbObjListCtrl : public CListCtrl
-{
-    friend CDbSourceWnd;
-    static int CALLBACK CompProc (LPARAM nRow1, LPARAM nRow2, LPARAM lparam);
-
-public:
     struct CData 
     {
         OCI8::EServerVersion m_MinVer;
@@ -84,8 +80,87 @@ public:
 
             int m_szWidth, m_dwAttr;
 
+            Common::ListCtrlDataProvider::Type m_colType;
+
+            // CColumn() { m_colType = Common::ListCtrlDataProvider::String; }
+
         } *m_pColumns;
     };
+
+    class ObjListInfoAdapter : public Common::ListCtrlDataProvider, Common::ListCtrlDataProviderHelper
+    {
+        const Common::RecArray& m_entries;
+        const CData& m_objListDef;
+
+    public:
+        ObjListInfoAdapter(const Common::RecArray& entries, const CData & objListDef) 
+            : m_entries(entries), m_objListDef(objListDef) {}
+
+        virtual int getRowCount () const { return m_entries.GetRows(); }
+
+        virtual int getColCount () const { return m_entries.GetColumns(); }
+
+        virtual Type getColType (int col) const {
+            return m_objListDef.m_pColumns[col].m_colType;
+        }
+
+        virtual const char* getColHeader (int col) const {
+            return m_objListDef.m_pColumns[col].m_szTitle;
+        }
+
+        virtual const char* getString (int row, int col) const {
+            return m_entries.GetCellStr(row, col);
+        }
+
+        bool IsVisibleRow (int /*row*/) const {
+            return true;
+        }
+
+        virtual int compare (int row1, int row2, int col) const {
+            switch (m_objListDef.m_pColumns[col].m_colType) {
+            case String: return comp(m_entries.GetCellStr(row1, col), m_entries.GetCellStr(row2, col));
+            case Number: return comp(atoi(m_entries.GetCellStr(row1, col)), atoi(m_entries.GetCellStr(row2, col)));
+            case Date:   return comp(m_entries.GetCellStr(row1, col), m_entries.GetCellStr(row2, col));
+            }
+            return 0;
+        }
+
+        virtual int GetMinDefColWidth (int col) const { 
+            return !col ? 40 : Common::ListCtrlDataProvider::GetMinDefColWidth(col);
+        }
+
+        virtual int getImageIndex (int /*row*/) const { return m_objListDef.m_nImageId; }
+
+        static DWORD get_item_state (const BYTE state[2])
+        {
+            DWORD retVal = 0;
+            if (state[0] && !state[1])
+            {
+                retVal = 1;
+            }
+            else if (!state[0] && state[1])
+            {
+                retVal = 2;
+            }
+            else if (state[0] && state[1])
+            {
+                retVal = 3;
+            }
+            return retVal;
+        }
+
+        virtual int getStateImageIndex (int row) const {
+            return get_item_state(m_entries.GetRowData(row));
+        }
+    };
+
+
+    class CDbObjListCtrl : public Common::CManagedListCtrl
+{
+    friend CDbSourceWnd;
+    static int CALLBACK CompProc (LPARAM nRow1, LPARAM nRow2, LPARAM lparam);
+
+public:
 
     static const CData  sm_TableData, 
                         sm_ChkConstraintData, 
@@ -107,7 +182,8 @@ public:
                         sm_SnapshotData,
                         sm_SnapshotLogData,
                         sm_TypeData,
-                        sm_TypeBodyData;
+                        sm_TypeBodyData,
+                        sm_RecyclebinData;
 
 private:
   const CData& m_Data;
@@ -121,8 +197,11 @@ private:
   CDWordArray m_mapColumns;
   Common::RecArray m_arrObjects;
   CImageList m_Images, m_StateImages;
+  ObjListInfoAdapter m_adapter;
   
   OciConnect& m_connect;
+
+  void SetStyle(void);
 
 // Construction
 public:
@@ -141,6 +220,8 @@ public:
   void RefreshList  (bool bValid, bool bInvalid);
   void ExecuteQuery (const CString& strSchema, const CString& strFilter);
   void RefreshRow   (int nItem, int nRow, const char* szOwner, const char* szName);
+  void ApplyQuickFilter (bool valid, bool invalid);
+
   string GetListSelectionAsText();
 
 // Overrides
