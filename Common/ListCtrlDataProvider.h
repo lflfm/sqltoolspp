@@ -84,6 +84,7 @@ protected:
 
     static int comp (const CString& s1, const CString& s2) { return stricmp(s1.GetString(), s2.GetString()); }
     static int comp (const std::string& s1, const std::string& s2) { return stricmp(s1.c_str(), s2.c_str()); }
+    static int comp (const char *s1, const char *s2) { return stricmp(s1, s2); }
     static int comp (int val1, int val2) { return val1 == val2 ? 0 : (val1 < val2 ? -1 : 1); }
     static int comp (__int64 val1, __int64 val2) { return val1 == val2 ? 0 : (val1 < val2 ? -1 : 1); }
     static int comp (unsigned __int64 val1, unsigned __int64 val2) { return val1 == val2 ? 0 : (val1 < val2 ? -1 : 1); }
@@ -136,6 +137,7 @@ private:
     FilterCollection m_filter;
     bool m_filterEmpty;
     bool m_initalized;
+    bool m_settingFilter;
     enum ESortDir m_sortDir;
 
 public:
