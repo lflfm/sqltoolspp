@@ -17,7 +17,8 @@ m_dataAdapter(dataAdapter),
 m_sortColumn(0), 
 m_sortDir(ASC), 
 m_filterEmpty(true), 
-m_initalized(false)
+m_initalized(false),
+m_settingFilter(false)
 {
 }
 
@@ -32,6 +33,8 @@ void ListCtrlManager::OnCreate ()
     HDITEM hdItem;
     memset(&hdItem, 0, sizeof(hdItem));
 
+    m_settingFilter = true;
+
     for (int i = 0, count = m_dataAdapter.getColCount(); i < count; ++i)
     {
         m_list.InsertColumn(i, m_dataAdapter.getColHeader(i), 
@@ -43,6 +46,8 @@ void ListCtrlManager::OnCreate ()
 
         header->SetItem(i, &hdItem);
     }
+
+    m_settingFilter = false;
 
     if (m_filter.empty())
         m_filter.resize(m_dataAdapter.getColCount());
@@ -91,8 +96,14 @@ void ListCtrlManager::SetFilter (const FilterCollection& filter)
     {
         m_filter = filter;
 
+        m_settingFilter = true;
+
         for (int i = 0, count = m_dataAdapter.getColCount(); i < count; ++i)
             setItemFilter(i, !filter.empty() ?  filter.at(i).value.c_str() : 0);
+
+        m_settingFilter = false;
+
+        OnRefresh();
     }
 }
 
@@ -120,6 +131,8 @@ void ListCtrlManager::GetColumnValues (int col, std::set<std::string>& _data) co
 void ListCtrlManager::OnRefresh (bool autosizeColumns)
 {
     CWaitCursor wait;
+
+    m_list.SetRedraw(false);
 
     m_list.DeleteAllItems();
 
@@ -180,6 +193,8 @@ void ListCtrlManager::OnRefresh (bool autosizeColumns)
 
     m_list.SetItemState(0, LVIS_SELECTED, LVIS_SELECTED);
     m_list.EnsureVisible(0, FALSE);
+
+    m_list.SetRedraw(true);
 }
 
 void ListCtrlManager::OnFilterChange (int)
@@ -187,7 +202,8 @@ void ListCtrlManager::OnFilterChange (int)
     if (m_initalized)
     {
         refreshFilter();
-        OnRefresh();
+        if (! m_settingFilter)
+            OnRefresh();
     }
 }
 
@@ -203,6 +219,8 @@ void ListCtrlManager::OnFilterBtnClick (int col)
     {
         CManagedListCtrlFilterDlg(&m_list, rc, *this, col).DoModal();
         m_list.SetFocus();
+        m_list.Invalidate();
+        m_list.GetHeaderCtrl()->Invalidate();
     }
 }
 
