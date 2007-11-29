@@ -1560,6 +1560,7 @@ IDR_LS_OPTIONS_POPUP MENU
 BEGIN
     POPUP ""
     BEGIN
+/*
         MENUITEM "Enable Filter",               ID_DS_FILTER_ENABLED, GRAYED
         MENUITEM "Filter by Name",              ID_DS_FILTER_BY_NAME, GRAYED
         MENUITEM "Filter byTable",              ID_DS_FILTER_BY_TABLES
@@ -1567,6 +1568,7 @@ BEGIN
         MENUITEM "Free Format Filter",          ID_DS_FILTER_FREE_FORMAT
         , GRAYED
         MENUITEM SEPARATOR
+*/
         MENUITEM "DDL Preferences...",          ID_DS_SHOW_OPTIONS
     END
 END
