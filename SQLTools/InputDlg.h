@@ -36,9 +36,11 @@ public:
 public:
     std::string m_prompt;
     std::string m_value;
+    std::string m_title;
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    virtual BOOL OnInitDialog();
 };
 
 class CPasswordDlg : public CDialog

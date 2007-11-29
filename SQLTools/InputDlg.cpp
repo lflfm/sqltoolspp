@@ -30,6 +30,13 @@ void CInputDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_INP_VALUE, m_value);
 }
 
+BOOL CInputDlg::OnInitDialog()
+{
+    if (!m_title.empty())
+        SetWindowText(m_title.c_str());
+     return CDialog::OnInitDialog();
+}
+
 void CPasswordDlg::DoDataExchange(CDataExchange* pDX)
 {
     CDialog::DoDataExchange(pDX);
