@@ -2157,7 +2157,7 @@ namespace OraMetaDict
         out.MoveIndent(2);
 
         if (m_strClusterName.empty())
-            StorageExt::Write(out, m_Dictionary, m_strOwner.c_str(), settings, false, false, true);
+            StorageExt::Write(out, m_Dictionary, m_strOwner.c_str(), settings, false, true, true);
         else 
         {
             out.PutIndent();
@@ -2196,7 +2196,7 @@ namespace OraMetaDict
         out.MoveIndent(-2);
 
 
-        out.PutLine("AS");
+        out.PutLine(" AS ");
         write_text_block(out, m_strQuery.c_str(), m_strQuery.size(),
                          settings.m_bSQLPlusCompatibility, settings.m_bSQLPlusCompatibility);
 
