@@ -32,8 +32,8 @@ using namespace OCI8;
 /////////////////////////////////////////////////////////////////////////////
 // CDbSourceWnd
 
-#define DECL_COL_DATA(type)  static CDbObjListCtrl::CData::CColumn g_##type##Columns[]
-#define DECL_DATA(type)          const CDbObjListCtrl::CData CDbObjListCtrl::sm_##type##Data
+#define DECL_COL_DATA(type)  static CData::CColumn g_##type##Columns[]
+#define DECL_DATA(type)          const CData CDbObjListCtrl::sm_##type##Data
 #define INIT_COL_REF(type)   sizeof g_##type##Columns/sizeof g_##type##Columns[0], \
                                                          g_##type##Columns
 
@@ -41,16 +41,16 @@ using namespace OCI8;
 
 DECL_COL_DATA(Table) =
 {
-    { "table_name",     "Name",       200, LVCFMT_LEFT  },
-    { "table_type",     "Type",        60, LVCFMT_LEFT  },
-    { "tablespace_name","Tablespace", 100, LVCFMT_LEFT  },
-    { "initial_extent", "Initial",     80, LVCFMT_RIGHT },
-    { "next_extent",    "Next",        80, LVCFMT_RIGHT },
-    { "pct_increase",   "Increase",    60, LVCFMT_RIGHT },
-    { "max_extents",    "Max Ext",     60, LVCFMT_RIGHT },
-    { "pct_free",       "Free",        60, LVCFMT_RIGHT },
-    { "pct_used",       "Used",        60, LVCFMT_RIGHT },
-    { "cluster_name",   "Cluster",    100, LVCFMT_LEFT  },
+    { "table_name",     "Name",       200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "table_type",     "Type",        60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "tablespace_name","Tablespace", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "initial_extent", "Initial",     80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "next_extent",    "Next",        80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_increase",   "Increase",    60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "max_extents",    "Max Ext",     60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_free",       "Free",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_used",       "Used",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "cluster_name",   "Cluster",    100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Table) =
@@ -78,17 +78,18 @@ DECL_DATA(Table) =
 
 DECL_COL_DATA(Index) =
 {
-    { "index_name",     "Index",      200, LVCFMT_LEFT  },
-    { "index_type",     "Type",        60, LVCFMT_LEFT  },
-    { "uniqueness",     "Unique",      40, LVCFMT_LEFT  },
-//    { "table_owner",    "Table Owner", 80, LVCFMT_LEFT  },
-    { "table_name",     "Table",      160, LVCFMT_LEFT  },
-    { "tablespace_name","Tablespace", 100, LVCFMT_LEFT  },
-    { "initial_extent", "Initial",     80, LVCFMT_RIGHT },
-    { "next_extent",    "Next",        80, LVCFMT_RIGHT },
-    { "pct_increase",   "Increase",    60, LVCFMT_RIGHT },
-    { "max_extents",    "Max Ext",     60, LVCFMT_RIGHT },
-    { "pct_free",       "Free",        60, LVCFMT_RIGHT },
+    { "index_name",     "Index",      200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "index_type",     "Type",        60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "uniqueness",     "Unique",      40, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+//    { "table_owner",    "Table Owner", 80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "table_name",     "Table",      160, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "tablespace_name","Tablespace", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "initial_extent", "Initial",     80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "next_extent",    "Next",        80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_increase",   "Increase",    60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "max_extents",    "Max Ext",     60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_free",       "Free",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "disp_status",    "Status",      60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Index) =
@@ -97,14 +98,14 @@ DECL_DATA(Index) =
     IDII_INDEX,
     "INDEX",
     "Indexes",
-    "SELECT /*+ RULE*/ * FROM sys.all_indexes t WHERE owner = :p_owner"
+    "SELECT /*+ RULE*/ t.*, decode(status, 'UNUSABLE', 'INVALID', status) as disp_status FROM sys.all_indexes t WHERE owner = :p_owner"
     " AND index_type != \'IOT - TOP\'",
     // for 73
-    "SELECT /*+ RULE*/ t.*, null index_type FROM sys.all_indexes t WHERE owner = :p_owner",
+    "SELECT /*+ RULE*/ t.*, null index_type, decode(status, 'UNUSABLE', 'INVALID', status) as disp_status FROM sys.all_indexes t WHERE owner = :p_owner",
     " AND index_name = :p_name",
     "index_name",
+    "disp_status", ":p_status",
     0,
-    0, 0,
     false, false, true,
     INIT_COL_REF(Index)
 };
@@ -113,11 +114,11 @@ DECL_DATA(Index) =
 
 DECL_COL_DATA(ChkConstraint) =
 {
-    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT  },
-    { "table_name",        "Table",          240, LVCFMT_LEFT  },
-    { "search_condition",  "Condition",      200, LVCFMT_LEFT  },
-    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT  },
-    { "deferred",          "Deferred",        80, LVCFMT_LEFT  },
+    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "table_name",        "Table",          240, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "search_condition",  "Condition",      200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferred",          "Deferred",        80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(ChkConstraint) =
@@ -147,10 +148,10 @@ DECL_DATA(ChkConstraint) =
 
 DECL_COL_DATA(PkConstraint) =
 {
-    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT  },
-    { "table_name",        "Table",          240, LVCFMT_LEFT  },
-    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT  },
-    { "deferred",          "Deferred",        80, LVCFMT_LEFT  },
+    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "table_name",        "Table",          240, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferred",          "Deferred",        80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(PkConstraint) =
@@ -180,10 +181,10 @@ DECL_DATA(PkConstraint) =
 
 DECL_COL_DATA(UkConstraint) =
 {
-    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT  },
-    { "table_name",        "Table",          240, LVCFMT_LEFT  },
-    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT  },
-    { "deferred",          "Deferred",        80, LVCFMT_LEFT  },
+    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "table_name",        "Table",          240, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferred",          "Deferred",        80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(UkConstraint) =
@@ -213,13 +214,13 @@ DECL_DATA(UkConstraint) =
 
 DECL_COL_DATA(FkConstraint) =
 {
-    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT  },
-    { "table_name",        "Table",          160, LVCFMT_LEFT  },
-    { "r_owner",           "Ref Owner",       70, LVCFMT_LEFT  },
-    { "r_constraint_name", "Ref Constraint", 160, LVCFMT_LEFT  },
-    { "delete_rule",       "Delete Rule",    100, LVCFMT_LEFT  },
-    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT  },
-    { "deferred",          "Deferred",        80, LVCFMT_LEFT  },
+    { "constraint_name",   "Constraint",     240, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "table_name",        "Table",          160, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "r_owner",           "Ref Owner",       70, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "r_constraint_name", "Ref Constraint", 160, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "delete_rule",       "Delete Rule",    100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferrable",        "Deferrable",      80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "deferred",          "Deferred",        80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(FkConstraint) =
@@ -251,14 +252,14 @@ DECL_DATA(FkConstraint) =
 
 DECL_COL_DATA(Sequence) =
 {
-    { "sequence_name", "Name",        200, LVCFMT_LEFT  },
-    { "last_number",   "Last Number",  90, LVCFMT_RIGHT },
-    { "min_value",     "Min Value",    80, LVCFMT_RIGHT },
-    { "max_value",     "Max Value",    80, LVCFMT_RIGHT },
-    { "increment_by",  "Interval",     60, LVCFMT_RIGHT },
-    { "cycle_flag",    "Cycle",        60, LVCFMT_RIGHT },
-    { "order_flag",    "Order",        60, LVCFMT_RIGHT },
-    { "cache_size",    "Cache",        60, LVCFMT_RIGHT },
+    { "sequence_name", "Name",        200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "last_number",   "Last Number",  90, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "min_value",     "Min Value",    80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "max_value",     "Max Value",    80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "increment_by",  "Interval",     60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "cycle_flag",    "Cycle",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "order_flag",    "Order",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "cache_size",    "Cache",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
 };
 
 DECL_DATA(Sequence) =
@@ -282,10 +283,11 @@ DECL_DATA(Sequence) =
 
 DECL_COL_DATA(View) =
 {
-    { "object_name",   "Name",        320, LVCFMT_LEFT  },
-    { "text_length",   "Text Length", 100, LVCFMT_RIGHT },
-    { "created",       "Created",     100, LVCFMT_LEFT  },
-    { "last_ddl_time", "Modified",    100, LVCFMT_LEFT  },
+    { "object_name",   "Name",        320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "text_length",   "Text Length", 100, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "created",       "Created",     100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "last_ddl_time", "Modified",    100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "status",        "Status",       60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(View) =
@@ -318,9 +320,10 @@ DECL_DATA(View) =
 
 DECL_COL_DATA(Function) =
 {
-    { "object_name",    "Name",    320, LVCFMT_LEFT },
-    { "created",        "Created", 100, LVCFMT_LEFT },
-    { "last_ddl_time", "Modified", 100, LVCFMT_LEFT },
+    { "object_name",    "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "created",        "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "last_ddl_time",  "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "status",         "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Function) =
@@ -345,9 +348,10 @@ DECL_DATA(Function) =
 
 DECL_COL_DATA(Procedure) =
 {
-    { "object_name",   "Name",     320, LVCFMT_LEFT },
-    { "created",       "Created",  100, LVCFMT_LEFT },
-    { "last_ddl_time", "Modified", 100, LVCFMT_LEFT },
+    { "object_name",   "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "created",       "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "last_ddl_time", "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "status",        "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Procedure) =
@@ -372,9 +376,10 @@ DECL_DATA(Procedure) =
 
 DECL_COL_DATA(Package) =
 {
-    { "object_name",   "Name",     320, LVCFMT_LEFT },
-    { "created",       "Created",  100, LVCFMT_LEFT },
-    { "last_ddl_time", "Modified", 100, LVCFMT_LEFT },
+    { "object_name",   "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "created",       "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "last_ddl_time", "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "status",        "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Package) =
@@ -399,9 +404,10 @@ DECL_DATA(Package) =
 
 DECL_COL_DATA(PackageBody) =
 {
-    { "object_name",   "Name",     320, LVCFMT_LEFT },
-    { "created",       "Created",  100, LVCFMT_LEFT },
-    { "last_ddl_time", "Modified", 100, LVCFMT_LEFT },
+    { "object_name",   "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "created",       "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "last_ddl_time", "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "status",        "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(PackageBody) =
@@ -426,14 +432,15 @@ DECL_DATA(PackageBody) =
 
 DECL_COL_DATA(Trigger) =
 {
-    { "object_name",     "Name",        275, LVCFMT_LEFT },
-    { "table_owner",     "Table Owner", 120, LVCFMT_LEFT },
-    { "table_name",      "Table",       120, LVCFMT_LEFT },
-    { "trigger_type",    "Type",        120, LVCFMT_LEFT },
-    { "triggering_event","Event",       120, LVCFMT_LEFT },
-    { "when_clause",     "When",        120, LVCFMT_LEFT },
-    { "created",         "Created",     100, LVCFMT_LEFT },
-    { "last_ddl_time",   "Modified",    100, LVCFMT_LEFT },
+    { "object_name",     "Name",        275, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "table_owner",     "Table Owner", 120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "table_name",      "Table",       120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "trigger_type",    "Type",        120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "triggering_event","Event",       120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "when_clause",     "When",        120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "created",         "Created",     100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "last_ddl_time",   "Modified",    100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "status",          "Status",       60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Trigger) =
@@ -472,10 +479,11 @@ DECL_DATA(Trigger) =
 
 DECL_COL_DATA(Synonym) =
 {
-    { "synonym_name", "Synonym", 300, LVCFMT_LEFT },
-    { "table_owner",  "Owner",   120, LVCFMT_LEFT },
-    { "table_name",   "Object",  300, LVCFMT_LEFT },
-    { "db_link",      "DB Link", 120, LVCFMT_LEFT },
+    { "synonym_name", "Synonym", 300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "table_owner",  "Owner",   120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "table_name",   "Object",  300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "db_link",      "DB Link", 120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "status",       "Status",   60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Synonym) =
@@ -513,7 +521,7 @@ DECL_DATA(Synonym) =
 
 DECL_COL_DATA(Grantee) =
 {
-    { "grantee", "Grantee", 450, LVCFMT_LEFT },
+    { "grantee", "Grantee", 450, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
 };
 
 DECL_DATA(Grantee) =
@@ -544,18 +552,18 @@ DECL_DATA(Grantee) =
 
 DECL_COL_DATA(Cluster) =
 {
-    { "cluster_name",   "Name",       200, LVCFMT_LEFT  },
-    { "cluster_type",   "Type",        60, LVCFMT_LEFT  },
-    { "function",       "Function",   100, LVCFMT_LEFT  },
-    { "hashkeys",       "Hashkeys",    70, LVCFMT_RIGHT },
-    { "key_size",       "Key size",    70, LVCFMT_RIGHT },
-    { "tablespace_name","Tablespace", 100, LVCFMT_LEFT  },
-    { "initial_extent", "Initial",     80, LVCFMT_RIGHT },
-    { "next_extent",    "Next",        80, LVCFMT_RIGHT },
-    { "pct_increase",   "Increase",    60, LVCFMT_RIGHT },
-    { "max_extents",    "Max Ext",     60, LVCFMT_RIGHT },
-    { "pct_free",       "Free",        60, LVCFMT_RIGHT },
-    { "pct_used",       "Used",        60, LVCFMT_RIGHT },
+    { "cluster_name",   "Name",       200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "cluster_type",   "Type",        60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "function",       "Function",   100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "hashkeys",       "Hashkeys",    70, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "key_size",       "Key size",    70, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "tablespace_name","Tablespace", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "initial_extent", "Initial",     80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "next_extent",    "Next",        80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_increase",   "Increase",    60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "max_extents",    "Max Ext",     60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_free",       "Free",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "pct_used",       "Used",        60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
 };
 
 DECL_DATA(Cluster) =
@@ -578,9 +586,9 @@ DECL_DATA(Cluster) =
 
 DECL_COL_DATA(DbLink) =
 {
-    { "db_link",  "Db Link",  200, LVCFMT_LEFT  },
-    { "username", "Username", 200, LVCFMT_LEFT  },
-    { "host",     "Host",     100, LVCFMT_LEFT  },
+    { "db_link",  "Db Link",  200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "username", "Username", 200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "host",     "Host",     100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(DbLink) =
@@ -603,19 +611,20 @@ DECL_DATA(DbLink) =
 
 DECL_COL_DATA(Snapshot) =
 {
-    { "name",           "Snapshot",     180, LVCFMT_LEFT },
-    { "master_owner",   "Master Owner", 100, LVCFMT_LEFT },
-    { "master",         "Master Table", 100, LVCFMT_LEFT },
-    { "master_link",    "Master Link",  100, LVCFMT_LEFT },
-    { "can_use_log",    "Use Log",       50, LVCFMT_LEFT },
-    { "updatable",      "Updatable",     50, LVCFMT_LEFT },
+    { "name",           "Snapshot",     180, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "master_owner",   "Master Owner", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "master",         "Master Table", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "master_link",    "Master Link",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "can_use_log",    "Use Log",       50, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "updatable",      "Updatable",     50, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
 // there isn't the "refresh_method" field in version 7
-//  { "refresh_method", "Method",        80, LVCFMT_LEFT },
-    { "type",           "Type",          80, LVCFMT_LEFT },
-    { "last_refresh",   "Last Refresh",  90, LVCFMT_LEFT },
-    { "next",           "Next",          90, LVCFMT_LEFT },
-    { "start_with",     "Start with",    90, LVCFMT_LEFT },
-    { "query",          "Query",        350, LVCFMT_LEFT },
+//  { "refresh_method", "Method",        80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "type",           "Type",          80, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "last_refresh",   "Last Refresh",  90, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "next",           "Next",          90, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "start_with",     "Start with",    90, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "query",          "Query",        350, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "status",         "Status",        60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 
 };
 
@@ -631,8 +640,8 @@ DECL_DATA(Snapshot) =
     NULL,
     " AND name = :p_name",
     "name",
+    "status", ":p_status", // m_szStatusColumn, m_szStatusParam
     0,
-    "status", 0,
     false, false, true,
     INIT_COL_REF(Snapshot)
 };
@@ -641,9 +650,9 @@ DECL_DATA(Snapshot) =
 
 DECL_COL_DATA(SnapshotLog) =
 {
-    { "master",      "Master Table", 200, LVCFMT_LEFT },
-    { "log_table",   "Log Table",    200, LVCFMT_LEFT },
-    { "log_trigger", "Log Trigger",  200, LVCFMT_LEFT },
+    { "master",      "Master Table", 200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "log_table",   "Log Table",    200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "log_trigger", "Log Trigger",  200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
 };
 
 DECL_DATA(SnapshotLog) =
@@ -669,11 +678,12 @@ DECL_DATA(SnapshotLog) =
 
 DECL_COL_DATA(Type) =
 {
-    { "type_name",  "Name",      300, LVCFMT_LEFT  },
-    { "typecode",   "Code",      100, LVCFMT_LEFT  },
-    { "attributes", "Attributes", 80, LVCFMT_RIGHT },
-    { "methods",    "Methods",    80, LVCFMT_RIGHT },
-    { "incomplete", "Incomplete", 80, LVCFMT_RIGHT },
+    { "type_name",  "Name",      300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "typecode",   "Code",      100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "attributes", "Attributes", 80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "methods",    "Methods",    80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "incomplete", "Incomplete", 80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "status",     "Status",     60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(Type) =
@@ -698,11 +708,12 @@ DECL_DATA(Type) =
 
 DECL_COL_DATA(TypeBody) =
 {
-    { "type_name",  "Name",      300, LVCFMT_LEFT  },
-    { "typecode",   "Code",      100, LVCFMT_LEFT  },
-    { "attributes", "Attributes", 80, LVCFMT_RIGHT },
-    { "methods",    "Methods",    80, LVCFMT_RIGHT },
-    { "incomplete", "Incomplete", 80, LVCFMT_RIGHT },
+    { "type_name",  "Name",      300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "typecode",   "Code",      100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "attributes", "Attributes", 80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "methods",    "Methods",    80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "incomplete", "Incomplete", 80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "status",     "Status",     60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
 
 DECL_DATA(TypeBody) =
@@ -723,13 +734,60 @@ DECL_DATA(TypeBody) =
     INIT_COL_REF(TypeBody)
 };
 
+DECL_COL_DATA(Recyclebin) =
+{
+    { "original_name",  "Original Name",      200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "operation",      "Operation",          100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "type",           "Type",               200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "partition_name", "Partition",          200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "createtime",     "Created",            100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "droptime",       "Dropped",            100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "can_undrop",     "Can Undrop",          60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "can_purge",      "Can Purge",           60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "space",          "Space (blk)",         60, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
+    { "object_name",    "Object Name",        200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+};
+
+DECL_DATA(Recyclebin) =
+{
+    esvServer10X,
+    IDII_RECYCLEBIN,
+    "RECYCLEBIN",
+    "Recyclebin",
+    "SELECT"
+    " object_name,"
+    " original_name,"
+    " operation,"
+    " type,"
+    " ts_name,"
+    " createtime,"
+    " droptime,"
+    " dropscn,"
+    " partition_name,"
+    " can_undrop,"
+    " can_purge,"
+    " related,"
+    " base_object,"
+    " purge_object,"
+    " space"
+    " FROM user_recyclebin"
+    " WHERE USER = :p_owner",
+    NULL,
+    " AND object_name = :p_name",
+    "object_name",
+    0, 0,
+    0,
+    false, false, true,
+    INIT_COL_REF(Recyclebin)
+};
+
 ///////////////////////////////////////////////////////////
 /*
 ///////////////////////////////////////////////////////////
 
 DECL_COL_DATA(...) =
 {
-    { "", "", 200, LVCFMT_LEFT },
+    { "", "", 200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
 };
 
 DECL_DATA(...) =
