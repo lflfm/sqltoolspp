@@ -228,11 +228,12 @@ void CManagedListCtrlFilterDlg::OnOK()
 {
     try { EXCEPTION_FRAME;
 
-        CDialog::OnOK();
+        UpdateData(TRUE);
         m_filter.at(m_filterColumn).value = m_value;
         m_filter.at(m_filterColumn).operation 
             = static_cast <Common::ListCtrlManager::EFilterOperation>(m_operation);
         m_listCtrlManager.SetFilter(m_filter);
+        CDialog::OnOK();
     }
     _COMMON_DEFAULT_HANDLER_
 }
