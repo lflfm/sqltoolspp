@@ -17,6 +17,7 @@ declare
   when ''PARALLEL_COMBINED_WITH_CHILD'' then ''PCWC''
   when ''SERIAL_TO_PARALLEL'' then ''S->P''
   when ''PARALLEL_TO_PARALLEL'' then ''P->P''
+  when ''PARALLEL_FROM_SERIAL'' then ''P<-S''
   else other_tag end as in_out,
   partition_start,
   partition_stop,
@@ -24,7 +25,7 @@ declare
   mem_opt,
   mem_one,
   last_mem_used || case last_mem_usage when ''OPTIMAL'' then '' (0)'' when ''ONE PASS'' then '' (1)'' when ''MULTI-PASS'' then '' (M)'' end,
-  case last_degree when 1 then null else last_degree end as last_degree,
+  case last_degree when 0 then null when 1 then null else last_degree end as last_degree,
   --opt_cnt,
   --one_cnt,
   --multi_cnt,
@@ -32,14 +33,13 @@ declare
   last_tmp,
   access_predicates,
   filter_predicates,
-  plan_hash_value,
   dynamic_sampling_flag
   from (
   SELECT /*+ opt_param(''parallel_execution_enabled'', ''false'') */
                         id, position, depth , operation, options, object_name, cardinality, bytes, temp_space, cost, io_cost,
                         cpu_cost, partition_start, partition_stop, object_node, other_tag, distribution, null, access_predicates, filter_predicates,
                         null, null, null, starts, outrows, crgets, cugets, reads, writes, etime, e_time_interval, mem_opt, mem_one, last_mem_used, last_degree, last_mem_usage,
-                        opt_cnt, one_cnt, multi_cnt, max_tmp, last_tmp, plan_hash_value, dynamic_sampling_flag from (
+                        opt_cnt, one_cnt, multi_cnt, max_tmp, last_tmp, dynamic_sampling_flag from (
                             select /*+ no_merge */
                             id, depth, position, operation, options,
                             cost, cardinality, bytes, object_node,
@@ -64,7 +64,6 @@ declare
                                       multipasses_executions multi_cnt,
                                       max_tempseg_size max_tmp,
                                       last_tempseg_size last_tmp,
-                                      plan_hash_value,
                                       case 0 /*instr(other_xml, ''dynamic_sampling'')*/ when 0 then NULL else ''YES'' end as dynamic_sampling_flag
                 from V$SQL_PLAN_STATISTICS_ALL vp
                 where address = hextoraw(:in_address)
@@ -86,7 +85,7 @@ declare
   s_row         varchar2(4000);
   a_access_pred t_list_varchar2;
   a_filter_pred t_list_varchar2;
-  a_plan_hash   t_list_varchar2;
+  s_plan_hash   varchar2(255);
   a_dyn_sampl   t_list_varchar2;
   s_output      varchar2(4000);
   s_sql_address varchar2(255);
@@ -94,6 +93,7 @@ declare
   s_child_num   varchar2(255);
   max_line_size constant pls_integer := 255;
   c_display_cursor sys_refcursor;
+  n_cnt pls_integer;
   function has_collection_only_nulls(in_coll in t_list_varchar2)
   return boolean is
     b_return boolean := true;
@@ -128,6 +128,8 @@ declare
     s_data varchar2(32767);
     n_number number;
     n_delim_pos number;
+    e_num_val_error exception;
+    pragma exception_init(e_num_val_error, -6502);
   begin
     n_delim_pos := instr(in_data, ' ');
     if n_delim_pos > 0 then
@@ -148,6 +150,9 @@ declare
     else to_char(n_number, 'FM99999')
     end;
     return s_return || s_trail;
+  exception
+  when e_num_val_error then
+    return in_data;
   end display_cursor_format_number;
   procedure put_line_smart(in_string in varchar2, in_line_prefix in varchar2 default '', in_line_size in pls_integer default 134) is
     n_offset pls_integer;
@@ -203,12 +208,13 @@ begin
   put_line_smart(in_string => '------------------------------------------------------------------------------------------------------------------------------------------------------', in_line_size => max_line_size);
   begin
   	execute immediate '
-    select sql_text
+    select sql_text,
+    plan_hash_value
     from v$sql
     where address = :s_sql_address
     and hash_value = to_number(:s_hash_value)
     and child_number = to_number(:s_child_num)'
-    into s_output using s_sql_address, s_hash_value, s_child_num;
+    into s_output, s_plan_hash using s_sql_address, s_hash_value, s_child_num;
   exception
   when NO_DATA_FOUND then
     null;
@@ -242,6 +248,7 @@ begin
   --a_column_list(19).s_heading := 'Max-Tmp'; a_column_list(19).b_is_number := true;
   a_column_list(19).s_heading := 'Last-Tmp'; a_column_list(19).b_is_number := true;
   open c_display_cursor for s_display_cursor using s_sql_address, to_number(s_hash_value), to_number(s_child_num);
+  /*
   fetch c_display_cursor bulk collect into
   a_column_list(1).a_data, -- a_p_id,
   a_column_list(2).a_data, -- a_operation,
@@ -268,11 +275,43 @@ begin
   a_column_list(19).a_data, -- a_last_tmp,
   a_access_pred,
   a_filter_pred,
-  a_plan_hash,
   a_dyn_sampl;
+  */
+  n_cnt := 1;
+  loop
+    fetch c_display_cursor into
+    a_column_list(1).a_data(n_cnt), -- a_p_id(n_cnt),
+    a_column_list(2).a_data(n_cnt), -- a_operation(n_cnt),
+    a_column_list(3).a_data(n_cnt), -- a_name(n_cnt),
+    a_column_list(4).a_data(n_cnt), -- a_starts(n_cnt),
+    a_column_list(5).a_data(n_cnt), -- a_e_rows(n_cnt),
+    a_column_list(6).a_data(n_cnt), -- a_a_rows(n_cnt),
+    a_column_list(7).a_data(n_cnt), -- a_a_time(n_cnt),
+    a_column_list(8).a_data(n_cnt), -- a_buffers(n_cnt),
+    a_column_list(9).a_data(n_cnt), -- a_reads(n_cnt),
+    a_column_list(10).a_data(n_cnt), -- a_writes(n_cnt),
+    a_column_list(11).a_data(n_cnt), -- a_in_out(n_cnt),
+    a_column_list(12).a_data(n_cnt), -- a_partition_start(n_cnt),
+    a_column_list(13).a_data(n_cnt), -- a_partition_stop(n_cnt),
+    a_column_list(14).a_data(n_cnt), -- a_distribution(n_cnt),
+    a_column_list(15).a_data(n_cnt), -- a_last_mem_usage(n_cnt),
+    a_column_list(16).a_data(n_cnt), -- a_last_degree(n_cnt),
+    a_column_list(17).a_data(n_cnt), -- a_mem_opt(n_cnt),
+    a_column_list(18).a_data(n_cnt), -- a_mem_one(n_cnt),
+    --a_column_list(17).a_data(n_cnt), -- a_opt_cnt(n_cnt),
+    --a_column_list(18).a_data(n_cnt), -- a_one_cnt(n_cnt),
+    --a_column_list(19).a_data(n_cnt), -- a_multi_cnt(n_cnt),
+    --a_column_list(22).a_data(n_cnt), -- a_max_tmp(n_cnt),
+    a_column_list(19).a_data(n_cnt), -- a_last_tmp(n_cnt),
+    a_access_pred(n_cnt),
+    a_filter_pred(n_cnt),
+    a_dyn_sampl(n_cnt);
+    exit when c_display_cursor%notfound;
+    n_cnt := n_cnt + 1;
+  end loop;
   close c_display_cursor;
   if a_column_list(1).a_data.count > 0 then
-    dbms_output.put_line('Plan hash value: ' || a_plan_hash(1));
+    dbms_output.put_line('Plan hash value: ' || s_plan_hash);
     dbms_output.put_line('');
     n_row_size := 1;
     for i in a_column_list.first..a_column_list.last loop
