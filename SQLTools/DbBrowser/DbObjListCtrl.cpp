@@ -41,11 +41,11 @@ using namespace OCI8;
 // CDbObjListCtrl
 
 CDbObjListCtrl::CDbObjListCtrl (OciConnect& connect, const CData& data)
-:  m_Data(data),
+:  CManagedListCtrl(m_adapter), m_Data(data),
    m_bDirty(true),
    m_nStatusColumn(-1), m_nEnabledColumn(-1),
    m_nSortColumn(-1), m_nDirection(0),
-   m_connect(connect)
+   m_connect(connect), m_adapter(m_arrObjects, data)
 {
     ASSERT(&data);
 }
@@ -55,7 +55,7 @@ CDbObjListCtrl::~CDbObjListCtrl()
 }
 
 
-BEGIN_MESSAGE_MAP(CDbObjListCtrl, CListCtrl)
+BEGIN_MESSAGE_MAP(CDbObjListCtrl, CManagedListCtrl)
     //{{AFX_MSG_MAP(CDbObjListCtrl)
     ON_WM_CREATE()
     ON_NOTIFY_REFLECT(LVN_COLUMNCLICK, OnColumnClick)
@@ -71,11 +71,9 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // CDbObjListCtrl message handlers
 
-
-int CDbObjListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
+void CDbObjListCtrl::SetStyle(void)
 {
-    if (CListCtrl::OnCreate(lpCreateStruct) == -1)
-        return -1;
+    ModifyStyle(LVS_SINGLESEL, 0);
 
     // 30.03.2003 optimization, removed images from Object Browser for Win95/Win98/WinMe because of resource cost
     if (!(::GetVersion() & 0x80000000))
@@ -95,7 +93,15 @@ int CDbObjListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
         SetCallbackMask(LVIS_STATEIMAGEMASK);
     }
+}
 
+int CDbObjListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+    if (CManagedListCtrl::OnCreate(lpCreateStruct) == -1)
+        return -1;
+
+    SetStyle();
+    /*
     LV_COLUMN lvcolumn;
     for (int i = 0; i < m_Data.m_nColumns; i++)
     {
@@ -108,10 +114,12 @@ int CDbObjListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
     }
 
     SetExtendedStyle(LVS_EX_FULLROWSELECT);
+    */
 
     return 0;
 }
 
+    /*
     static DWORD get_item_state (BYTE state[2])
     {
         DWORD retVal = 0;
@@ -129,6 +137,7 @@ int CDbObjListCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
         }
         return retVal;
     }
+    */
 
 void CDbObjListCtrl::ExecuteQuery (const CString& strSchema, const CString& /*strFilter*/)
 {
@@ -282,17 +291,85 @@ void CDbObjListCtrl::RefreshList (bool bValid, bool bInvalid)
     CListCtrl::SetItemState(CListCtrl::GetNextItem(-1, LVNI_ALL), &lvitem);
 }
 
+void CDbObjListCtrl::ApplyQuickFilter (bool valid, bool invalid) 
+{
+    Common::ListCtrlManager::FilterCollection filter;
+    GetFilter(filter);
+
+    if (filter.empty())
+        return;
+
+    if (m_nStatusColumn != -1)
+    {
+        const char* val = 0;
+
+        if (valid && invalid)
+            val = "";
+        else if (valid)
+            val = "VALID";
+        else if  (invalid)
+            val = "INVALID";
+        else
+            val = "NA";
+
+        for (int j(0); j < m_Data.m_nColumns; j++)
+            if (m_mapColumns[j] == m_nStatusColumn)
+            {
+                if (val != filter.at(j).value
+                || Common::ListCtrlManager::EXACT_MATCH != filter.at(j).operation)
+                {
+                    filter.at(j).value = val;
+                    filter.at(j).operation = Common::ListCtrlManager::EXACT_MATCH;
+                    SetFilter(filter);
+                }
+
+                break;
+            }
+    }
+}
+
 void CDbObjListCtrl::Refresh (const CString& strSchema, const CString& strFilter,
                               bool bValid, bool bInvalid, bool bForce)
 {
+    bool bNeedsInit = false;
+
+    if (m_adapter.getColCount() == 0)
+        bNeedsInit = true;
+    
     if (m_bDirty || bForce)
     {
+        m_bValid = bValid;
+        m_bInvalid = bInvalid;
+
         m_bDirty = false;
         ExecuteQuery(strSchema, strFilter);
-        RefreshList(bValid, bInvalid);
+        // RefreshList(bValid, bInvalid);
+        if (bNeedsInit)
+        {
+            Init();
+            SetStyle();
+        }
+        else
+            CManagedListCtrl::Refresh(true);
+
+        ApplyQuickFilter(m_bValid, m_bInvalid);
     }
     else if (m_bValid != bValid || m_bInvalid != bInvalid)
-        RefreshList(bValid, bInvalid);
+    {
+        m_bValid = bValid;
+        m_bInvalid = bInvalid;
+
+        // RefreshList(bValid, bInvalid);
+        if (bNeedsInit)
+        {
+            Init();
+            SetStyle();
+        }
+        else
+            CManagedListCtrl::Refresh(true);
+
+        ApplyQuickFilter(m_bValid, m_bInvalid);
+    }
 }
 
 #pragma message("   Important improvement: Sorting have column type dependent!")
@@ -308,6 +385,8 @@ void CDbObjListCtrl::Refresh (const CString& strSchema, const CString& strFilter
 
 void CDbObjListCtrl::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
+    CManagedListCtrl::OnLvnColumnclick(pNMHDR, pResult);
+    /*
     NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
     if (m_nSortColumn != pNMListView->iSubItem)
@@ -319,10 +398,14 @@ void CDbObjListCtrl::OnColumnClick(NMHDR* pNMHDR, LRESULT* pResult)
     SortItems(CompProc, (LPARAM)this);
 
     *pResult = 0;
+    */
 }
 
 void CDbObjListCtrl::OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 {
+    CManagedListCtrl::OnLvnGetdispinfo(pNMHDR, pResult);
+
+    /*
     LV_DISPINFO* pDispInfo = (LV_DISPINFO*)pNMHDR;
 
 //  strncpy(pDispInfo->item.pszText,
@@ -333,6 +416,7 @@ void CDbObjListCtrl::OnGetDispInfo(NMHDR* pNMHDR, LRESULT* pResult)
 //  pDispInfo->item.mask = LVIF_TEXT | LVIF_STATE;
 
     *pResult = 0;
+    */
 }
 
 void CDbObjListCtrl::OnContextMenu (CWnd*, CPoint point)
@@ -353,7 +437,7 @@ void CDbObjListCtrl::OnSelectAll()
 
 BOOL CDbObjListCtrl::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
 {
-    BOOL retVal = CListCtrl::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
+    BOOL retVal = CManagedListCtrl::OnCmdMsg(nID, nCode, pExtra, pHandlerInfo);
     if (!retVal)
     {
         CWnd* wndOwner = GetOwner();
@@ -367,6 +451,9 @@ void CDbObjListCtrl::OnInitMenuPopup (CMenu* pPopupMenu, UINT /*nIndex*/, BOOL b
 {
     if (!bSysMenu)
     {
+        if (!pPopupMenu->SetDefaultItem(IDC_DS_LOAD))
+            return;
+
         UINT flag;
         flag = (!m_Data.m_bCanCompile) ? MF_BYCOMMAND|MF_GRAYED : MF_BYCOMMAND|MF_ENABLED;
         pPopupMenu->EnableMenuItem(IDC_DS_COMPILE,  flag);
@@ -381,6 +468,16 @@ void CDbObjListCtrl::OnInitMenuPopup (CMenu* pPopupMenu, UINT /*nIndex*/, BOOL b
         DWORD style = LVS_TYPEMASK & GetWindowLong(m_hWnd, GWL_STYLE);
         pPopupMenu->CheckMenuItem(IDC_DS_AS_LIST,  (LVS_LIST == style) ? MF_BYCOMMAND|MF_CHECKED : MF_BYCOMMAND|MF_UNCHECKED);
         pPopupMenu->CheckMenuItem(IDC_DS_AS_REPORT,(LVS_REPORT == style) ? MF_BYCOMMAND|MF_CHECKED : MF_BYCOMMAND|MF_UNCHECKED);
+
+        if (strcmp(m_Data.m_szType, "RECYCLEBIN") == 0)
+        {
+            pPopupMenu->EnableMenuItem(IDC_DS_LOAD, MF_BYCOMMAND|MF_GRAYED);
+            pPopupMenu->EnableMenuItem(IDC_DS_LOAD_ALL_IN_ONE, MF_BYCOMMAND|MF_GRAYED);
+            pPopupMenu->EnableMenuItem(ID_SQL_DESCRIBE, MF_BYCOMMAND|MF_GRAYED);
+            pPopupMenu->AppendMenu(MF_SEPARATOR);
+            pPopupMenu->AppendMenu(MF_STRING, ID_DS_FLASHBACK,       "&Flashback");
+            pPopupMenu->AppendMenu(MF_STRING, ID_DS_PURGE_ALL,       "&Purge All");
+        }
 
         // Ugly hook
         if (!strcmp(m_Data.m_szType, "VIEW"))
@@ -464,7 +561,7 @@ LRESULT CDbObjListCtrl::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
     try { EXCEPTION_FRAME;
 
-        return CListCtrl::WindowProc(message, wParam, lParam);
+        return CManagedListCtrl::WindowProc(message, wParam, lParam);
     }
     _DEFAULT_HANDLER_
 
