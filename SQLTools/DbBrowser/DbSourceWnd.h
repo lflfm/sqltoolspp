@@ -41,7 +41,7 @@ public:
     OciConnect& m_connect;
     CImageList m_Images;
     CMenu m_menuOther, m_menuOptions;
-    CDbObjListCtrl* m_wndTabLists[19];
+    CDbObjListCtrl* m_wndTabLists[22];
     int m_nItems, m_nSelItems;
 
     CDbObjListCtrl* GetCurSel () const;
@@ -102,6 +102,7 @@ public:
     bool DoDataDelete  (CDoContext&);
     bool DoTruncate    (CDoContext&);
     bool DoTruncatePre (CDoContext&);
+    bool DoFlashback   (CDoContext&);
 
 // Overrides
 	//{{AFX_VIRTUAL(CDbSourceWnd)
@@ -151,6 +152,8 @@ protected:
     afx_msg void OnQuery ();
     afx_msg void OnDataDelete ();
     afx_msg void OnTruncate ();
+    afx_msg void OnFlashback ();
+    afx_msg void OnPurgeAll ();
     virtual BOOL PreTranslateMessage(MSG* pMsg);
 
     DECLARE_MESSAGE_MAP()

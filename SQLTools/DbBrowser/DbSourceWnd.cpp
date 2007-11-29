@@ -45,6 +45,7 @@
 #include "OCI8/BCursor.h"
 #include <math.h>
 #include "COMMON/GUICommandDictionary.h"
+#include "InputDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -232,6 +233,8 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_COMMAND(ID_DS_DELETE, OnDataDelete)
     ON_COMMAND(ID_DS_TRUNCATE, OnTruncate)
     ON_COMMAND(ID_SQL_DESCRIBE, OnSqlDescribe)
+    ON_COMMAND(ID_DS_FLASHBACK, OnFlashback)
+    ON_COMMAND(ID_DS_PURGE_ALL, OnPurgeAll)
 END_MESSAGE_MAP()
 
 
@@ -239,7 +242,7 @@ END_MESSAGE_MAP()
 // CDbSourceWnd message handlers
 
 
-    static const CDbObjListCtrl::CData* types[] = 
+    static const CData* types[] = 
     {
         &CDbObjListCtrl::sm_FunctionData,
         &CDbObjListCtrl::sm_ProcedureData,
@@ -258,10 +261,11 @@ END_MESSAGE_MAP()
         &CDbObjListCtrl::sm_GranteeData,
         &CDbObjListCtrl::sm_ClusterData,
         &CDbObjListCtrl::sm_DbLinkData,
-//      &CDbObjListCtrl::sm_SnapshotData,
-//      &CDbObjListCtrl::sm_SnapshotLogData,
+        &CDbObjListCtrl::sm_SnapshotData,
+        &CDbObjListCtrl::sm_SnapshotLogData,
         &CDbObjListCtrl::sm_TypeData,
         &CDbObjListCtrl::sm_TypeBodyData,
+        &CDbObjListCtrl::sm_RecyclebinData,
     };
 
 LRESULT CDbSourceWnd::OnInitDialog (WPARAM, LPARAM)
@@ -328,6 +332,9 @@ LRESULT CDbSourceWnd::OnInitDialog (WPARAM, LPARAM)
 	m_StaticFilter.Create("Filter: ", WS_CHILD|WS_VISIBLE|WS_GROUP|SS_RIGHT, 
 		CRect(250,4,250+25*2,4+8*2), this, IDC_STATIC_FILTER);
     m_StaticFilter.SendMessage(WM_SETFONT, (WPARAM)hfont, (LPARAM)TRUE);
+
+    m_StaticFilter.ShowWindow(FALSE);
+    m_wndFilterList.ShowWindow(FALSE);
 
     return TRUE;
 }
@@ -446,7 +453,7 @@ void CDbSourceWnd::OnSize (UINT nType, int cx, int cy)
 		int nRightChildrenCount = sizeof nRightChildren / sizeof nRightChildren[0];
 		int nTopChildrenCount = sizeof nTopChildren / sizeof nTopChildren[0];
 		int nBottomChildrenCount = sizeof nBottomChildren / sizeof nBottomChildren[0];
-		const int TOP_BREAK_WIDTH = 400;// magic border :) (anybody has better idea?)
+		const int TOP_BREAK_WIDTH = 300;// magic border :) (anybody has better idea?)
 		const int MIN_STATUS_WIDTH = 60;
 
         CRect rect;
@@ -462,7 +469,7 @@ void CDbSourceWnd::OnSize (UINT nType, int cx, int cy)
 			if (cx <= TOP_BREAK_WIDTH) {// fill remaining space (like Right component)
 				pWnd->SetWindowPos(0, 0, 0,	cx - rect.left,	rect.Height(), SWP_NOMOVE|SWP_NOZORDER);
 			} else {// fill only 1/4 of space
-				pWnd->SetWindowPos(0, 0, 0,	cx * 1/4, rect.Height(), SWP_NOMOVE|SWP_NOZORDER);
+				pWnd->SetWindowPos(0, 0, 0,	cx * 1/2, rect.Height(), SWP_NOMOVE|SWP_NOZORDER);
 			}
 		}
 		// set positions of top components 
@@ -674,8 +681,9 @@ void CDbSourceWnd::OnDataChanged2 ()
 
     int nTab = m_wndTab.GetCurSel();
     if (nTab != -1)
-        m_wndTabLists[nTab]->RefreshList(m_bValid ? true : false,
-                                                                         m_bInvalid ? true : false);
+        m_wndTabLists[nTab]->ApplyQuickFilter(m_bValid, m_bInvalid);
+        //m_wndTabLists[nTab]->RefreshList(m_bValid ? true : false,
+        //                                 m_bInvalid ? true : false);
 }
 
 void CDbSourceWnd::OnRefresh ()
@@ -792,7 +800,10 @@ void CDbSourceWnd::Do (bool (CDbSourceWnd::*pmfnDo)(CDoContext&),
         while ((index = wndListCtrl->GetNextItem(index, LVNI_SELECTED))!=-1) 
         {
             lvi.iItem      = index;
-            lvi.iSubItem   = 0;
+            if (!stricmp(doContext.m_szType, "RECYCLEBIN"))
+                lvi.iSubItem   = 2;
+            else
+                lvi.iSubItem   = 0;
             lvi.pszText    = szBuff;
             lvi.cchTextMax = sizeof szBuff;
             if (!wndListCtrl->GetItem(&lvi)) {
@@ -816,6 +827,48 @@ void CDbSourceWnd::Do (bool (CDbSourceWnd::*pmfnDo)(CDoContext&),
                     AfxThrowUserException();
                 }
                 doContext.m_szTable = lvi.pszText;
+            }
+
+            char szBuff3[NAME_MAX_SIZE];
+            // not really a neat solution...
+            if (!stricmp(doContext.m_szType, "RECYCLEBIN"))
+            {
+                // Can purge/undrop?
+                lvi.iItem  = index;
+                if (strcmp((const char *) param3, "PURGE") == 0)
+                    lvi.iSubItem     = 7;
+                else
+                    lvi.iSubItem     = 6;
+
+                lvi.pszText      = szBuff2;
+                lvi.cchTextMax = sizeof szBuff2;
+                if (!wndListCtrl->GetItem(&lvi)) {
+                    AfxMessageBox("Unknown error!");
+                    AfxThrowUserException();
+                }
+                if (stricmp(lvi.pszText, "YES") != 0)
+                    continue;
+
+                lvi.iItem  = index;
+                lvi.iSubItem     = 9;
+                lvi.pszText      = szBuff2;
+                lvi.cchTextMax = sizeof szBuff2;
+                if (!wndListCtrl->GetItem(&lvi)) {
+                    AfxMessageBox("Unknown error!");
+                    AfxThrowUserException();
+                }
+                doContext.m_szTable = lvi.pszText;
+
+                lvi.iItem  = index;
+                lvi.iSubItem     = 0;
+                lvi.pszText      = szBuff3;
+                lvi.cchTextMax = sizeof szBuff3;
+                if (!wndListCtrl->GetItem(&lvi)) {
+                    AfxMessageBox("Unknown error!");
+                    AfxThrowUserException();
+                }
+
+                doContext.m_pvParam3 = (void *) lvi.pszText;
             }
 
             try { EXCEPTION_FRAME;
@@ -866,7 +919,8 @@ void CDbSourceWnd::OnLoad (bool bAsOne)
     Loader.SetAsOne(bAsOne);
 
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
-        if ( ShowDDLPreferences(settings, true)) 
+        if ((string(wndListCtrl->m_Data.m_szType) != "RECYCLEBIN") &&
+        ( ShowDDLPreferences(settings, true)))
     {
 
         try { EXCEPTION_FRAME;
@@ -981,15 +1035,40 @@ void CDbSourceWnd::OnDelete ()
             CDWordArray dwArray;
             try 
             {
-                Do(&CDbSourceWnd::DoDelete, &dwArray);
+                if (strcmp(wndListCtrl->m_Data.m_szType, "RECYCLEBIN") == 0)
+                {
+                    char szRecycleMode[] = "PURGE";
+                    Do(&CDbSourceWnd::DoDelete, &dwArray, 0, szRecycleMode);
+                }
+                else
+                    Do(&CDbSourceWnd::DoDelete, &dwArray);
+
             }
             catch (CUserException*) {}
 
-            for (int i = dwArray.GetSize()-1; i >= 0; i--)
-                wndListCtrl->DeleteItem(dwArray[i]);
+            if (strcmp(wndListCtrl->m_Data.m_szType, "RECYCLEBIN") == 0)
+                OnDataChanged();
+            else
+                for (int i = dwArray.GetSize()-1; i >= 0; i--)
+                    wndListCtrl->DeleteItem(dwArray[i]);
         }
 }
 
+void CDbSourceWnd::OnFlashback ()
+{
+    if (CDbObjListCtrl* wndListCtrl = GetCurSel())
+    {
+        CDWordArray dwArray;
+        try 
+        {
+            char szRecycleMode[] = "FLASHBACK";
+            Do(&CDbSourceWnd::DoFlashback, &dwArray, 0, szRecycleMode);
+        }
+        catch (CUserException*) {}
+
+        OnDataChanged();
+    }
+}
 
 /*! \fn bool CDbSourceWnd::DoDelete (CDoContext& doContext)
  *
@@ -1009,8 +1088,11 @@ bool CDbSourceWnd::DoDelete (CDoContext& doContext)
 	if (!doContext.m_pvParam2)
     {
         CConfirmationDlg dlg(this);
-        dlg.m_strText.Format("Are you sure you want to drop \"%s\" %s?", doContext.m_szName,
-                                                 isTable ? "\r\ncascade constraints" : "");
+		if (stricmp(doContext.m_szType, "RECYCLEBIN") == 0)
+            dlg.m_strText.Format("Are you sure you want to purge \"%s\".\"%s\"?", doContext.m_szOwner, doContext.m_pvParam3);
+        else
+            dlg.m_strText.Format("Are you sure you want to drop \"%s\" %s?", doContext.m_szName,
+                                                     isTable ? "\r\ncascade constraints" : "");
 
         switch (dlg.DoModal()) 
         {
@@ -1038,6 +1120,9 @@ bool CDbSourceWnd::DoDelete (CDoContext& doContext)
 		} else if(!stricmp(doContext.m_szType, "DATABASE LINK")) {
 			cmd.Format("DROP DATABASE LINK \"%s\"", doContext.m_szName);
 		
+		} else if(!stricmp(doContext.m_szType, "RECYCLEBIN")) {
+            cmd.Format("PURGE %s \"%s\".\"%s\"", doContext.m_szName, doContext.m_szOwner, doContext.m_szTable);
+		
 		// ANOTHER DROPS
 		} else {
             cmd.Format("DROP %s \"%s\".\"%s\"%s",
@@ -1051,6 +1136,110 @@ bool CDbSourceWnd::DoDelete (CDoContext& doContext)
     }
 
     return true;
+}
+
+bool CDbSourceWnd::DoFlashback (CDoContext& doContext)
+{
+    _ASSERTE(doContext.m_pvParam 
+             && (!doContext.m_pvParam2 || doContext.m_pvParam2 == (void*)-1));
+
+    bool doit = false;
+
+    // ask user for confirmation
+	if (!doContext.m_pvParam2)
+    {
+        CConfirmationDlg dlg(this);
+        dlg.m_strText.Format("Are you sure you want to flashback \"%s\".\"%s\"?", doContext.m_szOwner, doContext.m_pvParam3);
+
+        switch (dlg.DoModal()) 
+        {
+        case ID_CNF_ALL:
+                doContext.m_pvParam2 = (void*)-1;
+        case IDYES:
+                doit = true;
+        case IDNO:
+                break;
+        case IDCANCEL:;
+                AfxThrowUserException();
+        }
+    }
+
+    if (doit || doContext.m_pvParam2 == (void*)-1)
+    {
+        CString cmd;
+
+        cmd.Format("FLASHBACK %s \"%s\".\"%s\" TO BEFORE DROP",
+                    doContext.m_szName, doContext.m_szOwner, doContext.m_szTable);
+
+        OciStatement sttm(m_connect, cmd);
+        try
+        {
+            sttm.Execute(1);
+            ((CDWordArray*)doContext.m_pvParam)->Add(doContext.m_nItem);
+        }
+        catch (const OciException& x)
+        {
+            if (x == 38312)
+            {
+                CInputDlg dlg;
+                dlg.m_title  = "Flashback failed due to name conflict";
+                dlg.m_prompt = "Flashback to new name:";
+                dlg.m_value  = (const char *) doContext.m_pvParam3;
+
+                int retVal = dlg.DoModal();
+                SetFocus();
+
+                if (retVal == IDOK)
+                {
+                    CString cmd;
+
+                    cmd.Format("FLASHBACK %s \"%s\".\"%s\" TO BEFORE DROP RENAME TO \"%s\"",
+                        doContext.m_szName, doContext.m_szOwner, doContext.m_szTable, dlg.m_value.c_str());
+
+                    sttm.Close();
+                    sttm.Prepare(cmd);
+                    sttm.Execute(1);
+                    ((CDWordArray*)doContext.m_pvParam)->Add(doContext.m_nItem);
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
+void CDbSourceWnd::OnPurgeAll()
+{
+    OciCursor cursor(m_connect, "select user from dual", 1);
+    cursor.Execute();
+    cursor.Fetch();
+
+    if (string(m_strSchema) != cursor.ToString(0))
+    {
+        AfxMessageBox("PURGE RECYCLEBIN is available only for the current user.", MB_OK|MB_ICONEXCLAMATION);
+        return;
+    }
+
+    if (AfxMessageBox("Are you sure you want to purge all objects in the recyclebin?", MB_ICONQUESTION|MB_OKCANCEL) == IDOK)
+    {
+        try
+        {
+            Global::SetStatusText("PURGE RECYCLEBIN", TRUE);
+            m_connect.ExecuteStatement("PURGE RECYCLEBIN");
+            Global::SetStatusText("", TRUE);
+
+            OnRefresh();
+        }
+        catch (const OciException& x)
+        {
+            MessageBeep(MB_ICONHAND);
+            ostringstream msg;
+            msg << "PURGE RECYCLEBIN failed with the following error:\n\n" << x.what();
+            if (AfxMessageBox(msg.str().c_str(), MB_ICONHAND|MB_OKCANCEL) == IDCANCEL)
+                AfxThrowUserException();
+
+        }
+    }
 }
 
 void CDbSourceWnd::OnCompile ()
