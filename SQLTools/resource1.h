@@ -422,6 +422,8 @@
 #define ID_GRID_POPUP                   40005
 #define ID_GRIDPOPUP_WORDWRAP           40006
 #define ID_GRIDPOPUP_CLOSE              40007
+#define ID_DS_FLASHBACK                 40008
+#define ID_DS_PURGE_ALL                 40009
 // #define ID_NP_EDIT_COPY                 40003
 // #define ID_NP_EDIT_SELECT_ALL           40004
 #define IDR_NEWPLAN_OPTIONS             999
