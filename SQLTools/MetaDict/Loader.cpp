@@ -240,6 +240,13 @@ void Loader::LoadObjects (const char* owner, const char* name, const char* type,
         return;
     }
 
+    if (!stricmp(type, "SNAPSHOT"))
+    {
+        LoadSnapshots(owner, name, useLike);
+
+        return;
+    }
+
     if (!stricmp(type, "SNAPSHOT LOG"))
     {
         LoadSnapshotLogs(owner, name, useLike);
