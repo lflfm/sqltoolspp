@@ -144,97 +144,102 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
             Global::GetSettingsPath(path);
             path += "\\display_cursor_9i.sql";
             std::ifstream is(path.c_str());
-            std::string buffer;
-            string s_display_cursor;
-            for (int row = 0; std::getline(is, buffer); row++)
-                s_display_cursor += buffer + "\n";
+            if (! is.is_open() || is.bad())
+                text = "Could not open 'Data\\display_cursor_9i.sql'. Check your installation.";
+            else
+            {
+                std::string buffer;
+                string s_display_cursor;
+                for (int row = 0; std::getline(is, buffer); row++)
+                    s_display_cursor += buffer + "\n";
 
-            OciAutoCursor explan_curs(m_connect);
-            OciStatement cursor(m_connect);
+                OciAutoCursor explan_curs(m_connect);
+                OciStatement cursor(m_connect);
 
-	        try
-	        {
-                cursor.Prepare("BEGIN dbms_output.enable(1000000); END;");
-		        cursor.ExecuteShadow(1, true);
+	            try
+	            {
+                    cursor.Prepare("BEGIN dbms_output.enable(1000000); END;");
+		            cursor.ExecuteShadow(1, true);
 
-                cursor.Close();
+                    cursor.Close();
 
-                /*string::size_type n_pos = 0;
-                vector<string>  a_Replaces;
-                a_Replaces.push_back(m_connect.GetCurrentSqlHashValue());
-                a_Replaces.push_back(m_connect.GetCurrentSqlAddress());
+                    /*string::size_type n_pos = 0;
+                    vector<string>  a_Replaces;
+                    a_Replaces.push_back(m_connect.GetCurrentSqlHashValue());
+                    a_Replaces.push_back(m_connect.GetCurrentSqlAddress());
 
-                for (;;)
-                {
-                    n_pos = s_display_cursor.find("%s", n_pos + 2);
-                    if (n_pos == string::npos)
-                        break;
-                    s_display_cursor.replace(n_pos, 2, a_Replaces.back());
-                    a_Replaces.pop_back();
-                }
-                */
-                explan_curs.Prepare(s_display_cursor.c_str());
-                OciStringVar currentSqlAddress(m_connect.GetCurrentSqlAddress());
-                OciStringVar currentSqlHashValue(m_connect.GetCurrentSqlHashValue());
-		        explan_curs.Bind(&currentSqlAddress, ":sql_address");
-                explan_curs.Bind(&currentSqlHashValue, ":hash_value");
-
-		        explan_curs.ExecuteShadow(); //(1, true);
-
-                const int cnArraySize = 100;
-
-                OciNumberVar linesV(m_connect);
-                linesV.Assign(cnArraySize);
-                int nLineSize = 255;
-
-                OciStringArray output(nLineSize, cnArraySize);
-
-                cursor.Prepare("BEGIN dbms_output.get_lines(:lines,:numlines); END;");
-                cursor.Bind(":lines", output);
-                cursor.Bind(":numlines", linesV);
-
-                string buffer;
-                cursor.ExecuteShadow(1, true/*guaranteedSafe*/);
-                int lines = linesV.ToInt();
-
-                while (lines > 0)
-                {
-                    for (int i(0); i < lines; i++)
+                    for (;;)
                     {
-                        output.GetString(i, buffer);
-				        text += buffer;
-				        text += "\r\n";
+                        n_pos = s_display_cursor.find("%s", n_pos + 2);
+                        if (n_pos == string::npos)
+                            break;
+                        s_display_cursor.replace(n_pos, 2, a_Replaces.back());
+                        a_Replaces.pop_back();
+                    }
+                    */
+                    explan_curs.Prepare(s_display_cursor.c_str());
+                    OciStringVar currentSqlAddress(m_connect.GetCurrentSqlAddress());
+                    OciStringVar currentSqlHashValue(m_connect.GetCurrentSqlHashValue());
+		            explan_curs.Bind(&currentSqlAddress, ":sql_address");
+                    explan_curs.Bind(&currentSqlHashValue, ":hash_value");
+
+		            explan_curs.ExecuteShadow(); //(1, true);
+
+                    const int cnArraySize = 100;
+
+                    OciNumberVar linesV(m_connect);
+                    linesV.Assign(cnArraySize);
+                    int nLineSize = 255;
+
+                    OciStringArray output(nLineSize, cnArraySize);
+
+                    cursor.Prepare("BEGIN dbms_output.get_lines(:lines,:numlines); END;");
+                    cursor.Bind(":lines", output);
+                    cursor.Bind(":numlines", linesV);
+
+                    string buffer;
+                    cursor.ExecuteShadow(1, true/*guaranteedSafe*/);
+                    int lines = linesV.ToInt();
+
+                    while (lines > 0)
+                    {
+                        for (int i(0); i < lines; i++)
+                        {
+                            output.GetString(i, buffer);
+				            text += buffer;
+				            text += "\r\n";
+                        }
+
+                        cursor.ExecuteShadow(1, true);
+                        lines = linesV.ToInt();
                     }
 
-                    cursor.ExecuteShadow(1, true);
-                    lines = linesV.ToInt();
+                    cursor.Close();
+
+                    cursor.Prepare("BEGIN dbms_output.disable; END;");
+		            cursor.ExecuteShadow(1, true);
+
+                    cursor.Close();
                 }
-
-                cursor.Close();
-
-                cursor.Prepare("BEGIN dbms_output.disable; END;");
-		        cursor.ExecuteShadow(1, true);
-
-                cursor.Close();
-            }
-            catch (const OCI8::Exception& x)
-            {
-		        //if (explan_curs.IsOpen())
-		        //	explan_curs.Close();
-                string::size_type n_pos = 0;
-
-		        text = string("Error: ") + x.what() + string("\r\noccurred executing script from 'display_cursor_9i.sql'.");
-                // text += string("\r\nProbably you are lacking SELECT privileges on V$SQL and/or V$SQL_PLAN_STATISTICS_ALL");
-                for (;;)
+                catch (const OCI8::Exception& x)
                 {
-                    n_pos = text.find("\n", n_pos + 2);
-                    if (n_pos == string::npos)
-                        break;
-                    text.replace(n_pos, 1, "\r\n");
-                }
-	        }
+		            //if (explan_curs.IsOpen())
+		            //	explan_curs.Close();
+                    string::size_type n_pos = 0;
 
-	        m_connect.SetSession();
+		            text = string("Error: ") + x.what() + string("\r\noccurred executing script from 'display_cursor_9i.sql'.");
+                    // text += string("\r\nProbably you are lacking SELECT privileges on V$SQL and/or V$SQL_PLAN_STATISTICS_ALL");
+                    for (;;)
+                    {
+                        n_pos = text.find("\n", n_pos + 2);
+                        if (n_pos == string::npos)
+                            break;
+                        text.replace(n_pos, 1, "\r\n");
+                    }
+	            }
+
+	            m_connect.SetSession();
+            }
 		}
         else
             text = "Could not read sql statement info for this session (no SELECT privilege on V$SESSION?), therefore impossible to call DBMS_XPLAN.DISPLAY_CURSOR()";
