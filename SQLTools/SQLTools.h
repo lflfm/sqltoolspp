@@ -65,7 +65,7 @@ class CSQLToolsApp : public CWinApp, SettingsSubscriber
     bool EvBeforeCloseConnect (OciConnect&);
     bool EvAfterCloseConnect  (OciConnect&);
 
-    void DoFileSaveAll (bool silent, bool skipNew);
+    BOOL DoFileSaveAll (bool silent, bool skipNew);
 
     static SQLToolsSettings m_settings;
     friend const SQLToolsSettings& GetSQLToolsSettings ();
@@ -100,6 +100,7 @@ public:
 	afx_msg void OnEditPermanetSettings();
 	afx_msg void OnAppSettings();
 	afx_msg void OnSqlConnect();
+	afx_msg void OnSqlReconnect();
 	afx_msg void OnSqlCommit();
 	afx_msg void OnSqlRollback();
 	afx_msg void OnSqlDisconnect();

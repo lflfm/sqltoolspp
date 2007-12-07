@@ -61,6 +61,7 @@ BEGIN_MESSAGE_MAP(CSQLToolsApp, CWinApp)
 	ON_COMMAND(ID_EDIT_PERMANENT_SETTINGS, OnEditPermanetSettings)
 	ON_COMMAND(ID_APP_SETTINGS, OnAppSettings)
 	ON_COMMAND(ID_SQL_CONNECT, OnSqlConnect)
+	ON_COMMAND(ID_SQL_RECONNECT, OnSqlReconnect)
 	ON_COMMAND(ID_SQL_COMMIT, OnSqlCommit)
 	ON_COMMAND(ID_SQL_ROLLBACK, OnSqlRollback)
 	ON_COMMAND(ID_SQL_DISCONNECT, OnSqlDisconnect)
@@ -78,6 +79,7 @@ BEGIN_MESSAGE_MAP(CSQLToolsApp, CWinApp)
     ON_UPDATE_COMMAND_UI_RANGE(ID_SQL_DISCONNECT, ID_SQL_TABLE_TRANSFORMER, OnUpdate_SqlGroup)
     ON_UPDATE_COMMAND_UI(ID_INDICATOR_OCIGRID, OnUpdate_EditIndicators)
     ON_UPDATE_COMMAND_UI(ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR, OnUpdate_SqlGroup)
+    ON_UPDATE_COMMAND_UI(ID_SQL_RECONNECT, OnUpdate_SqlGroup)
 	// Standard file based document commands
 	ON_COMMAND(ID_FILE_NEW, CWinApp::OnFileNew)
 	ON_COMMAND(ID_FILE_OPEN, CWinApp::OnFileOpen)
@@ -387,15 +389,16 @@ void CSQLToolsApp::OnFileCloseAll ()
 		((CDocManagerExt*)m_pDocManager)->SaveAndCloseAllDocuments();
 }
 
-void CSQLToolsApp::DoFileSaveAll (bool silent, bool skipNew)
+BOOL CSQLToolsApp::DoFileSaveAll (bool silent, bool skipNew)
 {
+    BOOL bRet;
     bool _silent  = COEDocument::GetSaveModifiedSilent();
     bool _skipNew = COEDocument::GetSaveModifiedSkipNew();
     try
     {
         COEDocument::SetSaveModifiedSilent(silent);
         COEDocument::SetSaveModifiedSkipNew(skipNew);
-        SaveAllModified();
+        bRet = SaveAllModified();
         COEDocument::SetSaveModifiedSilent(_silent);
         COEDocument::SetSaveModifiedSkipNew(_skipNew);
     }
@@ -405,6 +408,8 @@ void CSQLToolsApp::DoFileSaveAll (bool silent, bool skipNew)
         COEDocument::SetSaveModifiedSkipNew(_skipNew);
         throw;
     }
+
+    return bRet;
 }
 
 void CSQLToolsApp::OnFileSaveAll ()
