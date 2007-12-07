@@ -63,7 +63,6 @@ void convert_extensions (const string& extensions, string& ofn_extensions)
     }
 }
 
-static 
 void make_filter (CString& filter, OPENFILENAME& ofn)
 {
     const SettingsManager& settingMgrl = COEDocument::GetSettingsManager();

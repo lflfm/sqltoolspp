@@ -68,5 +68,6 @@ public:
     BOOL OnIdle (LONG);
 };
 
+void make_filter (CString& filter, OPENFILENAME& ofn);
 
 #endif//__DOCMANAGEREXT_H__
