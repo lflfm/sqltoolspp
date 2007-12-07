@@ -57,25 +57,33 @@ void CPropServerPage::DoDataExchange(CDataExchange* pDX)
     DDV_MaxChars(pDX, m_settings.m_PlanTable, 65);
 
     DDX_Text(pDX, IDC_SERV_PROP_OUTPUT_SIZE, m_settings.m_OutputSize);
-	DDV_MinMaxUInt(pDX, m_settings.m_OutputSize, 0, 1000000000);
-    SendDlgItemMessage(IDC_SERV_PROP_OUTPUT_SIZE_SPIN, UDM_SETRANGE32, 1, 1000000000);
+    DDX_Check(pDX, IDC_PROP_PLUS_UNLIMITED_OUTPUT, m_settings.m_UnlimitedOutputSize);
+	DDV_MinMaxUInt(pDX, m_settings.m_OutputSize, 2000, 1000000);
+    SendDlgItemMessage(IDC_SERV_PROP_OUTPUT_SIZE_SPIN, UDM_SETRANGE32, 2000, 1000000);
     
     UDACCEL accels[10];
+    /*
     int count = SendDlgItemMessage(IDC_SERV_PROP_OUTPUT_SIZE_SPIN, UDM_GETACCEL, 
         (WPARAM)sizeof(accels)/sizeof(accels[0]), (LPARAM)&accels);
 
     for (int i = 0; i < count && i < sizeof(accels)/sizeof(accels[0]); i++)
         accels[i].nInc *= 10000;
+    */
+
+    // SendDlgItemMessage(IDC_SERV_PROP_OUTPUT_SIZE_SPIN, UDM_SETACCEL, (WPARAM)i, (LPARAM)&accels);
+
+    accels[0].nSec = 1;
+    accels[0].nInc = 10000;
     
-    SendDlgItemMessage(IDC_SERV_PROP_OUTPUT_SIZE_SPIN, UDM_SETACCEL, (WPARAM)i, (LPARAM)&accels);
+    SendDlgItemMessage(IDC_SERV_PROP_OUTPUT_SIZE_SPIN, UDM_SETACCEL, (WPARAM)1, (LPARAM)&accels);
 
     DDX_Text(pDX, IDC_SERV_PROP_CANCEL_QUERY_DELAY, m_settings.m_CancelQueryDelay);
 	DDV_MinMaxUInt(pDX, m_settings.m_CancelQueryDelay, 0, 60 * 60);
     SendDlgItemMessage(IDC_SERV_PROP_CANCEL_QUERY_DELAY_SPIN, UDM_SETRANGE32, 0, 60 * 60);
 
     DDX_Check(pDX, IDC_SERV_PROP_TOPMOST_CANCEL_QUERY, m_settings.m_TopmostCancelQuery);
-    DDX_Check(pDX, IDC_SERV_PROP_DISPLAY_CURSOR, m_settings.m_DbmsXplanDisplayCursor);
-    DDX_Check(pDX, IDC_SERV_PROP_WHITESPACE_DELIM, m_settings.m_WhitespaceLineDelim);
+    // DDX_Check(pDX, IDC_SERV_PROP_DISPLAY_CURSOR, m_settings.m_DbmsXplanDisplayCursor);
+    // DDX_Check(pDX, IDC_SERV_PROP_WHITESPACE_DELIM, m_settings.m_WhitespaceLineDelim);
 
     OnServPropSesstat();
 }
