@@ -43,3 +43,10 @@ void CPasswordDlg::DoDataExchange(CDataExchange* pDX)
     DDX_Text(pDX, IDC_INP_PROMPT, m_prompt);
     DDX_Text(pDX, IDC_INP_VALUE, m_value);
 }
+
+BOOL CPasswordDlg::OnInitDialog()
+{
+    if (!m_title.empty())
+        SetWindowText(m_title.c_str());
+     return CDialog::OnInitDialog();
+}
