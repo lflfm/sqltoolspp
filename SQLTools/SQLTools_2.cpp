@@ -159,6 +159,9 @@ void CSQLToolsApp::InitGUICommand ()
     GUICommandDictionary::InsertCommand("Edit.PermanentSettings",          ID_APP_SETTINGS); //ID_EDIT_PERMANENT_SETTINGS
     GUICommandDictionary::InsertCommand("Edit.ColumnMarkers",              ID_EDIT_VIEW_COLUMN_MARKERS);
     GUICommandDictionary::InsertCommand("Edit.IndentGuide",                ID_EDIT_VIEW_INDENT_GUIDE);
+// Misc
+    GUICommandDictionary::InsertCommand("Edit.CopyWithNewLines",           ID_EDIT_COPY_NEW_LINES);
+
 //View
     GUICommandDictionary::InsertCommand("View.Toolbar",                    ID_VIEW_TOOLBAR);
     GUICommandDictionary::InsertCommand("View.StatusBar",                  ID_VIEW_STATUS_BAR);
@@ -186,6 +189,7 @@ void CSQLToolsApp::InitGUICommand ()
 //Session
     GUICommandDictionary::InsertCommand("Session.Connect",                 ID_SQL_CONNECT);
     GUICommandDictionary::InsertCommand("Session.Disconnect",              ID_SQL_DISCONNECT);
+    GUICommandDictionary::InsertCommand("Session.Reconnect",               ID_SQL_RECONNECT);
     GUICommandDictionary::InsertCommand("Session.Commit",                  ID_SQL_COMMIT);
     GUICommandDictionary::InsertCommand("Session.Rollback",                ID_SQL_ROLLBACK);
     GUICommandDictionary::InsertCommand("Session.EnableDbmsOutput",        ID_SQL_DBMS_OUTPUT);
@@ -193,9 +197,11 @@ void CSQLToolsApp::InitGUICommand ()
     GUICommandDictionary::InsertCommand("Session.DbmsXplanDisplayCursor",  ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR);
 //Script
     GUICommandDictionary::InsertCommand("Script.Execute",                  ID_SQL_EXECUTE);
+    GUICommandDictionary::InsertCommand("Script.ExecuteHaltOnErrors",      ID_SQL_EXECUTE_HALT_ON_ERRORS);
     GUICommandDictionary::InsertCommand("Script.ExecuteBelow",             ID_SQL_EXECUTE_BELOW);
     GUICommandDictionary::InsertCommand("Script.ExecuteCurrent",           ID_SQL_EXECUTE_CURRENT);
     GUICommandDictionary::InsertCommand("Script.ExecuteCurrentAndStep",    ID_SQL_EXECUTE_CURRENT_AND_STEP);
+    GUICommandDictionary::InsertCommand("Script.ExecuteExternal",          ID_SQL_EXECUTE_EXTERNAL);
     GUICommandDictionary::InsertCommand("Script.NextError",                ID_SQL_NEXT_ERROR);
     GUICommandDictionary::InsertCommand("Script.PreviousError",            ID_SQL_PREV_ERROR);
     GUICommandDictionary::InsertCommand("Script.GetHistoryAndStepBack",    ID_SQL_HISTORY_GET_AND_STEPBACK);
