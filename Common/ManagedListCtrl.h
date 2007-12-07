@@ -26,7 +26,7 @@ class CManagedListCtrl : public CListCtrl
 {
     ListCtrlManager m_manager;
 public:
-	CManagedListCtrl (ListCtrlDataProvider&);
+	CManagedListCtrl (ListCtrlDataProvider&, bool bAutoResize = true);
 
     void SetSortColumn (int col, ListCtrlManager::ESortDir dir = ListCtrlManager::ASC);
     void GetSortColumn (int& col, ListCtrlManager::ESortDir& dir);

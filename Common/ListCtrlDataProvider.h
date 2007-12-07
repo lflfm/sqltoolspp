@@ -138,10 +138,11 @@ private:
     bool m_filterEmpty;
     bool m_initalized;
     bool m_settingFilter;
+    bool m_bAutoResize;
     enum ESortDir m_sortDir;
 
 public:
-    ListCtrlManager (CListCtrl&, ListCtrlDataProvider&);
+    ListCtrlManager (CListCtrl&, ListCtrlDataProvider&, bool bAutoResize = true);
 
     CListCtrl& GetListCtrl () { return m_list; }
     const CListCtrl& GetListCtrl () const { return m_list; }

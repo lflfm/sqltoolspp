@@ -11,14 +11,17 @@
 namespace Common
 {
 
-ListCtrlManager::ListCtrlManager (CListCtrl& list, ListCtrlDataProvider& dataAdapter)
+ListCtrlManager::ListCtrlManager (CListCtrl& list, 
+                                  ListCtrlDataProvider& dataAdapter, 
+                                  bool bAutoResize)
 : m_list(list), 
 m_dataAdapter(dataAdapter),
 m_sortColumn(0), 
 m_sortDir(ASC), 
 m_filterEmpty(true), 
 m_initalized(false),
-m_settingFilter(false)
+m_settingFilter(false),
+m_bAutoResize(bAutoResize)
 {
 }
 
@@ -54,7 +57,7 @@ void ListCtrlManager::OnCreate ()
 
     m_initalized = true;
 
-    OnRefresh(true);
+    OnRefresh(m_bAutoResize);
 }
 
 void ListCtrlManager::setItemFilter (int col, const char* str)

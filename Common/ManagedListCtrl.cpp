@@ -8,8 +8,8 @@
 namespace Common
 {
 
-CManagedListCtrl::CManagedListCtrl (ListCtrlDataProvider& adapter)
-: m_manager(*this, adapter)
+CManagedListCtrl::CManagedListCtrl (ListCtrlDataProvider& adapter, bool bAutoResize)
+: m_manager(*this, adapter, bAutoResize)
 {
 }
 
