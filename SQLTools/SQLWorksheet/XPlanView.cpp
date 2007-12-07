@@ -404,6 +404,7 @@ BEGIN_MESSAGE_MAP(CGridPopupEdit, CEdit)
 	ON_COMMAND(ID_GRIDPOPUP_WORDWRAP, OnGridPopupWordWrap)
 	ON_WM_CONTEXTMENU()
     ON_WM_INITMENUPOPUP()
+    ON_WM_KEYDOWN()
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_COMMAND(ID_EDIT_SELECT_ALL, OnEditSelectAll)
     ON_COMMAND(ID_GRIDPOPUP_CLOSE, OnGridPopupClose)
@@ -503,7 +504,20 @@ int  CGridPopupEdit::OnCreate (LPCREATESTRUCT lpCreateStruct)
 
 	m_accelTable = Common::GUICommandDictionary::GetMenuAccelTable(pPopup->m_hMenu);
 
-	return retval;
+    return retval;
+}
+
+void CGridPopupEdit::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags) 
+{
+    switch (nChar)
+    {
+    case VK_ESCAPE:
+        OnGridPopupClose();
+        return;
+        break;
+    }
+
+    CEdit::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
 BOOL CGridPopupEdit::PreTranslateMessage(MSG* pMsg)
@@ -524,6 +538,37 @@ void CGridPopupEdit::OnContextMenu (CWnd* , CPoint pos)
     CMenu* pPopup = menu.GetSubMenu(0);
     ASSERT(pPopup != NULL);
     Common::GUICommandDictionary::AddAccelDescriptionToMenu(pPopup->m_hMenu);
+
+    const int MENU_ITEM_TEXT_SIZE   = 80;
+    const int MENUITEMINFO_OLD_SIZE = 44;
+
+    MENUITEMINFO mii;
+    memset(&mii, 0, sizeof mii);
+    mii.cbSize = MENUITEMINFO_OLD_SIZE;  // 07.04.2003 bug fix, no menu shortcut labels on Win95,... because of SDK incompatibility
+    mii.fMask  = MIIM_SUBMENU | MIIM_DATA | MIIM_ID | MIIM_TYPE;
+
+    char buffer[MENU_ITEM_TEXT_SIZE];
+    mii.dwTypeData = buffer;
+    mii.cch = sizeof buffer;
+
+    if (pPopup->GetMenuItemInfo(ID_GRIDPOPUP_CLOSE, &mii))
+    {
+        string menuText = buffer;
+
+        if (menuText.find('\t') != string::npos)
+            menuText += "; ";
+        else
+            menuText += "\t";
+
+        menuText += "ESC";
+
+        strcpy(buffer, menuText.c_str());
+
+        mii.cch = menuText.size() + 1;
+
+        pPopup->SetMenuItemInfo(ID_GRIDPOPUP_CLOSE, &mii);
+    }
+
     pPopup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, pos.x, pos.y, this);
 }
 
