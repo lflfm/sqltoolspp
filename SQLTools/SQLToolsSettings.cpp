@@ -45,7 +45,14 @@ SQLToolsSettings::SQLToolsSettings ()
     m_CancelQueryDelay    = 1;
     m_TopmostCancelQuery  = true;
     m_DbmsXplanDisplayCursor = false;
-	m_WhitespaceLineDelim = false;
+	m_WhitespaceLineDelim = true;
+	m_EmptyLineDelim      = true;
+    m_UnlimitedOutputSize = false;
+    m_ExternalToolCommand = "";
+    m_ExternalToolParameters = "";
+    m_UseDbmsMetaData     = false;
+    m_HaltOnErrors        = false;
+    m_SaveFilesBeforeExecute = false;
                                  
     m_GridMaxColLength           = 16;
     m_GridMultilineCount         = 3;
@@ -182,7 +189,14 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_VER_READ_MEMBER(1009, settings, CancelQueryDelay, 1);
     OESMS_VER_READ_MEMBER(1010, settings, TopmostCancelQuery, true);
     OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, DbmsXplanDisplayCursor, false);
-    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, WhitespaceLineDelim, false);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, WhitespaceLineDelim, true);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, EmptyLineDelim, true);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, UnlimitedOutputSize, false);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, ExternalToolCommand, "");
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, ExternalToolParameters, "");
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, UseDbmsMetaData, false);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, HaltOnErrors, false);
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, SaveFilesBeforeExecute, false);
                                 
     OESMS_READ_MEMBER(settings, GridMaxColLength          );
     OESMS_READ_MEMBER(settings, GridMultilineCount        );
@@ -280,6 +294,13 @@ void SQLToolsSettingsWriter::operator << (const SQLToolsSettings& settings)
     OESMS_WRITE_MEMBER(settings, TopmostCancelQuery );
     OESMS_WRITE_MEMBER(settings, DbmsXplanDisplayCursor );
     OESMS_WRITE_MEMBER(settings, WhitespaceLineDelim );
+    OESMS_WRITE_MEMBER(settings, EmptyLineDelim );
+    OESMS_WRITE_MEMBER(settings, UnlimitedOutputSize );
+    OESMS_WRITE_MEMBER(settings, ExternalToolCommand );
+    OESMS_WRITE_MEMBER(settings, ExternalToolParameters );
+    OESMS_WRITE_MEMBER(settings, UseDbmsMetaData );
+    OESMS_WRITE_MEMBER(settings, HaltOnErrors );
+    OESMS_WRITE_MEMBER(settings, SaveFilesBeforeExecute );
                                 
     OESMS_WRITE_MEMBER(settings, GridMaxColLength          );
     OESMS_WRITE_MEMBER(settings, GridMultilineCount        );

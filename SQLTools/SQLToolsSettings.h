@@ -46,6 +46,7 @@ class SQLToolsSettings : public OpenEditor::BaseSettings, public OraMetaDict::Wr
     friend class CPropGridOutputPage;
     friend class CPropHistoryPage;
     friend class CDBSCommonPage;
+    friend class CPlusPlusPage;
 
 public:
     enum HistoryAction {
@@ -70,6 +71,13 @@ public:
     OES_DECLARE_PROPERTY(bool,   TopmostCancelQuery );
     OES_DECLARE_PROPERTY(bool,   DbmsXplanDisplayCursor);
     OES_DECLARE_PROPERTY(bool,   WhitespaceLineDelim);
+    OES_DECLARE_PROPERTY(bool,   EmptyLineDelim);
+    OES_DECLARE_PROPERTY(bool,   UnlimitedOutputSize);
+    OES_DECLARE_PROPERTY(string, ExternalToolCommand);
+    OES_DECLARE_PROPERTY(string, ExternalToolParameters);
+    OES_DECLARE_PROPERTY(bool,   HaltOnErrors);
+    OES_DECLARE_PROPERTY(bool,   UseDbmsMetaData);
+    OES_DECLARE_PROPERTY(bool,   SaveFilesBeforeExecute);
 
     OES_DECLARE_PROPERTY(int,    GridMaxColLength        );
     OES_DECLARE_PROPERTY(int,    GridMultilineCount      );
