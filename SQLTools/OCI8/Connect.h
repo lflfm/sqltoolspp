@@ -145,6 +145,7 @@ protected:
 
     virtual void Open  (const char* uid, const char* pswd, const char* alias, EConnectionMode mode, ESafety safety);
     virtual void Close (bool purge = false);
+    virtual void Reconnect();
 
 public:
     virtual void Commit (bool guaranteedSafe = false);
@@ -205,6 +206,7 @@ private:
     virtual void check_alloc (sword status);
     virtual void check (sword status);
     virtual void check_interrupt ();
+    virtual void DoOpen();
 
     static EClentVersion m_clientVersoon;
 
@@ -250,6 +252,7 @@ public:
     void Open  (const char* uid, const char* pswd, const char* alias, EConnectionMode mode, ESafety safety);
     void Open  (const char* uid, const char* pswd, const char* host, const char* port, const char* sid, bool serviceInsteadOfSid, EConnectionMode mode, ESafety safety);
     void Close (bool purge = false);
+    void Reconnect();
 
     void ExecuteStatement (const char*, bool guaranteedSafe = false);
     void ExecuteShadowStatement (const char*, bool guaranteedSafe = false);

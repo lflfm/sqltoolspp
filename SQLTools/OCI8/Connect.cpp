@@ -78,10 +78,15 @@ void Exception::CHECK (ConnectBase* conn, sword status)
 
         switch (errcode)
         {
-        case 28:
-        case 1012:
-        case 3113:
-        case 3114:
+        case 22: // invalid session ID
+        case 28: // your session has been killed
+        case 41: // RESOURCE MANAGER: active time limit exceeded
+        case 1012: // not logged on
+        case 3113: // end-of-file communication channel
+        case 3114: // not connected to Oracle
+        case 2396: // exceeded maximum idle time
+        case 2397: // exceeded PRIVATE_SGA limit
+        case 2399: // exceeded maximum connect time
             if (conn->IsOpen())
                 conn->Close(true); // connect losed, not logged on
         }
@@ -262,6 +267,57 @@ ConnectBase::~ConnectBase ()
     _DESTRUCTOR_HANDLER_;
 }
 
+void ConnectBase::DoOpen()
+{
+    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_errhp, OCI_HTYPE_ERROR, 0, 0));
+    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_srvhp, OCI_HTYPE_SERVER, 0, 0));
+    CHECK(OCIServerAttach(m_srvhp, m_errhp, (OraText*)m_alias.c_str(), m_alias.length(), 0));
+
+    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_authp, (ub4)OCI_HTYPE_SESSION, 0, 0));
+    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_auth_shadowp, (ub4)OCI_HTYPE_SESSION, 0, 0));
+
+    if (!m_uid.empty())
+        CHECK(OCIAttrSet(m_authp, OCI_HTYPE_SESSION,
+            (OraText*)m_uid.c_str(), m_uid.length(), OCI_ATTR_USERNAME, m_errhp));
+        CHECK(OCIAttrSet(m_auth_shadowp, OCI_HTYPE_SESSION,
+            (OraText*)m_uid.c_str(), m_uid.length(), OCI_ATTR_USERNAME, m_errhp));
+    if (!m_password.empty())
+        CHECK(OCIAttrSet(m_authp, OCI_HTYPE_SESSION,
+            (OraText*)m_password.c_str(), m_password.length(), OCI_ATTR_PASSWORD, m_errhp));
+        CHECK(OCIAttrSet(m_auth_shadowp, OCI_HTYPE_SESSION,
+            (OraText*)m_password.c_str(), m_password.length(), OCI_ATTR_PASSWORD, m_errhp));
+
+    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid **)&m_svchp, OCI_HTYPE_SVCCTX, 0, 0));
+    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_srvhp, 0, OCI_ATTR_SERVER, m_errhp));
+    CHECK(OCISessionBegin(m_svchp, m_errhp, m_authp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
+	if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
+	{
+		CHECK(OCISessionBegin(m_svchp, m_errhp, m_auth_shadowp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
+		m_openShadow = true;
+    }
+	else
+		m_openShadow = false;
+    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
+
+#ifdef XMLTYPE_SUPPORT
+    if (IsXMLTypeSupported())
+    {
+        OCIDuration dur = OCI_DURATION_SESSION;
+        ocixmldbparam params[2];
+        params[0].name_ocixmldbparam = XCTXINIT_OCIDUR;
+        params[0].value_ocixmldbparam = &dur;
+        m_xctx = g_OCIXmlDbInitXmlCtx(m_envhp, m_svchp, m_errhp, params, 1);
+
+        CHECK(
+            OCITypeByName(m_envhp, m_errhp, m_svchp,
+                (const OraText*)"SYS", sizeof("SYS")-1, (const OraText*)"XMLTYPE", sizeof("XMLTYPE")-1,
+                (const OraText*)0, 0, OCI_DURATION_SESSION, OCI_TYPEGET_HEADER, &m_xmltype));
+    }
+#endif//XMLTYPE_SUPPORT
+
+	m_open = true;
+}
+
 void ConnectBase::Open (const char* uid, const char* pswd, const char* alias, EConnectionMode mode, ESafety safety)
 {
     SHOW_WAIT;
@@ -315,53 +371,12 @@ void ConnectBase::Open (const char* uid, const char* pswd, const char* alias, EC
         if (alias) m_alias = alias;
      }
 
-    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_errhp, OCI_HTYPE_ERROR, 0, 0));
-    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_srvhp, OCI_HTYPE_SERVER, 0, 0));
-    CHECK(OCIServerAttach(m_srvhp, m_errhp, (OraText*)m_alias.c_str(), m_alias.length(), 0));
+    DoOpen();
+}
 
-    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_authp, (ub4)OCI_HTYPE_SESSION, 0, 0));
-    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid**)&m_auth_shadowp, (ub4)OCI_HTYPE_SESSION, 0, 0));
-
-    if (!m_uid.empty())
-        CHECK(OCIAttrSet(m_authp, OCI_HTYPE_SESSION,
-            (OraText*)m_uid.c_str(), m_uid.length(), OCI_ATTR_USERNAME, m_errhp));
-        CHECK(OCIAttrSet(m_auth_shadowp, OCI_HTYPE_SESSION,
-            (OraText*)m_uid.c_str(), m_uid.length(), OCI_ATTR_USERNAME, m_errhp));
-    if (!m_password.empty())
-        CHECK(OCIAttrSet(m_authp, OCI_HTYPE_SESSION,
-            (OraText*)m_password.c_str(), m_password.length(), OCI_ATTR_PASSWORD, m_errhp));
-        CHECK(OCIAttrSet(m_auth_shadowp, OCI_HTYPE_SESSION,
-            (OraText*)m_password.c_str(), m_password.length(), OCI_ATTR_PASSWORD, m_errhp));
-
-    CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid **)&m_svchp, OCI_HTYPE_SVCCTX, 0, 0));
-    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_srvhp, 0, OCI_ATTR_SERVER, m_errhp));
-    CHECK(OCISessionBegin(m_svchp, m_errhp, m_authp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
-	if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
-	{
-		CHECK(OCISessionBegin(m_svchp, m_errhp, m_auth_shadowp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
-		m_openShadow = true;
-    }
-	else
-		m_openShadow = false;
-    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
-
-#ifdef XMLTYPE_SUPPORT
-    if (IsXMLTypeSupported())
-    {
-        OCIDuration dur = OCI_DURATION_SESSION;
-        ocixmldbparam params[2];
-        params[0].name_ocixmldbparam = XCTXINIT_OCIDUR;
-        params[0].value_ocixmldbparam = &dur;
-        m_xctx = g_OCIXmlDbInitXmlCtx(m_envhp, m_svchp, m_errhp, params, 1);
-
-        CHECK(
-            OCITypeByName(m_envhp, m_errhp, m_svchp,
-                (const OraText*)"SYS", sizeof("SYS")-1, (const OraText*)"XMLTYPE", sizeof("XMLTYPE")-1,
-                (const OraText*)0, 0, OCI_DURATION_SESSION, OCI_TYPEGET_HEADER, &m_xmltype));
-    }
-#endif//XMLTYPE_SUPPORT
-
-	m_open = true;
+void ConnectBase::Reconnect()
+{
+    DoOpen();
 }
 
 void ConnectBase::CheckShadowSession(const bool bForceConnectShadow)
@@ -640,6 +655,26 @@ void Connect::Open (const char* uid, const char* pswd, const char* host, const c
     m_evAfterOpen.Handle(*this);
 }
 
+void Connect::Reconnect()
+{
+    m_evBeforeOpen.Handle(*this);
+
+    m_strGlobalName.erase();
+    m_strVersion.erase();
+	m_sessionSid.clear();
+
+    ConnectBase::Reconnect();
+
+    LoadSessionNlsParameters();
+    AlterSessionNlsParams();
+    EnableOutput(m_OutputEnable, m_OutputSize, true);
+	GetSessionSid();
+	if (IsOpenShadow())
+		SetShadowClientInfo();
+
+    m_evAfterOpen.Handle(*this);
+}
+
 void Connect::Close (bool purge)
 {
 	if (IsOpen())
@@ -716,7 +751,9 @@ void Connect::EnableOutput (bool enable, unsigned long size, bool connectInit)
             {
                 char buffer[80];
                 // Version 10 and above support unlimited output buffer size
-                if ((GetVersion() >= OCI8::esvServer10X) && (GetClientVersion() >= OCI8::ecvClient10X) && (m_OutputSize > 1000000))
+                if ((GetVersion() >= OCI8::esvServer10X) && 
+                    (GetClientVersion() >= OCI8::ecvClient10X) && 
+                    ((m_OutputSize > 1000000) || GetSQLToolsSettings().GetUnlimitedOutputSize()))
                     sprintf(buffer, "BEGIN dbms_output.enable(NULL); END;");
                 else
                     sprintf(buffer, "BEGIN dbms_output.enable(%ld); END;", m_OutputSize);
