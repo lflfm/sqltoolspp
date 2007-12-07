@@ -33,6 +33,7 @@
 #include "Tools/TableTransformer.h"
 #include <OCI8/Statement.h>
 #include <OCI8/ACursor.h>
+#include "InputDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -245,6 +246,32 @@ void CSQLToolsApp::DoConnect (const char* user, const char* pwd, const char* hos
     m_connect->Open(user, pwd, host, port, sid, serviceInsteadOfSid, mode, safety);
 }
 
+void CSQLToolsApp::OnSqlReconnect()
+{
+    if (! m_connect->IsOpen())
+    {
+        m_connect->Reconnect();
+    }
+    else
+    {
+        try
+        {
+            OciStatement sttm(*m_connect, "begin null; end;");
+            sttm.Execute(1, true);
+        }
+        catch (const OciException& x)
+        {
+            if (! m_connect->IsOpen())
+                m_connect->Reconnect();
+            else
+            {
+                MessageBeep(MB_ICONSTOP);
+                AfxMessageBox(x.what(), MB_OK|MB_ICONSTOP);
+            }
+        }
+    }
+}
+
 void CSQLToolsApp::OnSqlConnect()
 {
     CConnectDlg connectDlg(m_pMainWnd);
@@ -265,8 +292,45 @@ void CSQLToolsApp::OnSqlConnect()
         }
         catch (const OciException& x)
         {
-            AfxMessageBox(x.what(), MB_OK|MB_ICONSTOP);
-	        m_connect->Close(true);
+            if (x == 1005)
+            {
+                CPasswordDlg Dlg(m_pMainWnd);
+
+                Dlg.m_title = "Null password denied, enter password:";
+                Dlg.m_prompt = CString("TNSAlias:") + 
+                    (connectDlg.m_directConnection ? 
+                     connectDlg.m_host + ":" + connectDlg.m_tcpPort + ":" + connectDlg.m_sid : 
+                     connectDlg.m_tnsAlias);
+
+                if (Dlg.DoModal() == IDOK)
+                {
+                    connectDlg.m_password = Dlg.m_value.c_str();
+                    connectDlg.writeProfile();
+
+                    try
+		            {
+                        if (!connectDlg.m_directConnection)
+                            DoConnect(connectDlg.m_user, connectDlg.m_password, connectDlg.m_tnsAlias,
+                                connectDlg.m_connectionMode, connectDlg.m_safety);
+                        else
+                            DoConnect(connectDlg.m_user, connectDlg.m_password,
+                                connectDlg.m_host, connectDlg.m_tcpPort, connectDlg.m_sid, connectDlg.m_serviceInsteadOfSid,
+                                connectDlg.m_connectionMode, connectDlg.m_safety);
+
+                        break;
+                    }
+                    catch (const OciException& x)
+                    {
+                        AfxMessageBox(x.what(), MB_OK|MB_ICONSTOP);
+	                    m_connect->Close(true);
+                    }
+                }
+            }
+            else
+            {
+                AfxMessageBox(x.what(), MB_OK|MB_ICONSTOP);
+	            m_connect->Close(true);
+            }
         }
     }
 }
@@ -338,6 +402,15 @@ void CSQLToolsApp::OnUpdate_SqlSubstitutionVariables (CCmdUI* pCmdUI)
 void CSQLToolsApp::OnUpdate_SqlGroup (CCmdUI* pCmdUI)
 {
     ASSERT(ID_SQL_SESSION_STATISTICS - ID_SQL_DISCONNECT == 5);
+
+    if (pCmdUI->m_nID == ID_SQL_RECONNECT)
+    {
+        if (string(m_connect->GetUID()) != "" && string(m_connect->GetAlias()) != "")
+            pCmdUI->Enable(TRUE);
+        else
+            pCmdUI->Enable(FALSE);
+        return;
+    }
 
     if (m_connect->IsOpen())
     {
