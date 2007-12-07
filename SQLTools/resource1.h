@@ -294,6 +294,16 @@
 #define ID_DS_FILTER_BY_TABLES          1618
 #define ID_DS_FILTER_FREE_FORMAT        1619
 #define ID_DS_FILTER_BY_NAME            1620
+#define IDC_PROP_PLUS_DISPLAY_CURSOR    1700
+#define IDC_PROP_PLUS_WHITESPACE_DELIM  1701
+#define IDC_PROP_PLUS_EMPTYLINE_DELIM   1709
+#define IDC_PROP_PLUS_UNLIMITED_OUTPUT  1702
+#define IDC_PROP_PLUS_EXTERNAL_TOOL_CMD 1703
+#define IDC_PROP_PLUS_EXTERNAL_TOOL_PAR 1708
+#define IDC_PROP_PLUS_USE_DBMS_METADATA 1704
+#define IDC_PROP_PLUS_HALT_ON_ERRORS    1705
+#define IDC_PROP_PLUS_SAVE_BEF_EXECUTE  1706
+#define IDC_PROP_PLUS_SELECT_DIR        1707
 #define IDD_DFP_DIRSELECT               2000
 #define IDC_PFC_RESET_ALL               2001
 #define IDC_PFC_ITEMS                   2002
@@ -310,6 +320,7 @@
 #define IDD_ES_MAIN_PAGE                10022
 #define IDD_DB_DELETE                   10023
 #define IDD_PROP_HISTORY                10024
+#define IDD_PROP_PLUSPLUS               10099
 #define ID_APP_SETTINGS                 0x8000
 #define ID_GREP_CLEAR                   32772
 #define ID_GREP_OPEN_FILE               32773
@@ -348,19 +359,22 @@
 #define ID_CUSTOM_PREV_TAB              0x9203
 #define ID_SQL_CONNECT                  0x9301
 #define ID_SQL_DISCONNECT               0x9302
+#define ID_SQL_RECONNECT                40015
 #define ID_SQL_COMMIT                   0x9303
 #define ID_SQL_ROLLBACK                 0x9304
 #define ID_SQL_DBMS_OUTPUT              0x9305
 #define ID_SQL_EXTRACT_SCHEMA           0x9306
 #define ID_SQL_SESSION_STATISTICS       0x9307
-#define ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR 0x9999
+#define ID_SQL_DBMS_XPLAN_DISPLAY_CURSOR 40012
 #define ID_SQL_TABLE_TRANSFORMER        0x9308
 #define ID_SQL_EXPLAIN_PLAN             0x9408
 #define ID_SQL_DESCRIBE                 0x9409
 #define ID_SQL_EXECUTE                  0x940a
+#define ID_SQL_EXECUTE_HALT_ON_ERRORS   40013
 #define ID_SQL_EXECUTE_BELOW            0x940b
 #define ID_SQL_EXECUTE_CURRENT          0x940c
 #define ID_SQL_EXECUTE_CURRENT_AND_STEP 0x940d
+#define ID_SQL_EXECUTE_EXTERNAL         40014
 #define ID_SQL_SUBSTITUTION_VARIABLES   0x940e
 #define ID_SQL_REFRESH                  0x940f
 #define ID_SQL_NEXT_ERROR               0x9410
@@ -372,7 +386,7 @@
 #define ID_ES_AS_DB_BKS_SCHEMA          38147
 #define ID_SQL_LOAD                     38149
 #define ID_SQLTOOLS_ON_THE_WEB          38150
-#define ID_SQLTOOLS_UPDATE              40008
+#define ID_SQLTOOLS_UPDATE              40011
 #define ID_GRID_OUTPUT_SAVE             38151
 #define ID_GRID_OUTPUT_OPEN             38152
 #define ID_GRID_OUTPUT_OPTIONS          38153
@@ -424,6 +438,7 @@
 #define ID_GRIDPOPUP_CLOSE              40007
 #define ID_DS_FLASHBACK                 40008
 #define ID_DS_PURGE_ALL                 40009
+#define ID_EDIT_COPY_NEW_LINES          40010
 // #define ID_NP_EDIT_COPY                 40003
 // #define ID_NP_EDIT_SELECT_ALL           40004
 #define IDR_NEWPLAN_OPTIONS             999
