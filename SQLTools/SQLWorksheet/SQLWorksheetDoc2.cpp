@@ -125,6 +125,13 @@ CTypeMap::TData _typeMap [] = {
 
 CTypeMap typeMap = { sizeof _typeMap / sizeof _typeMap[0], _typeMap };
 
+BOOL CPLSWorksheetDoc::CheckFileSaveBeforeExecute()
+{
+    if (GetSQLToolsSettings().GetSaveFilesBeforeExecute())
+        return GetApp()->DoFileSaveAll(/*silent*/true, /*skipNew*/false);
+    else
+        return TRUE;
+}
 
 void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 {
@@ -278,6 +285,9 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 
 void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 {
+    if (! CheckFileSaveBeforeExecute())
+        return;
+
     CTreeCtrl& tree = m_pExplainPlan->GetTreeCtrl();
     tree.DeleteAllItems();
 
