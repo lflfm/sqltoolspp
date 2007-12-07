@@ -32,6 +32,7 @@
 #include "Dlg/DBSCommonPage.h"
 #include "Dlg/DBSTablePage.h"
 #include "Dlg/PropHistoryPage.h"
+#include "Dlg/PlusPlusPage.h"
 #include "OpenEditor/OEDocument.h"
 
 /*
@@ -112,6 +113,7 @@ struct SettingsDialogCallback : COEDocument::SettingsDialogCallback
     CPropGridOutputPage m_gridOutputPage;
     CPropHistoryPage    m_histPage;
     CVisualAttributesPage m_vaPage;
+    CPlusPlusPage       m_plusPlusPage;
     bool                m_ok;
 
     SettingsDialogCallback (const SQLToolsSettings& settings)
@@ -123,6 +125,7 @@ struct SettingsDialogCallback : COEDocument::SettingsDialogCallback
         m_gridPage2(m_settings),
         m_gridOutputPage(m_settings),
         m_histPage(m_settings),
+        m_plusPlusPage(m_settings),
         m_ok(false)
     {
         std::vector<VisualAttributesSet*> vasets;
@@ -145,6 +148,7 @@ struct SettingsDialogCallback : COEDocument::SettingsDialogCallback
         sheet.AddPage(&m_gridOutputPage);
         sheet.AddPage(&m_histPage);
         sheet.AddPage(&m_vaPage);
+        sheet.AddPage(&m_plusPlusPage);
     }
 
     virtual void AfterPageAdding  (Common::CPropertySheetMem& /*sheet*/)
