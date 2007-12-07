@@ -117,12 +117,17 @@ void DDX_CBString (CDataExchange* pDX, int nIDC, std::string& _value)
 	}
 	else
 	{
+        LRESULT lResult;
 		// set current selection based on model string
-		if (::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM)-1,
-            (LPARAM)(LPCTSTR)_value.c_str()) == CB_ERR)
+		if ((lResult = ::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT, (WPARAM)-1,
+            (LPARAM)(LPCTSTR)_value.c_str())) == CB_ERR)
 		{
 			// just set the edit text (will be ignored if DROPDOWNLIST)
             AfxSetWindowText(hWndCtrl, _value.c_str());
 		}
+        else
+        {
+            ::SendMessage(hWndCtrl, CB_SETCURSEL, (WPARAM)lResult, 0);
+        }
 	}
 }
