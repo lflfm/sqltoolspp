@@ -442,7 +442,7 @@ void fetchObjectDescriptors (OciCursor& cursor, std::vector<ObjectDescriptor>& r
 
         // problem with public.% :(
         if (rows > 300)
-            throw FindObjectException("Find object: too many object found!\nPlease use more exact criteria!");
+            throw FindObjectException("Find object: too many objects found!\nPlease use more precise criteria!");
     }
     cursor.Close();
 }
