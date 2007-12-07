@@ -123,7 +123,7 @@ public:
 
     enum EExecutionMode { ALL = 0, CURRENT = 0x1, STEP = 0x2 };
     static void PrintExecTime (std::ostream& out, double seconds);
-    void DoSqlExecute (int);
+    void DoSqlExecute (int mode, bool bHaltOnErrors = false);
 
     void MakeStep (int curLine);
     void ShowSelectResult (std::auto_ptr<OciAutoCursor>& cursor, double lastExecTime);
@@ -134,6 +134,7 @@ public:
 
     void DoSqlExplainPlan (const string&);
 	void DoSqlDbmsXPlanDisplayCursor();
+    static BOOL CheckFileSaveBeforeExecute();
 
     void GoTo (int);
 
@@ -178,9 +179,11 @@ public:
 protected:
 	//{{AFX_MSG(CPLSWorksheetDoc)
 	afx_msg void OnSqlExecute();
+    afx_msg void OnSqlExecuteHaltOnErrors();
 	afx_msg void OnSqlExecuteBelow();
 	afx_msg void OnSqlExecuteCurrent();
 	afx_msg void OnSqlExecuteCurrentAndStep();
+    afx_msg void OnSqlExecuteExternal();
 	afx_msg void OnSqlDescribe();
 	afx_msg void OnSqlExplainPlan();
 	afx_msg void OnSqlLoad();

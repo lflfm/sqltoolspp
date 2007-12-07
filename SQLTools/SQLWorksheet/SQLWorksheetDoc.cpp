@@ -70,6 +70,8 @@
 #include "CommandPerformerImpl.h"
 
 #include "XPlanView.h"
+#include "COMMON/TempFilesManager.h"
+#include "COMMON\StrHelpers.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -180,8 +182,10 @@ BEGIN_MESSAGE_MAP(CPLSWorksheetDoc, COEDocument)
     //{{AFX_MSG_MAP(CPLSWorksheetDoc)
 	//}}AFX_MSG_MAP
     ON_COMMAND(ID_SQL_EXECUTE, OnSqlExecute)
+    ON_COMMAND(ID_SQL_EXECUTE_HALT_ON_ERRORS, OnSqlExecuteHaltOnErrors)
     ON_COMMAND(ID_SQL_EXECUTE_CURRENT, OnSqlExecuteCurrent)
     ON_COMMAND(ID_SQL_EXECUTE_CURRENT_AND_STEP, OnSqlExecuteCurrentAndStep)
+    ON_COMMAND(ID_SQL_EXECUTE_EXTERNAL, OnSqlExecuteExternal)
 	ON_COMMAND(ID_SQL_LOAD, OnSqlLoad)
     ON_COMMAND(ID_SQL_DESCRIBE, OnSqlDescribe)
     ON_COMMAND(ID_SQL_EXPLAIN_PLAN, OnSqlExplainPlan)
@@ -192,6 +196,7 @@ BEGIN_MESSAGE_MAP(CPLSWorksheetDoc, COEDocument)
     ON_UPDATE_COMMAND_UI(ID_SQL_LOAD, OnUpdate_SqlGroup)
     ON_UPDATE_COMMAND_UI(ID_SQL_DESCRIBE, OnUpdate_SqlGroup)
     ON_UPDATE_COMMAND_UI(ID_SQL_EXPLAIN_PLAN, OnUpdate_SqlGroup)
+    ON_UPDATE_COMMAND_UI(ID_SQL_EXECUTE_EXTERNAL, OnUpdate_SqlGroup)
 
     ON_COMMAND(ID_SQL_CURR_ERROR, OnSqlCurrError)
     ON_COMMAND(ID_SQL_NEXT_ERROR, OnSqlNextError)
@@ -225,6 +230,12 @@ void CPLSWorksheetDoc::OnUpdate_SqlGroup (CCmdUI* pCmdUI)
 {
     ASSERT(ID_SQL_EXECUTE_CURRENT_AND_STEP - ID_SQL_EXPLAIN_PLAN == 5);
 
+    if (pCmdUI->m_nID == ID_SQL_EXECUTE_EXTERNAL)
+    {
+        pCmdUI->Enable(TRUE);
+        return;
+    }
+
     if (m_connect.IsOpen())
         pCmdUI->Enable(TRUE);
     else
@@ -234,6 +245,144 @@ void CPLSWorksheetDoc::OnUpdate_SqlGroup (CCmdUI* pCmdUI)
 void CPLSWorksheetDoc::OnSqlExecute()
 {
     DoSqlExecute(ALL);
+}
+
+void CPLSWorksheetDoc::OnSqlExecuteHaltOnErrors()
+{
+    DoSqlExecute(ALL, true);
+}
+
+void CPLSWorksheetDoc::OnSqlExecuteExternal()
+{
+    bool bWriteToTempFile;
+    string sFilename;
+    OpenEditor::Square sel;
+    m_pEditor->GetSelection(sel);
+    sel.normalize();
+    int nlines = m_pEditor->GetLineCount();
+
+    bWriteToTempFile = false;
+
+    if (sel.is_empty())
+    {
+        if (IsModified())
+        {
+            switch (AfxMessageBox("Do you want to save the file before executing external tool?", MB_YESNOCANCEL|MB_ICONQUESTION))
+            {
+            case IDCANCEL:
+                return;
+            case IDYES:
+                if (DoFileSave())
+                {
+                    sFilename = GetPathName();
+                }
+                else
+                    return;
+
+                break;
+
+            case IDNO:
+                bWriteToTempFile = true;
+                sel.start.line = 0;
+                sel.end.line = nlines - 1;
+                sel.start.column = 0;
+                sel.end.column = INT_MAX;
+            }
+        }
+        else
+        {
+            sFilename = GetPathName();
+        }
+    }
+    else
+    {
+        bWriteToTempFile = true;
+    }
+
+    if (bWriteToTempFile)
+    {
+        sel.start.column = m_pEditor->PosToInx(sel.start.line, sel.start.column);
+        sel.end.column   = m_pEditor->PosToInx(sel.end.line, sel.end.column);
+
+        sFilename = TempFilesManager::CreateFile("SQL");
+
+        if (!sFilename.empty())
+        {
+            HANDLE hFile = ::CreateFile(sFilename.c_str(), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+            if (hFile == INVALID_HANDLE_VALUE)
+            {
+                MessageBeep((UINT)-1);
+                AfxMessageBox("Cannot open temporary file for external tool.", MB_OK|MB_ICONSTOP);
+                return;
+            }
+            DWORD written;
+
+            int line = sel.start.line;
+            int offset = sel.start.column;
+            int len;
+            const char* str;
+            const char lf[] = "\r\n";
+
+            for (; line < nlines && line <= sel.end.line; line++)
+            {
+                m_pEditor->GetLine(line, str, len);
+
+                if (line == sel.end.line)
+                    len = min(len, sel.end.column);
+
+                if (len > 0)
+                    WriteFile(hFile, str + offset, len - offset, &written, 0);
+
+                WriteFile(hFile, lf, sizeof(lf) - 1, &written, 0);
+                
+				offset = 0;
+            }
+
+            CloseHandle(hFile);
+        }
+        else
+        {
+            MessageBeep((UINT)-1);
+            AfxMessageBox("Cannot generate temporary file for external tool.", MB_OK|MB_ICONSTOP);
+            return;
+        }
+    }
+
+    Common::Substitutor subst;
+    subst.AddPair("<CMD>", GetSQLToolsSettings().GetExternalToolCommand().c_str());
+    subst.AddPair("<USER>", m_connect.GetUID());
+    subst.AddPair("<PASSWORD>", m_connect.GetPassword());
+    subst.AddPair("<CONNECT_STRING>", m_connect.GetAlias());
+    subst.AddPair("<FILENAME>", string(string("\"") + sFilename + "\"").c_str());
+    subst << "\"<CMD>\" " << GetSQLToolsSettings().GetExternalToolParameters().c_str();
+
+    string sParameter = subst.GetResult();
+
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+    // Start the child process. 
+    if( !CreateProcess( NULL, // module name
+        (LPSTR) sParameter.c_str(),// Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &si,            // Pointer to STARTUPINFO structure
+        &pi )           // Pointer to PROCESS_INFORMATION structure
+    ) 
+    {
+        MessageBeep((UINT)-1);
+        AfxMessageBox("CreateProcess failed.", MB_OK|MB_ICONSTOP);
+        return;
+    }
 }
 
 void CPLSWorksheetDoc::OnSqlExecuteCurrent()
@@ -265,39 +414,52 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
                 // search from the current line to top for blank line
                 sel.start.line = m_pEditor->GetPosition().line;
 
-				const char *linePtr;
-				int len;
+                if (GetSQLToolsSettings().GetEmptyLineDelim() || 
+                    GetSQLToolsSettings().GetWhitespaceLineDelim())
+                {
+				    const char *linePtr;
+				    int len;
 
-				while (sel.start.line > 0)
-				{
-					m_pEditor->GetLine(sel.start.line - 1, linePtr, len);
-					if (len == 0)
-						break;
+				    while (sel.start.line > 0)
+				    {
+					    m_pEditor->GetLine(sel.start.line - 1, linePtr, len);
+					    if (GetSQLToolsSettings().GetEmptyLineDelim())
+					        if (len == 0)
+						        break;
 
-					if (GetSQLToolsSettings().GetWhitespaceLineDelim())
-						if (IsBlankLine(linePtr, len))
-							break;
+					    if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+						    if ((len > 0) && IsBlankLine(linePtr, len))
+							    break;
 
-                    sel.start.line--;
-				}
+                        sel.start.line--;
+				    }
+                }
                 // to the bottom
                 sel.end.column = INT_MAX;
 
                 // search from the current line to bottom for blank line
                 sel.end.line = m_pEditor->GetPosition().line;
 
-				while (sel.end.line < nlines - 1)
-				{
-					m_pEditor->GetLine(sel.end.line + 1, linePtr, len);
-					if (len == 0)
-						break;
+                if (GetSQLToolsSettings().GetEmptyLineDelim() || 
+                    GetSQLToolsSettings().GetWhitespaceLineDelim())
+                {
+				    const char *linePtr;
+				    int len;
 
-					if (GetSQLToolsSettings().GetWhitespaceLineDelim())
-						if (IsBlankLine(linePtr, len))
-							break;
-					
-					sel.end.line++;
-				}
+				    while (sel.end.line < nlines - 1)
+				    {
+					    m_pEditor->GetLine(sel.end.line + 1, linePtr, len);
+					    if (GetSQLToolsSettings().GetEmptyLineDelim())
+					        if (len == 0)
+						        break;
+
+					    if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+						    if ((len > 0) && IsBlankLine(linePtr, len))
+							    break;
+    					
+					    sel.end.line++;
+				    }
+                }
             }
             // convert positions to indexes (because of tabs)
             sel.start.column = m_pEditor->PosToInx(sel.start.line, sel.start.column);
@@ -392,9 +554,11 @@ bool CPLSWorksheetDoc::IsBlankLine(const char *linePtr, const int len)
 	return true;
 }
 
-void CPLSWorksheetDoc::DoSqlExecute (int mode)
+void CPLSWorksheetDoc::DoSqlExecute (int mode, bool bHaltOnErrors)
 {
     try { EXCEPTION_FRAME;
+        if (! CheckFileSaveBeforeExecute())
+            return;
 
         CWaitCursor wait;
 
@@ -421,21 +585,26 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
 				{
                     sel.start.line = m_pEditor->GetPosition().line;
 
-					const char *linePtr;
-					int len;
+                    if (GetSQLToolsSettings().GetEmptyLineDelim() || 
+                        GetSQLToolsSettings().GetWhitespaceLineDelim())
+                    {
+					    const char *linePtr;
+					    int len;
 
-					while (sel.start.line > 0)
-					{
-						m_pEditor->GetLine(sel.start.line - 1, linePtr, len);
-						if (len == 0)
-							break;
+					    while (sel.start.line > 0)
+					    {
+						    m_pEditor->GetLine(sel.start.line - 1, linePtr, len);
+    					    if (GetSQLToolsSettings().GetEmptyLineDelim())
+						        if (len == 0)
+							        break;
 
-						if (GetSQLToolsSettings().GetWhitespaceLineDelim())
-							if (IsBlankLine(linePtr, len))
-								break;
-						
-						sel.start.line--;
-					}
+						    if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+							    if ((len > 0) && IsBlankLine(linePtr, len))
+								    break;
+    						
+						    sel.start.line--;
+					    }
+                    }
 				}
 
                 // to the bottom
@@ -447,21 +616,26 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
 				{
                     sel.end.line = m_pEditor->GetPosition().line;
 
-					const char *linePtr;
-					int len;
+                    if (GetSQLToolsSettings().GetEmptyLineDelim() || 
+                        GetSQLToolsSettings().GetWhitespaceLineDelim())
+                    {
+					    const char *linePtr;
+					    int len;
 
-					while (sel.end.line < nlines - 1)
-					{
-						m_pEditor->GetLine(sel.end.line + 1, linePtr, len);
-						if (len == 0)
-							break;
+					    while (sel.end.line < nlines - 1)
+					    {
+						    m_pEditor->GetLine(sel.end.line + 1, linePtr, len);
+    					    if (GetSQLToolsSettings().GetEmptyLineDelim())
+						        if (len == 0)
+							        break;
 
-						if (GetSQLToolsSettings().GetWhitespaceLineDelim())
-							if (IsBlankLine(linePtr, len))
-								break;
-						
-						sel.end.line++;
-					}
+						    if (GetSQLToolsSettings().GetWhitespaceLineDelim())
+							    if ((len > 0) && IsBlankLine(linePtr, len))
+								    break;
+    						
+						    sel.end.line++;
+					    }
+                    }
 				}
             }
             // convert positions to indexes (because of tabs)
@@ -497,7 +671,8 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode)
                 
 				offset = 0;
 
-                if (performer.GetStatementCount() && mode != ALL)
+                if ((performer.GetStatementCount() && mode != ALL) || 
+                    ((GetSQLToolsSettings().GetHaltOnErrors() || bHaltOnErrors) && performer.HasErrors()))
                     break;
             }
             commandParser.PutEOF();
