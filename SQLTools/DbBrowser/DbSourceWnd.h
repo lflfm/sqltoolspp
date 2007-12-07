@@ -128,6 +128,7 @@ protected:
     afx_msg void OnDblClikList(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnLoad();
     afx_msg void OnCopy();
+    afx_msg void OnCopyWithNewLines();
 	afx_msg void OnSqlDescribe();
     afx_msg void OnLoadAsOne();
     afx_msg void OnCompile();

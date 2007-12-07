@@ -208,6 +208,7 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_COMMAND(IDC_DS_COMPILE, OnCompile)
     ON_COMMAND(IDC_DS_COPY, OnCopy)
     ON_COMMAND(ID_EDIT_COPY, OnCopy)
+    ON_COMMAND(ID_EDIT_COPY_NEW_LINES, OnCopyWithNewLines)
     ON_COMMAND(IDC_DS_DELETE, OnDelete)
     ON_COMMAND(IDC_DS_DISABLE, OnDisable)
     ON_COMMAND(IDC_DS_ENABLE, OnEnable)
@@ -914,6 +915,9 @@ void CDbSourceWnd::Do (bool (CDbSourceWnd::*pmfnDo)(CDoContext&),
 
 void CDbSourceWnd::OnLoad (bool bAsOne)
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     SQLToolsSettings settings = GetSQLToolsSettings();
     CPLSWorksheetDoc::CLoader Loader;
     Loader.SetAsOne(bAsOne);
@@ -1029,6 +1033,9 @@ bool CDbSourceWnd::DoLoad (CDoContext& doContext)
 
 void CDbSourceWnd::OnDelete ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
         if (wndListCtrl->m_Data.m_bCanDrop) 
         {
@@ -1056,6 +1063,9 @@ void CDbSourceWnd::OnDelete ()
 
 void CDbSourceWnd::OnFlashback ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel())
     {
         CDWordArray dwArray;
@@ -1210,6 +1220,12 @@ bool CDbSourceWnd::DoFlashback (CDoContext& doContext)
 
 void CDbSourceWnd::OnPurgeAll()
 {
+    if (m_connect.GetVersion() < OCI8::esvServer10X)
+        return;
+
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     OciCursor cursor(m_connect, "select user from dual", 1);
     cursor.Execute();
     cursor.Fetch();
@@ -1244,6 +1260,9 @@ void CDbSourceWnd::OnPurgeAll()
 
 void CDbSourceWnd::OnCompile ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
         if (wndListCtrl->m_Data.m_bCanCompile)
     {
@@ -1275,6 +1294,9 @@ void CDbSourceWnd::OnCopy_Public()
 
 void CDbSourceWnd::OnSqlDescribe()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     try { EXCEPTION_FRAME;
 
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
@@ -1305,7 +1327,21 @@ void CDbSourceWnd::OnCopy ()
 {
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
     {
-		string s_theTextList = wndListCtrl->GetListSelectionAsText();
+		string s_theTextList = wndListCtrl->GetListSelectionAsText(false);
+
+		Common::CopyTextToClipboard(s_theTextList);
+
+		// AfxMessageBox(s_theTextList.c_str());
+
+		Global::SetStatusText("Copied to clipboard: " + s_theTextList);
+    }
+}
+
+void CDbSourceWnd::OnCopyWithNewLines ()
+{
+    if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
+    {
+		string s_theTextList = wndListCtrl->GetListSelectionAsText(true);
 
 		Common::CopyTextToClipboard(s_theTextList);
 
@@ -1317,6 +1353,9 @@ void CDbSourceWnd::OnCopy ()
 
 void CDbSourceWnd::OnDisable ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
         if (wndListCtrl->m_Data.m_bCanDisable)
             Do(&CDbSourceWnd::DoAlter, wndListCtrl, "DISABLE", "Disabling %s ...");
@@ -1324,6 +1363,9 @@ void CDbSourceWnd::OnDisable ()
 
 void CDbSourceWnd::OnEnable ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
         if (wndListCtrl->m_Data.m_bCanDisable)
             Do(&CDbSourceWnd::DoAlter, wndListCtrl, "ENABLE", "Enabling %s ...");
@@ -1555,6 +1597,9 @@ bool CDbSourceWnd::DoQuery (CDoContext& doContext)
 
 void CDbSourceWnd::OnQuery ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
         if ((!strcmp(wndListCtrl->m_Data.m_szType, "TABLE") 
         || !strcmp(wndListCtrl->m_Data.m_szType, "VIEW")))
@@ -1575,6 +1620,9 @@ bool CDbSourceWnd::DoDataDelete (CDoContext& doContext)
 
 void CDbSourceWnd::OnDataDelete ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
         if (!strcmp(wndListCtrl->m_Data.m_szType, "TABLE") 
         || !strcmp(wndListCtrl->m_Data.m_szType, "VIEW"))
@@ -1655,6 +1703,9 @@ bool CDbSourceWnd::DoTruncatePre (CDoContext& doContext)
 
 void CDbSourceWnd::OnTruncate ()
 {
+    if (! CPLSWorksheetDoc::CheckFileSaveBeforeExecute())
+        return;
+
     if (CDbObjListCtrl* wndListCtrl = GetCurSel()) 
         if (!strcmp(wndListCtrl->m_Data.m_szType, "TABLE"))
     {
