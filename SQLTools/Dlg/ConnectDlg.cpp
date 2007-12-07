@@ -33,6 +33,7 @@
 #include <fstream>
 #include "resource.h"
 #include "ConnectDlg.h"
+#include "InputDlg.h"
 #include <COMMON/StrHelpers.h>
 #include <COMMON/DlgDataExt.h>
 #include <OCI8/Connect.h>
@@ -85,7 +86,7 @@ static char THIS_FILE[] = __FILE__;
 CConnectDlg::CConnectDlg(CWnd* pParent /*=NULL*/)
     : CDialog(CConnectDlg::IDD, pParent),
     m_sortColumn(-1), m_direction(Common::ListCtrlManager::ESortDir::ASC), m_adapter(m_data), 
-    m_profiles(m_adapter)
+    m_profiles(m_adapter, false)
 {
     SetHelpID(CConnectDlg::IDD);
     //{{AFX_DATA_INIT(CConnectDlg)
@@ -353,7 +354,12 @@ BOOL CConnectDlg::OnInitDialog()
 
                 m_profiles.SetFilter(m_filter);
 
-                m_profiles.Refresh(true);
+                for (int i = 0; i < m_adapter.getColCount(); i++)
+                {
+                    m_profiles.SetColumnWidth(i, m_adapter.GetDefaultColWidth(i));
+                }
+
+                m_profiles.Refresh(false);
             }
         }
 
@@ -483,6 +489,34 @@ void CConnectDlg::OnDataChanged_SavePassword ()
     AfxGetApp()->WriteProfileInt("Server", "SavePassword", m_savePassword);
 }
 
+void CConnectDlg::TestConnection()
+{
+    OciConnect connect;
+    
+    OCI8::EConnectionMode mode = OCI8::ecmDefault;
+    switch (m_connectionMode)
+    {
+    case 1: mode = OCI8::ecmSysDba; break;
+    case 2: mode = OCI8::ecmSysOper; break;
+    }
+    connect.Open(m_user, m_password, m_tnsAlias, mode, OCI8::esReadOnly);
+    connect.Close();
+
+    CString message;
+
+    if (!m_directConnection)
+        message.Format("TNS:\t%s\t\nUser:\t%s\n\nConnection is Ok!\t", 
+            (LPCSTR)m_tnsAlias, (LPCSTR)m_user);
+    else
+        message.Format("Host:\t%s\t\nTCP Port:\t%s\n%s:\t%s\nUser:\t%s\n\nConnection is Ok!\t", 
+            (LPCSTR)m_host, (LPCSTR)m_tcpPort, 
+            (!m_serviceInsteadOfSid ? "SID" : "Service_Name"),
+            (LPCSTR)m_sid, (LPCSTR)m_user);
+
+    MessageBeep(MB_OK);
+    MessageBox(message, "Connection test", MB_OK|MB_ICONASTERISK);
+}
+
 void CConnectDlg::OnTest () 
 {
     UpdateData(TRUE);
@@ -491,36 +525,37 @@ void CConnectDlg::OnTest ()
         makeTnsString(m_tnsAlias);
 
     try { EXCEPTION_FRAME;
-
-        OciConnect connect;
-        
-        OCI8::EConnectionMode mode = OCI8::ecmDefault;
-        switch (m_connectionMode)
-        {
-        case 1: mode = OCI8::ecmSysDba; break;
-        case 2: mode = OCI8::ecmSysOper; break;
-        }
-        connect.Open(m_user, m_password, m_tnsAlias, mode, OCI8::esReadOnly);
-        connect.Close();
-
-        CString message;
-
-        if (!m_directConnection)
-            message.Format("TNS:\t%s\t\nUser:\t%s\n\nConnection is Ok!\t", 
-                (LPCSTR)m_tnsAlias, (LPCSTR)m_user);
-        else
-            message.Format("Host:\t%s\t\nTCP Port:\t%s\n%s:\t%s\nUser:\t%s\n\nConnection is Ok!\t", 
-                (LPCSTR)m_host, (LPCSTR)m_tcpPort, 
-                (!m_serviceInsteadOfSid ? "SID" : "Service_Name"),
-                (LPCSTR)m_sid, (LPCSTR)m_user);
-
-        MessageBeep(MB_OK);
-        MessageBox(message, "Connection test", MB_OK|MB_ICONASTERISK);
+        TestConnection();
     }
     catch (const OciException& x)
     {
-        MessageBeep((UINT)-1);
-        MessageBox(x.what(), "Connection test", MB_OK|MB_ICONHAND);
+        if (x == 1005)
+        {
+            CPasswordDlg Dlg(this);
+
+            Dlg.m_title = "Null password denied, enter password:";
+            Dlg.m_prompt = CString("TNSAlias:") + 
+                (m_directConnection ? m_host + ":" + m_tcpPort + ":" + m_sid : m_tnsAlias);
+
+            if (Dlg.DoModal() == IDOK)
+            {
+                m_password = Dlg.m_value.c_str();
+
+                try { EXCEPTION_FRAME;
+                    TestConnection();
+                }
+                catch (const OciException& x)
+                {
+                    MessageBeep((UINT)-1);
+                    MessageBox(x.what(), "Connection test", MB_OK|MB_ICONHAND);
+                }
+            }
+        }
+        else
+        {
+            MessageBeep((UINT)-1);
+            MessageBox(x.what(), "Connection test", MB_OK|MB_ICONHAND);
+        }
     }
     _COMMON_DEFAULT_HANDLER_
 }
@@ -558,6 +593,81 @@ void CConnectDlg::OnDelete ()
     }
 }
 
+void CConnectDlg::writeProfile()
+{
+    // extract tns alias from user
+    int pos = m_user.Find('@');
+    if (pos != -1) 
+    {
+        m_tnsAlias = m_user.GetBuffer(m_user.GetLength()) + pos + 1;
+        m_user.ReleaseBuffer(pos);
+    }
+
+    // extract password from user
+    pos = m_user.Find('/');
+    if (pos != -1) 
+    {
+        if (pos != -1) 
+        {
+            m_password = m_user.GetBuffer(m_user.GetLength()) + pos + 1;
+            m_user.ReleaseBuffer(pos);
+        }
+    }
+
+    AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszDirectConnectionKey, m_directConnection);
+
+    CString keyName;
+    if (!m_directConnection)
+    {
+        AfxGetApp()->WriteProfileString(cszCurrProfileKey, cszUserKey, m_user);
+        AfxGetApp()->WriteProfileString(cszCurrProfileKey, cszConnectKey, m_tnsAlias);
+        AfxGetApp()->WriteProfileString(cszCurrProfileKey, cszPasswordKey, m_savePassword ? m_password : "");
+        AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszModeKey, m_connectionMode);
+        AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszSafetyKey, m_safety);
+
+        keyName.Format("%s\\%s - %s", cszProfilesKey, (LPCTSTR)m_tnsAlias, (LPCTSTR)m_user);
+        keyName.MakeUpper();
+
+        AfxGetApp()->WriteProfileString(keyName, cszUserKey, m_user);
+        AfxGetApp()->WriteProfileString(keyName, cszConnectKey, m_tnsAlias);
+        AfxGetApp()->WriteProfileInt(keyName, cszModeKey, m_connectionMode);
+        AfxGetApp()->WriteProfileInt(keyName, cszSafetyKey, m_safety);
+
+        // 16.02.2004 bug fix, a connection info might not be displayed properly after changing an existing connection profile
+        m_host.Empty();
+        m_tcpPort.Empty();
+        m_sid.Empty();
+    }
+    else
+    {
+        makeTnsString(m_tnsAlias);
+        AfxGetApp()->WriteProfileString(cszProfilesExKey, cszUserKey, m_user);
+        AfxGetApp()->WriteProfileString(cszProfilesExKey, cszPasswordKey, m_savePassword ? m_password : "");
+        AfxGetApp()->WriteProfileString(cszProfilesExKey, cszHostKey, m_host);
+        AfxGetApp()->WriteProfileString(cszProfilesExKey, cszTcpPortKey, m_tcpPort);
+        AfxGetApp()->WriteProfileString(cszProfilesExKey, cszSIDKey, m_sid);
+        AfxGetApp()->WriteProfileInt(cszProfilesExKey, cszServiceInsteadOfSidKey, m_serviceInsteadOfSid);
+        AfxGetApp()->WriteProfileInt(cszProfilesExKey, cszModeKey, m_connectionMode);
+        AfxGetApp()->WriteProfileInt(cszProfilesExKey, cszSafetyKey, m_safety);
+
+        keyName.Format("%s\\%s:%s:%s - %s", cszProfilesExKey, 
+            (LPCSTR)m_host, (LPCSTR)m_tcpPort, (LPCSTR)m_sid, (LPCTSTR)m_user);
+        keyName.MakeUpper();
+
+        AfxGetApp()->WriteProfileString(keyName, cszHostKey,    m_host);
+        AfxGetApp()->WriteProfileString(keyName, cszTcpPortKey, m_tcpPort);
+        AfxGetApp()->WriteProfileString(keyName, cszSIDKey,     m_sid);
+        AfxGetApp()->WriteProfileInt(keyName, cszServiceInsteadOfSidKey, m_serviceInsteadOfSid);
+        AfxGetApp()->WriteProfileInt(keyName, cszModeKey, m_connectionMode);
+        AfxGetApp()->WriteProfileInt(keyName, cszSafetyKey, m_safety);
+    }
+
+    AfxGetApp()->WriteProfileString(keyName, cszUserKey,    m_user);
+    AfxGetApp()->WriteProfileString(keyName, cszPasswordKey, m_savePassword ? m_password : "");
+
+    int counter = AfxGetApp()->GetProfileInt(keyName, cszCounterKey, 0);
+    AfxGetApp()->WriteProfileInt(keyName, cszCounterKey, ++counter);
+}
 
 void CConnectDlg::OnOK () 
 {
@@ -565,79 +675,7 @@ void CConnectDlg::OnOK ()
 
         CDialog::OnOK();
 
-        // extract tns alias from user
-        int pos = m_user.Find('@');
-        if (pos != -1) 
-        {
-            m_tnsAlias = m_user.GetBuffer(m_user.GetLength()) + pos + 1;
-            m_user.ReleaseBuffer(pos);
-        }
-
-        // extract password from user
-        pos = m_user.Find('/');
-        if (pos != -1) 
-        {
-            if (pos != -1) 
-            {
-                m_password = m_user.GetBuffer(m_user.GetLength()) + pos + 1;
-                m_user.ReleaseBuffer(pos);
-            }
-        }
-
-        AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszDirectConnectionKey, m_directConnection);
-
-        CString keyName;
-        if (!m_directConnection)
-        {
-            AfxGetApp()->WriteProfileString(cszCurrProfileKey, cszUserKey, m_user);
-            AfxGetApp()->WriteProfileString(cszCurrProfileKey, cszConnectKey, m_tnsAlias);
-            AfxGetApp()->WriteProfileString(cszCurrProfileKey, cszPasswordKey, m_savePassword ? m_password : "");
-            AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszModeKey, m_connectionMode);
-            AfxGetApp()->WriteProfileInt(cszCurrProfileKey, cszSafetyKey, m_safety);
-
-            keyName.Format("%s\\%s - %s", cszProfilesKey, (LPCTSTR)m_tnsAlias, (LPCTSTR)m_user);
-            keyName.MakeUpper();
-
-            AfxGetApp()->WriteProfileString(keyName, cszUserKey, m_user);
-            AfxGetApp()->WriteProfileString(keyName, cszConnectKey, m_tnsAlias);
-            AfxGetApp()->WriteProfileInt(keyName, cszModeKey, m_connectionMode);
-            AfxGetApp()->WriteProfileInt(keyName, cszSafetyKey, m_safety);
-
-            // 16.02.2004 bug fix, a connection info might not be displayed properly after changing an existing connection profile
-            m_host.Empty();
-            m_tcpPort.Empty();
-            m_sid.Empty();
-        }
-        else
-        {
-            makeTnsString(m_tnsAlias);
-            AfxGetApp()->WriteProfileString(cszProfilesExKey, cszUserKey, m_user);
-            AfxGetApp()->WriteProfileString(cszProfilesExKey, cszPasswordKey, m_savePassword ? m_password : "");
-            AfxGetApp()->WriteProfileString(cszProfilesExKey, cszHostKey, m_host);
-            AfxGetApp()->WriteProfileString(cszProfilesExKey, cszTcpPortKey, m_tcpPort);
-            AfxGetApp()->WriteProfileString(cszProfilesExKey, cszSIDKey, m_sid);
-            AfxGetApp()->WriteProfileInt(cszProfilesExKey, cszServiceInsteadOfSidKey, m_serviceInsteadOfSid);
-            AfxGetApp()->WriteProfileInt(cszProfilesExKey, cszModeKey, m_connectionMode);
-            AfxGetApp()->WriteProfileInt(cszProfilesExKey, cszSafetyKey, m_safety);
-
-            keyName.Format("%s\\%s:%s:%s - %s", cszProfilesExKey, 
-                (LPCSTR)m_host, (LPCSTR)m_tcpPort, (LPCSTR)m_sid, (LPCTSTR)m_user);
-            keyName.MakeUpper();
-
-            AfxGetApp()->WriteProfileString(keyName, cszHostKey,    m_host);
-            AfxGetApp()->WriteProfileString(keyName, cszTcpPortKey, m_tcpPort);
-            AfxGetApp()->WriteProfileString(keyName, cszSIDKey,     m_sid);
-            AfxGetApp()->WriteProfileInt(keyName, cszServiceInsteadOfSidKey, m_serviceInsteadOfSid);
-            AfxGetApp()->WriteProfileInt(keyName, cszModeKey, m_connectionMode);
-            AfxGetApp()->WriteProfileInt(keyName, cszSafetyKey, m_safety);
-        }
-
-        AfxGetApp()->WriteProfileString(keyName, cszUserKey,    m_user);
-        AfxGetApp()->WriteProfileString(keyName, cszPasswordKey, m_savePassword ? m_password : "");
-
-        int counter = AfxGetApp()->GetProfileInt(keyName, cszCounterKey, 0);
-        AfxGetApp()->WriteProfileInt(keyName, cszCounterKey, ++counter);
-
+        writeProfile();
         writeProfileListConfig();
     }
     _DEFAULT_HANDLER_

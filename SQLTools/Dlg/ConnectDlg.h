@@ -89,7 +89,7 @@
             switch (col) {
             case 0: return "User";       
             case 1: return "Alias";
-            case 2: return "Usage Count";      
+            case 2: return "Counter";      
             case 3: return "Last usage";    
             }
             return "Unknown";
@@ -122,6 +122,16 @@
         virtual int GetMinDefColWidth (int col) const { 
             return !col ? 40 : Common::ListCtrlDataProvider::GetMinDefColWidth(col);
         }
+
+        int GetDefaultColWidth (int col) const { 
+            switch (col) {
+            case 0: return 100;
+            case 1: return 140;
+            case 2: return 60;
+            case 3: return 100;
+            }
+            return !col ? 40 : GetMinDefColWidth(col);
+        }
     };
 
 class CConnectDlg : public CDialog
@@ -139,10 +149,11 @@ class CConnectDlg : public CDialog
 
     static void filetime_to_string (FILETIME&, CString&);
     void writeProfileListConfig(void);
+    void TestConnection();
 
 public:
 	CConnectDlg (CWnd* pParent = NULL);
-
+    void writeProfile();
 
 	//{{AFX_DATA(CConnectDlg)
 	enum { IDD = IDD_CONNECT_DIALOG };
