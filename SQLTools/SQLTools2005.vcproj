@@ -2734,6 +2734,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Dlg\PlusPlusPage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Dlg\PlusPlusPage.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Dlg\PropGridOutputPage.cpp"
 				>
 			</File>
