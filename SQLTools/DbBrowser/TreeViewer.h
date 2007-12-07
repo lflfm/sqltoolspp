@@ -37,7 +37,7 @@ public:
     using CTreeCtrlEx::Create;
     void LoadAndSetImageList (UINT nResId);
 	const string GetItemStrippedText(HTREEITEM hItem, const bool b_force_alt = false);
-    const string GetSelectedItemsAsText(const bool b_force_alt = false);
+    const string GetSelectedItemsAsText(const bool b_force_alt = false, const bool b_NewLines = false);
 
 	//{{AFX_VIRTUAL(CTreeViewer)
 	protected:

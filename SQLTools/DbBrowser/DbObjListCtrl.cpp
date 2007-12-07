@@ -501,7 +501,7 @@ void CDbObjListCtrl::OnLButtonDblClk (UINT /*nFlags*/, CPoint /*point*/)
         wndOwner->SendMessage(WM_COMMAND, IDC_DS_LOAD);
 }
 
-string CDbObjListCtrl::GetListSelectionAsText()
+string CDbObjListCtrl::GetListSelectionAsText(const bool bNewLines)
 {
     LV_ITEM lvi;
     memset(&lvi, 0, sizeof lvi);
@@ -536,7 +536,7 @@ string CDbObjListCtrl::GetListSelectionAsText()
         }
 
         s_theTextList += s_delimiter + s_schema + string(lower_items ? CString(lvi.pszText).MakeLower() : CString(lvi.pszText));
-		s_delimiter = ", ";
+        bNewLines ? s_delimiter = ", \r\n" : s_delimiter = ", ";
     }
 
 	return s_theTextList;

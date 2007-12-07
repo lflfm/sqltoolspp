@@ -222,7 +222,7 @@ public:
   void RefreshRow   (int nItem, int nRow, const char* szOwner, const char* szName);
   void ApplyQuickFilter (bool valid, bool invalid);
 
-  string GetListSelectionAsText();
+  string GetListSelectionAsText(const bool bNewLines = false);
 
 // Overrides
 	// ClassWizard generated virtual function overrides

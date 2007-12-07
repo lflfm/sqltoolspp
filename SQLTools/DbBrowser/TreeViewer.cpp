@@ -246,7 +246,7 @@ const string CTreeViewer::GetItemStrippedText(HTREEITEM hItem, const bool b_forc
 	return string(strText);
 }
 
-const string CTreeViewer::GetSelectedItemsAsText(const bool b_force_alt)
+const string CTreeViewer::GetSelectedItemsAsText(const bool b_force_alt, const bool b_NewLines)
 {
     bool b_schema_name = GetSQLToolsSettings().m_bShemaName;
 	bool lower_items = GetSQLToolsSettings().m_bLowerNames;
@@ -276,7 +276,7 @@ const string CTreeViewer::GetSelectedItemsAsText(const bool b_force_alt)
         for (; hItem != NULL; hItem = GetNextSelectedItem(hItem))
         {
     		theText += theDelimiter + theOwner + GetItemStrippedText(hItem, b_force_alt);
-            theDelimiter = ", ";
+            b_NewLines ? theDelimiter = ", \r\n" : theDelimiter = ", ";
 		}
 	}
 

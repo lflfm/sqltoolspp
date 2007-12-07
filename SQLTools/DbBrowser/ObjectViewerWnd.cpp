@@ -64,7 +64,16 @@ BOOL CObjectViewerWnd::PreTranslateMessage(MSG* pMsg)
 void CObjectViewerWnd::OnEditCopy()
 {
     // ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
-    string theText = m_treeViewer.GetSelectedItemsAsText(true);
+    string theText = m_treeViewer.GetSelectedItemsAsText(true, false);
+	Common::CopyTextToClipboard(theText);
+
+	Global::SetStatusText("Copied to clipboard: " + theText);
+}
+
+void CObjectViewerWnd::OnEditCopyWithNewLines()
+{
+    // ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
+    string theText = m_treeViewer.GetSelectedItemsAsText(true, true);
 	Common::CopyTextToClipboard(theText);
 
 	Global::SetStatusText("Copied to clipboard: " + theText);
@@ -190,6 +199,7 @@ BEGIN_MESSAGE_MAP(CObjectViewerWnd, CDialog)
     ON_CBN_CLOSEUP(IDC_OIT_INPUT, OnInput_CloseUp)
 	ON_COMMAND(ID_SQL_OBJ_VIEWER, OnSqlObjViewer)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
+	ON_COMMAND(ID_EDIT_COPY_NEW_LINES, OnEditCopyWithNewLines)
 END_MESSAGE_MAP()
 
 // CObjectViewerWnd message handlers
