@@ -113,6 +113,40 @@ void AutoCursor::Bind(Variable* var, const string& name)
 }
 
 
+void AutoCursor::Bind (const char* name, const char* value, int len)
+{
+    ASSERT_EXCEPTION_FRAME;
+
+    if (!(name && value)) _RAISE(Exception(0, "OCI8::AutoCursor::Bind(): Invalid arguments!"));
+    
+    if (len == -1) len = strlen(value);
+    counted_ptr<Variable>& fld = m_boundFields[name] = counted_ptr<Variable>(new StringVar(value, len));
+
+    Statement::Bind(name, *fld.get());
+}
+
+void AutoCursor::Bind (const char* name, int value)
+{
+    ASSERT_EXCEPTION_FRAME;
+
+    if (!(name)) _RAISE(Exception(0, "OCI8::AutoCursor::Bind(): Invalid arguments!"));
+    
+    counted_ptr<Variable>& fld = m_boundFields[name] = counted_ptr<Variable>(new NumberVar(m_connect, value));
+
+    Statement::Bind(name, *fld.get());
+}
+
+void AutoCursor::Bind (const char* name, double value)
+{
+    ASSERT_EXCEPTION_FRAME;
+
+    if (!(name)) _RAISE(Exception(0, "OCI8::AutoCursor::Bind(): Invalid arguments!"));
+    
+    counted_ptr<Variable>& fld = m_boundFields[name] = counted_ptr<Variable>(new NumberVar(m_connect, value));
+
+    Statement::Bind(name, *fld.get());
+}
+
 /** @brief Sets up vectors, following a select statement.
  *
  * Each element of m_fields will hold a counted pointer, of the appropriate type to hold the data.

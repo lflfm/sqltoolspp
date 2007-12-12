@@ -69,6 +69,10 @@ public:
     bool IsNull (int) const;
     //bool IsTruncated (int) const;
 
+    void Bind (const char* name, const char* value, int len = -1);
+    void Bind (const char* name, int value);
+    void Bind (const char* name, double value);
+
     using Statement::GetConnect;
     using Statement::GetType;
     using Statement::GetRowCount;
