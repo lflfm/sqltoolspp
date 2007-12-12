@@ -254,6 +254,13 @@ void CPLSWorksheetDoc::OnSqlExecuteHaltOnErrors()
 
 void CPLSWorksheetDoc::OnSqlExecuteExternal()
 {
+    if (GetSQLToolsSettings().GetExternalToolCommand().empty() || (GetSQLToolsSettings().GetExternalToolCommand() == ""))
+    {
+        MessageBeep((UINT)-1);
+        AfxMessageBox("You need to define the external tool command in the settings.", MB_OK|MB_ICONSTOP);
+        return;
+    }
+
     bool bWriteToTempFile;
     string sFilename;
     OpenEditor::Square sel;
@@ -292,6 +299,12 @@ void CPLSWorksheetDoc::OnSqlExecuteExternal()
         else
         {
             sFilename = GetPathName();
+            if (sFilename.empty() || (sFilename == ""))
+            {
+                MessageBeep((UINT)-1);
+                AfxMessageBox("Running an unmodified new document in an external tool is not useful.", MB_OK|MB_ICONSTOP);
+                return;
+            }
         }
     }
     else
@@ -380,7 +393,7 @@ void CPLSWorksheetDoc::OnSqlExecuteExternal()
     ) 
     {
         MessageBeep((UINT)-1);
-        AfxMessageBox("CreateProcess failed.", MB_OK|MB_ICONSTOP);
+        AfxMessageBox((string("Spawning external tool failed. Command line used:\n") + sParameter).c_str(), MB_OK|MB_ICONSTOP);
         return;
     }
 }
@@ -1065,46 +1078,77 @@ void CPLSWorksheetDoc::CLoader::Put (const DbObject& object,
                 out.Erase();
         }
 
-        if (settings.m_bConstraints)
-            table.WriteConstraints(out, settings, 'C');
-
-        if (out.GetLength() > 0)
+        if (object.UseDbms_MetaData())
         {
-            if (putTitle && !settings.GetNoPrompts())
-                put_obj_header(m_TableOutput[2], object, settings);
+            if (settings.m_bConstraints)
+                table.WriteConstraints(out, settings, 'E');
 
-            m_TableOutput[2] += out;
-            m_TableOutput[2].NewLine();
-            out.Erase();
+            if (out.GetLength() > 0)
+            {
+                if (putTitle && !settings.GetNoPrompts())
+                    put_obj_header(m_TableOutput[2], object, settings);
+
+                m_TableOutput[2] += out;
+                m_TableOutput[2].NewLine();
+                out.Erase();
+            }
+
+            if (settings.m_bConstraints)
+                table.WriteConstraints(out, settings, 'R');
+
+            if (out.GetLength() > 0)
+            {
+                if (putTitle && !settings.GetNoPrompts())
+                    put_obj_header(m_TableOutput[3], object, settings);
+
+                m_TableOutput[3] += out;
+                m_TableOutput[3].NewLine();
+                out.Erase();
+            }
         }
-
-        if (settings.m_bConstraints)
-            table.WriteConstraints(out, settings, 'P');
-
-        if (settings.m_bConstraints)
-            table.WriteConstraints(out, settings, 'U');
-
-        if (out.GetLength() > 0)
+        else
         {
-            if (putTitle && !settings.GetNoPrompts())
-                put_obj_header(m_TableOutput[3], object, settings);
+            if (settings.m_bConstraints)
+                table.WriteConstraints(out, settings, 'C');
 
-            m_TableOutput[3] += out;
-            m_TableOutput[3].NewLine();
-            out.Erase();
-        }
+            if (out.GetLength() > 0)
+            {
+                if (putTitle && !settings.GetNoPrompts())
+                    put_obj_header(m_TableOutput[2], object, settings);
 
-        if (settings.m_bConstraints)
-            table.WriteConstraints(out, settings, 'R');
+                m_TableOutput[2] += out;
+                m_TableOutput[2].NewLine();
+                out.Erase();
+            }
 
-        if (out.GetLength() > 0)
-        {
-            if (putTitle && !settings.GetNoPrompts())
-                put_obj_header(m_TableOutput[4], object, settings);
+            if (settings.m_bConstraints)
+                table.WriteConstraints(out, settings, 'P');
 
-            m_TableOutput[4] += out;
-            m_TableOutput[4].NewLine();
-            out.Erase();
+            if (settings.m_bConstraints)
+                table.WriteConstraints(out, settings, 'U');
+
+            if (out.GetLength() > 0)
+            {
+                if (putTitle && !settings.GetNoPrompts())
+                    put_obj_header(m_TableOutput[3], object, settings);
+
+                m_TableOutput[3] += out;
+                m_TableOutput[3].NewLine();
+                out.Erase();
+            }
+
+            if (settings.m_bConstraints)
+                table.WriteConstraints(out, settings, 'R');
+
+            if (out.GetLength() > 0)
+            {
+                if (putTitle && !settings.GetNoPrompts())
+                    put_obj_header(m_TableOutput[4], object, settings);
+
+                m_TableOutput[4] += out;
+                m_TableOutput[4].NewLine();
+                out.Erase();
+            }
         }
 
         if (settings.m_bTriggers)
@@ -1243,15 +1287,38 @@ void CPLSWorksheetDoc::CLoader::Flush (bool bForce)
                     "GRANTS",
                 };
 
+                LPSCSTR cszTitlesDBMS_MetaData[TAB_OUT_ARR_SIZE] =
+                {
+                    "TABLE DEFINITIONS",
+                    "INDEXES",
+                    "CONSTRAINTS",
+                    "REFERENTIAL CONSTRAINTS",
+                    "<DUMMY>",
+                    "TRIGGERS",
+                    "GRANTS",
+                };
+
+                bool bUseDBMS_MetaData = DbObject::UseDbms_MetaData();
+
+                // bool bUseDBMS_MetaData = GetSQLToolsSettings().GetUseDbmsMetaData();
+
+                // if (bUseDBMS_MetaData && 
+                //    ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetVersion() < OCI8::esvServer9X)
+                //    bUseDBMS_MetaData = false;
+
                 if (m_TableOutput[0].GetPosition())
                 {
                     for (int i(0); i < TAB_OUT_ARR_SIZE; i++)
                     {
+                        if (bUseDBMS_MetaData && (string(cszTitlesDBMS_MetaData[i]) == "<DUMMY>"))
+                            continue;
+
                         if (m_TableOutput[i].GetPosition())
                         {
                             if (!GetSQLToolsSettings().GetNoPrompts())
                             {
-                                put_group_header(m_Output, cszTitles[i]);
+                                put_group_header(m_Output, 
+                                                 bUseDBMS_MetaData ? cszTitlesDBMS_MetaData[i] : cszTitles[i]);
                                 m_Output.NewLine();
                             }
 
