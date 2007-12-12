@@ -303,6 +303,8 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,142,77,72,10
     CONTROL         "Seq&uences with START WITH",IDC_DBSP_SEQ_WITH_START,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,142,90,114,10
+    CONTROL         "Use DBMS_METADA&TA (>= 9i)",IDC_PROP_PLUS_USE_DBMS_METADATA,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,142,103,114,10
     CONTROL         "Only show this &Dialog when the Shift key is down",
                     IDC_DBSP_SHOW_ON_SHIFT_ONLY,"Button",BS_AUTOCHECKBOX | 
                     NOT WS_VISIBLE | WS_TABSTOP,52,113,170,10
@@ -329,7 +331,7 @@ BEGIN
     LTEXT           "<USER>,<PASSWORD>,<CONNECT_STRING>,<FILENAME>",IDC_STATIC,15,105,240,10
     EDITTEXT        IDC_PROP_PLUS_EXTERNAL_TOOL_PAR,15,118,230,12,
                     ES_AUTOHSCROLL,WS_EX_LEFT
-    CONTROL         "Use DBMS_&METADATA for DDL generation",IDC_PROP_PLUS_USE_DBMS_METADATA,
+    CONTROL         "Use DBMS_&METADATA for DDL generation (>= 9i)",IDC_PROP_PLUS_USE_DBMS_METADATA,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,133,240,10
     CONTROL         "&Halt on errors in script mode",IDC_PROP_PLUS_HALT_ON_ERRORS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,146,240,10
@@ -454,12 +456,12 @@ BEGIN
                     TCS_RAGGEDRIGHT | TCS_FOCUSNEVER,1,0,433,16
 END
 
-IDD_ES_OPTION_PAGE DIALOGEX 0, 0, 289, 121
+IDD_ES_OPTION_PAGE DIALOGEX 0, 0, 289, 130
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_CAPTION
 CAPTION "   Option   "
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Common",IDC_STATIC,6,7,138,107
+    GROUPBOX        "Common",IDC_STATIC,6,7,138,120
     CONTROL         "&Prefix with schema name",IDC_ESP_SCHEMA_NAME,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,18,17,94,10
     CONTROL         "&Lowercase object's names",IDC_ESP_LOWER_NAMES,"Button",
@@ -475,9 +477,11 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,86,114,10
     CONTROL         "&Comments after column",IDC_ESP_COMMENTS_AFTER_COLUMN,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,99,90,9
+    CONTROL         "Use DBMS_METADA&TA (>= 9i)",IDC_PROP_PLUS_USE_DBMS_METADATA,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,112,115,10
     EDITTEXT        IDC_ESP_COMMENTS_POS,108,97,29,12,ES_AUTOHSCROLL | 
                     ES_NUMBER,WS_EX_RIGHT
-    GROUPBOX        "Table",IDC_STATIC,150,7,132,107
+    GROUPBOX        "Table",IDC_STATIC,150,7,132,120
     CONTROL         "&Group by DDL types",IDC_ESP_GROUP_BY_DDL,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,166,17,80,10
     CONTROL         "&No storage for PK,UK",IDC_ESP_NO_STORAGE_FOR_PKUK,
@@ -1692,6 +1696,8 @@ BEGIN
     BUTTON      ID_SQL_EXECUTE_CURRENT
     BUTTON      ID_SQL_EXECUTE_CURRENT_AND_STEP
     BUTTON      ID_SQL_EXECUTE
+    BUTTON      ID_SQL_EXECUTE_HALT_ON_ERRORS
+    BUTTON      ID_SQL_EXECUTE_EXTERNAL
     SEPARATOR
     BUTTON      ID_SQL_NEXT_ERROR
     BUTTON      ID_SQL_PREV_ERROR
@@ -1828,6 +1834,7 @@ BEGIN
     ID_SQL_EXPLAIN_PLAN     "Explain plan for the current sql statement\nExplain plan"
     ID_SQL_DESCRIBE         "Find and describe database object\nFind object"
     ID_SQL_EXECUTE          "Execute the whole script\nExecute script"
+    ID_SQL_EXECUTE_HALT_ON_ERRORS "Execute the whole script, halt on errors\nExecute script, halt on errors"
     ID_SQL_EXECUTE_BELOW    "Execute the script from the current line\nExecute below"
     ID_SQL_EXECUTE_CURRENT  "Execute the current sql statement\nExecute current"
     ID_SQL_EXECUTE_CURRENT_AND_STEP 
