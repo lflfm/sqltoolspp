@@ -138,6 +138,8 @@ private:
     void write_object               (OraMetaDict::DbObject& object, void* param);
     void write_table_definition     (OraMetaDict::DbObject& object, void* param);
     void write_table_indexes        (OraMetaDict::DbObject& object, void* param);
+    void write_table_nonref_constraint (OraMetaDict::DbObject& object, void* param);
+    void write_table_ref_constraint (OraMetaDict::DbObject& object, void* param);
     void write_table_chk_constraint (OraMetaDict::DbObject& object, void* param);
     void write_table_unq_constraint (OraMetaDict::DbObject& object, void* param);
     void write_table_fk_constraint  (OraMetaDict::DbObject& object, void* param);

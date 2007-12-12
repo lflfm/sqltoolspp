@@ -225,6 +225,38 @@ void write_table_indexes (DbObject& object, void* param)
     }
 } 
 
+void write_table_nonref_constraint (DbObject& object, void* param)
+{
+    _ASSERTE(param);
+    Table& table = static_cast<Table&>(object);
+    WriteContext& context = *reinterpret_cast<WriteContext*>(param);
+
+    TextOutputInMEM out(context.GetDDLSettings().m_bLowerNames ? true : false, 2*1024);
+    table.WriteConstraints(out, context.GetDDLSettings(), 'E');
+
+    if (out.GetLength() > 0) 
+    {
+        FILE* pFile = context.OpenFile(object.m_strName + "~CONS");
+        CHECK_WRITE_ERROR(static_cast<int>(fwrite(out.GetData(), 1, out.GetLength(), pFile)) >= out.GetLength());
+    }
+} 
+
+void write_table_ref_constraint (DbObject& object, void* param)
+{
+    _ASSERTE(param);
+    Table& table = static_cast<Table&>(object);
+    WriteContext& context = *reinterpret_cast<WriteContext*>(param);
+
+    TextOutputInMEM out(context.GetDDLSettings().m_bLowerNames ? true : false, 2*1024);
+    table.WriteConstraints(out, context.GetDDLSettings(), 'R');
+
+    if (out.GetLength() > 0) 
+    {
+        FILE* pFile = context.OpenFile(object.m_strName + "~FK");
+        CHECK_WRITE_ERROR(static_cast<int>(fwrite(out.GetData(), 1, out.GetLength(), pFile)) >= out.GetLength());
+    }
+} 
+
 void write_table_chk_constraint (DbObject& object, void* param)
 {
     _ASSERTE(param);

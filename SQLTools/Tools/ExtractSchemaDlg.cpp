@@ -309,9 +309,22 @@ void CExtractSchemaDlg::WriteSchema (OraMetaDict::Dictionary& dict, CAbortContro
             if (m_DDLSettings.m_bGroupByDDL) {
                 dict.EnumTables(write_table_definition,     &context);
                 dict.EnumTables(write_table_indexes,        &context);
-                dict.EnumTables(write_table_chk_constraint, &context);
-                dict.EnumTables(write_table_unq_constraint, &context);
-                dict.EnumTables(write_table_fk_constraint,  &context);
+                //bool bUseDBMS_MetaData = GetSQLToolsSettings().GetUseDbmsMetaData();
+
+                //if (bUseDBMS_MetaData && 
+                //    ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetVersion() < OCI8::esvServer9X)
+                //    bUseDBMS_MetaData = false;
+                if (DbObject::UseDbms_MetaData())
+                {
+                    dict.EnumTables(write_table_nonref_constraint, &context);
+                    dict.EnumTables(write_table_ref_constraint,  &context);
+                }
+                else
+                {
+                    dict.EnumTables(write_table_chk_constraint, &context);
+                    dict.EnumTables(write_table_unq_constraint, &context);
+                    dict.EnumTables(write_table_fk_constraint,  &context);
+                }
             } else {
                 m_DDLSettings.m_bConstraints = TRUE;
                 m_DDLSettings.m_bIndexes     = TRUE;
