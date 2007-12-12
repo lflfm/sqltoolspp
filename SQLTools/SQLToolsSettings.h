@@ -47,6 +47,7 @@ class SQLToolsSettings : public OpenEditor::BaseSettings, public OraMetaDict::Wr
     friend class CPropHistoryPage;
     friend class CDBSCommonPage;
     friend class CPlusPlusPage;
+    friend class CExtractSchemaOptionPage;
 
 public:
     enum HistoryAction {
