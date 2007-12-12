@@ -250,7 +250,15 @@ void CSQLToolsApp::OnSqlReconnect()
 {
     if (! m_connect->IsOpen())
     {
-        m_connect->Reconnect();
+        try
+		{
+            m_connect->Reconnect();
+        }
+        catch (const OciException& x)
+        {
+            MessageBeep(MB_ICONSTOP);
+            AfxMessageBox(x.what(), MB_OK|MB_ICONSTOP);
+        }
     }
     else
     {
@@ -262,7 +270,17 @@ void CSQLToolsApp::OnSqlReconnect()
         catch (const OciException& x)
         {
             if (! m_connect->IsOpen())
-                m_connect->Reconnect();
+            {
+                try
+		        {
+                    m_connect->Reconnect();
+                }
+                catch (const OciException& x)
+                {
+                    MessageBeep(MB_ICONSTOP);
+                    AfxMessageBox(x.what(), MB_OK|MB_ICONSTOP);
+                }
+            }
             else
             {
                 MessageBeep(MB_ICONSTOP);
