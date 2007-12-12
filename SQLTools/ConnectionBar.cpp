@@ -26,11 +26,12 @@
     {
 	    ID_SQL_CONNECT,
 	    ID_SQL_DISCONNECT,
+        ID_SQL_RECONNECT,
 	    ID_SEPARATOR,
 	    ID_SEPARATOR, // for indicator
     };
 
-    static const int cnIndicatorInx = 3;
+    static const int cnIndicatorInx = 4;
     static const int cnIndicatorId  = 111;
     static const CSize g_buttonSize = CSize(19, 19);
     static const CRect g_toolbarBorders = CRect(1, 1, 1, 1);
