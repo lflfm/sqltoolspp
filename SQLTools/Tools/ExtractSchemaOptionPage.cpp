@@ -56,6 +56,7 @@ void CExtractSchemaOptionPage::DoDataExchange(CDataExchange* pDX)
 
     DDX_Check(pDX, IDC_ESP_VIEW_WITH_FORCE,       m_DDLSettings.m_bViewWithForce);
     DDX_Check(pDX, IDC_ESP_SEQ_WITH_START,        m_DDLSettings.m_bSequnceWithStart);
+    DDX_Check(pDX, IDC_PROP_PLUS_USE_DBMS_METADATA, GetSQLToolsSettingsForUpdate().m_UseDbmsMetaData);
 
     OnCommentsAfterColumn();
 }
