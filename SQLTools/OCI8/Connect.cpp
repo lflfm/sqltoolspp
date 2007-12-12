@@ -752,7 +752,7 @@ void Connect::EnableOutput (bool enable, unsigned long size, bool connectInit)
                 char buffer[80];
                 // Version 10 and above support unlimited output buffer size
                 if ((GetVersion() >= OCI8::esvServer10X) && 
-                    (GetClientVersion() >= OCI8::ecvClient10X) && 
+                    //(GetClientVersion() >= OCI8::ecvClient10X) && 
                     ((m_OutputSize > 1000000) || GetSQLToolsSettings().GetUnlimitedOutputSize()))
                     sprintf(buffer, "BEGIN dbms_output.enable(NULL); END;");
                 else
