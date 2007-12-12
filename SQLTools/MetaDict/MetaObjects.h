@@ -113,7 +113,21 @@ namespace OraMetaDict
         // return code offset for functions,procedures,packages & views
         virtual int  Write (TextOutput& out, const WriteSettings&) const = 0;
         virtual void WriteGrants (TextOutput& out, const WriteSettings&) const;
-
+        // DBMS_METADATA base support
+        static bool UseDbms_MetaData();
+        virtual void SetDBMS_MetaDataOption(const char *option, const char *value) const;
+        virtual void SetDBMS_MetaDataOption(const char *option, const bool value) const;
+        virtual void SetDBMS_MetaDataOption(const char *option, const int  value) const;
+        virtual void InitDBMS_MetaData() const;
+        virtual void InitDBMS_MetaDataStorage(const WriteSettings & settings) const;
+        virtual string DBMS_MetaDataGetDDL(const char *type, 
+                                           const char *name = 0,
+                                           const char *owner = 0) const;
+        virtual string DBMS_MetaDataGetDependentDDL(const char *type, 
+                                                    const char *name = 0,
+                                                    const char *owner = 0) const;
+        virtual string DBMS_MetaDataGetGrantedDDL(const char *type, 
+                                                  const char *grantee) const;
     protected:
         Dictionary& m_Dictionary;
     public:

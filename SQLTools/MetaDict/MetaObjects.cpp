@@ -47,6 +47,8 @@
 #include "MetaDict\MetaObjects.h"
 #include "MetaDict\MetaDictionary.h"
 #include "SQLWorksheet/PlsSqlParser.h"
+#include "SQLTools.h"
+#include "OCI8/ACursor.h"
 
 #pragma warning ( disable : 4800 )
 
@@ -59,6 +61,23 @@ static char THIS_FILE[]=__FILE__;
 
 namespace OraMetaDict 
 {
+    char csz_dbms_metadata_get_ddl[] =
+        "select dbms_metadata.get_ddl(:type, :name, :owner) from dual";
+
+    char csz_dbms_metadata_get_dependent_ddl[] =
+        "select dbms_metadata.get_dependent_ddl(:type, :name, :owner) from dual";
+
+    char csz_dbms_metadata_get_granted_ddl[] =
+        "select dbms_metadata.get_granted_ddl(:type, :grantee) from dual";
+
+    char csz_dbms_metadata_set_option[] = 
+                     "begin "
+                     "dbms_metadata.set_transform_param("
+                     "DBMS_METADATA.SESSION_TRANSFORM,"
+                     ":option,"
+                     ":value);"
+                     "end;";
+
     using namespace std;
     const int cnUnlimitedVal = 2147483645;
 
@@ -184,8 +203,167 @@ namespace OraMetaDict
 
     /// DbObject ///////////////////////////////////////////////////////////////
 
+    bool DbObject::UseDbms_MetaData()
+    {
+        OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+        if ((GetSQLToolsSettings().GetUseDbmsMetaData()) && 
+            (connect.GetVersion() >= OCI8::esvServer9X))
+            return true;
+        else
+            return false;
+    }
+
+    void DbObject::SetDBMS_MetaDataOption(const char *option, const char *value) const
+    {
+        OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+        OciAutoCursor sttm(connect);
+
+        sttm.Prepare(csz_dbms_metadata_set_option);
+        sttm.Bind(":option", option);
+        sttm.Bind(":value", value);
+        sttm.Execute();
+    }
+
+    void DbObject::SetDBMS_MetaDataOption(const char *option, const bool value) const
+    {
+        OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+        OciAutoCursor sttm(connect);
+
+        if (value)
+            sttm.Prepare("begin "
+                         "dbms_metadata.set_transform_param("
+                         "DBMS_METADATA.SESSION_TRANSFORM,"
+                         ":option,"
+                         "true);"
+                         "end;"
+                         );
+        else
+            sttm.Prepare("begin "
+                         "dbms_metadata.set_transform_param("
+                         "DBMS_METADATA.SESSION_TRANSFORM,"
+                         ":option,"
+                         "false);"
+                         "end;"
+                         );
+
+        sttm.Bind(":option", option);
+        sttm.Execute();
+    }
+
+    void DbObject::SetDBMS_MetaDataOption(const char *option, const int  value) const
+    {
+        OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+        OciAutoCursor sttm(connect);
+
+        sttm.Prepare(csz_dbms_metadata_set_option);
+        sttm.Bind(":option", option);
+        sttm.Bind(":value", value);
+        sttm.Execute();
+    }
+
+    void DbObject::InitDBMS_MetaData() const
+    {
+        SetDBMS_MetaDataOption("SQLTERMINATOR", true);
+        SetDBMS_MetaDataOption("PRETTY", true);
+        SetDBMS_MetaDataOption("SIZE_BYTE_KEYWORD", true);
+    }
+
+    void DbObject::InitDBMS_MetaDataStorage(const WriteSettings & settings) const
+    {
+        if (settings.m_bAlwaysPutTablespace)
+            SetDBMS_MetaDataOption("TABLESPACE", true);
+        else
+            SetDBMS_MetaDataOption("TABLESPACE", false);
+
+        if (settings.m_nStorageClause != 0)
+            SetDBMS_MetaDataOption("STORAGE", true);
+        else
+            SetDBMS_MetaDataOption("STORAGE", false);
+    }
+
+    string DbObject::DBMS_MetaDataGetDDL(const char *type, 
+                                         const char *name,
+                                         const char *owner) const
+    {
+        string s_ddl = "";
+        OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+
+        OciAutoCursor meta_cursor(connect, csz_dbms_metadata_get_ddl, 100, 512*1024);
+
+        meta_cursor.Bind(":type", type);
+        meta_cursor.Bind(":name", name == 0 ? GetName() : name);
+        meta_cursor.Bind(":owner", owner == 0 ? GetOwner() : owner);
+        meta_cursor.Execute();
+
+        if (meta_cursor.Fetch())
+        {
+            meta_cursor.GetString(0, s_ddl);
+        }
+
+        return s_ddl;
+    }
+
+    string DbObject::DBMS_MetaDataGetDependentDDL(const char *type, 
+                                        const char *name,
+                                        const char *owner) const
+    {
+        string s_ddl = "";
+        OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+
+        try
+        {
+            OciAutoCursor meta_cursor(connect, csz_dbms_metadata_get_dependent_ddl, 100, 512*1024);
+
+            meta_cursor.Bind(":type", type);
+            meta_cursor.Bind(":name", name == 0 ? GetName() : name);
+            meta_cursor.Bind(":owner", owner == 0 ? GetOwner() : owner);
+            meta_cursor.Execute();
+
+            if (meta_cursor.Fetch())
+            {
+                meta_cursor.GetString(0, s_ddl);
+            }
+        }
+        catch (const OciException& x)
+        {
+            if (x != 31608)
+                throw;
+        }
+
+        return s_ddl;
+    }
+
+    string DbObject::DBMS_MetaDataGetGrantedDDL(const char *type, 
+                                                const char *grantee) const
+    {
+        string s_ddl = "";
+        OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+
+        OciAutoCursor meta_cursor(connect, csz_dbms_metadata_get_granted_ddl, 100, 512*1024);
+
+        meta_cursor.Bind(":type", type);
+        meta_cursor.Bind(":grantee", grantee);
+        meta_cursor.Execute();
+
+        if (meta_cursor.Fetch())
+        {
+            meta_cursor.GetString(0, s_ddl);
+        }
+
+        return s_ddl;
+    }
+
     void DbObject::WriteGrants (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData() && ! m_strOwner.empty() && (m_strOwner != ""))
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDependentDDL("OBJECT_GRANT"));
+
+            return;
+        }
+
         Grantor* pGrantor = 0;
         
         try 
@@ -484,6 +662,17 @@ namespace OraMetaDict
 
     int Index::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            out.Put(DBMS_MetaDataGetDDL("INDEX"));
+
+            return 0;
+        }
+
         out.PutIndent();
         out.Put("CREATE ");
 
@@ -605,6 +794,25 @@ namespace OraMetaDict
 
     int Constraint::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            if (! settings.m_bNoStorageForConstraint)
+                SetDBMS_MetaDataOption("STORAGE", true);
+            else
+                SetDBMS_MetaDataOption("STORAGE", false);
+
+            if (m_strType[0] == 'R')
+                out.Put(DBMS_MetaDataGetDDL("REF_CONSTRAINT"));
+            else
+                out.Put(DBMS_MetaDataGetDDL("CONSTRAINT"));
+
+            return 0;
+        }
+
         out.PutIndent();
         out.Put("ALTER TABLE ");
         out.PutOwnerAndName(m_strOwner, m_strTableName, settings.m_bShemaName);
@@ -752,6 +960,17 @@ namespace OraMetaDict
     
     void TableBase::WriteIndexes (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            out.Put(DBMS_MetaDataGetDependentDDL("INDEX"));
+
+            return;
+        }
+
         set<string>::const_iterator it(m_setIndexes.begin()),
                                     end(m_setIndexes.end());
         for (it; it != end; it++) 
@@ -795,6 +1014,26 @@ namespace OraMetaDict
 
     void TableBase::WriteConstraints (TextOutput& out, const WriteSettings& settings, char chType) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            if (! settings.m_bNoStorageForConstraint)
+                SetDBMS_MetaDataOption("STORAGE", true);
+            else
+                SetDBMS_MetaDataOption("STORAGE", false);
+
+            if (chType == 'A' || chType == 'E')
+                out.Put(DBMS_MetaDataGetDependentDDL("CONSTRAINT"));
+
+            if (chType == 'A' || chType == 'R')
+                out.Put(DBMS_MetaDataGetDependentDDL("REF_CONSTRAINT"));
+
+            return;
+        }
+
         set<string>::const_iterator it(m_setConstraints.begin()),
                                     end(m_setConstraints.end());
         ConstraintVector vector;
@@ -818,6 +1057,15 @@ namespace OraMetaDict
 
     void TableBase::WriteTriggers (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDependentDDL("TRIGGER"));
+
+            return;
+        }
+
         set<string>::const_iterator it(m_setTriggers.begin()),
                                     end(m_setTriggers.end());
         for (it; it != end; it++)
@@ -838,6 +1086,20 @@ namespace OraMetaDict
 
     void Table::WriteDefinition (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            SetDBMS_MetaDataOption("CONSTRAINTS", false);
+            SetDBMS_MetaDataOption("REF_CONSTRAINTS", false);
+
+            out.Put(DBMS_MetaDataGetDDL("TABLE"));
+
+            return;
+        }
+
         out.PutIndent();
         out.Put("CREATE");
         if (settings.m_bSQLPlusCompatibility) 
@@ -1043,6 +1305,15 @@ namespace OraMetaDict
 
     void Table::WriteComments (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDependentDDL("COMMENT"));
+
+            return;
+        }
+
         if (!m_strComments.empty()) 
         {
             out.PutIndent();
@@ -1091,13 +1362,20 @@ namespace OraMetaDict
 
         if (settings.m_bConstraints) 
         {
-            WriteConstraints(out, settings, 'C');
-            
-            if (m_TableType != ettIOT)
-                WriteConstraints(out, settings, 'P');
+            if (UseDbms_MetaData())
+            {
+                WriteConstraints(out, settings, 'A');
+            }
+            else
+            {
+                WriteConstraints(out, settings, 'C');
+                
+                if (m_TableType != ettIOT)
+                    WriteConstraints(out, settings, 'P');
 
-            WriteConstraints(out, settings, 'U');
-            WriteConstraints(out, settings, 'R');
+                WriteConstraints(out, settings, 'U');
+                WriteConstraints(out, settings, 'R');
+            }
         }
 
         if (settings.m_bTriggers) 
@@ -1172,6 +1450,15 @@ namespace OraMetaDict
     // 30.11.2004 bug fix, trigger reverse-engineering fails in OF clause if column name contains "ON_"/"_ON"/"_ON_"
     int Trigger::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDDL("TRIGGER"));
+
+            return 0;
+        }
+
         // TODO: move this class into a separated file
         class TriggerDescriptionAnalyzer : public SyntaxAnalyser
         {
@@ -1330,6 +1617,15 @@ namespace OraMetaDict
 
     void View::WriteTriggers (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDependentDDL("TRIGGER"));
+
+            return;
+        }
+
         set<string>::const_iterator it(m_setTriggers.begin()),
                                     end(m_setTriggers.end());
 
@@ -1339,6 +1635,15 @@ namespace OraMetaDict
 
     void View::WriteComments (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDependentDDL("COMMENT"));
+
+            return;
+        }
+
         if (!m_strComments.empty()) 
         {
             out.PutIndent();
@@ -1378,102 +1683,117 @@ namespace OraMetaDict
     int View::Write (TextOutput& out, const WriteSettings& settings) const
     {
         int nHeaderLines = 0;
-        if (!settings.m_bViewWithTriggers
-        && m_setTriggers.size()) 
+
+        if (UseDbms_MetaData())
         {
-            out.PutLine("PROMPT This view has instead triggers");
-            nHeaderLines++;
+            InitDBMS_MetaData();
+
+            if (settings.m_bViewWithForce)
+                SetDBMS_MetaDataOption("FORCE", true);
+            else
+                SetDBMS_MetaDataOption("FORCE", false);
+
+            out.Put(DBMS_MetaDataGetDDL("VIEW"));
         }
-        
-        out.PutIndent();
-        out.Put("CREATE OR REPLACE");
-        if (settings.m_bViewWithForce) out.Put(" FORCE");
-        
-        if (settings.m_bSQLPlusCompatibility) 
+        else
         {
-            out.Put(" ");
-        }
-        else 
-        {
-            nHeaderLines++;
-            out.NewLine();
-            out.PutIndent();
-        }
-        
-        out.Put("VIEW ");
-        out.PutOwnerAndName(m_strOwner, m_strName, settings.m_bShemaName);
-        out.Put(" (");
-
-        if (settings.m_bCommentsAfterColumn
-        && !m_strComments.empty()) 
-        {
-            out.Put(" -- ");
-            out.Put(m_strComments);
-        }
-        out.NewLine();
-        nHeaderLines++;
-
-        int nMaxColLength = 0;
-        int nSize = m_Columns.size();
-
-        map<int,string>::const_iterator it(m_Columns.begin()),
-                                        end(m_Columns.end());
-        for (; it != end; it++)
-            nMaxColLength = max(nMaxColLength, static_cast<int>(it->second.size()));
-
-        nMaxColLength += 2;
-        nMaxColLength = max(nMaxColLength, settings.m_nCommentsPos);
-
-        out.MoveIndent(2);
-        it = m_Columns.begin();
-        for (int i = 0; it != end; it++, i++) 
-        {
-            out.PutIndent();
-            int nPos = out.GetPosition();
-            out.SafeWriteDBName(it->second);
-
-            if (i < (nSize - 1)) out.Put(",");
-
-            if (settings.m_bCommentsAfterColumn) 
+            if (!settings.m_bViewWithTriggers
+            && m_setTriggers.size()) 
             {
-                map<int,string>::const_iterator comIt = m_mapColComments.find(i);
+                out.PutLine("PROMPT This view has instead triggers");
+                nHeaderLines++;
+            }
+            
+            out.PutIndent();
+            out.Put("CREATE OR REPLACE");
+            if (settings.m_bViewWithForce) out.Put(" FORCE");
+            
+            if (settings.m_bSQLPlusCompatibility) 
+            {
+                out.Put(" ");
+            }
+            else 
+            {
+                nHeaderLines++;
+                out.NewLine();
+                out.PutIndent();
+            }
+            
+            out.Put("VIEW ");
+            out.PutOwnerAndName(m_strOwner, m_strName, settings.m_bShemaName);
+            out.Put(" (");
 
-                if (comIt != m_mapColComments.end()) 
+            if (settings.m_bCommentsAfterColumn
+            && !m_strComments.empty()) 
+            {
+                out.Put(" -- ");
+                out.Put(m_strComments);
+            }
+            out.NewLine();
+            nHeaderLines++;
+
+            int nMaxColLength = 0;
+            int nSize = m_Columns.size();
+
+            map<int,string>::const_iterator it(m_Columns.begin()),
+                                            end(m_Columns.end());
+            for (; it != end; it++)
+                nMaxColLength = max(nMaxColLength, static_cast<int>(it->second.size()));
+
+            nMaxColLength += 2;
+            nMaxColLength = max(nMaxColLength, settings.m_nCommentsPos);
+
+            out.MoveIndent(2);
+            it = m_Columns.begin();
+            for (int i = 0; it != end; it++, i++) 
+            {
+                out.PutIndent();
+                int nPos = out.GetPosition();
+                out.SafeWriteDBName(it->second);
+
+                if (i < (nSize - 1)) out.Put(",");
+
+                if (settings.m_bCommentsAfterColumn) 
                 {
-                    int j = out.GetPosition() - nPos;
-                    while (j++ < nMaxColLength)
-                        out.Put(" ");
-                    out.Put("-- ");
-                    out.Put((*comIt).second);
+                    map<int,string>::const_iterator comIt = m_mapColComments.find(i);
+
+                    if (comIt != m_mapColComments.end()) 
+                    {
+                        int j = out.GetPosition() - nPos;
+                        while (j++ < nMaxColLength)
+                            out.Put(" ");
+                        out.Put("-- ");
+                        out.Put((*comIt).second);
+                    }
+                }
+                out.NewLine();
+                nHeaderLines++;
+            }
+
+            out.MoveIndent(-2);
+            out.PutLine(") AS");
+            nHeaderLines++;
+
+            write_text_block(out, m_strText.c_str(), m_strText.size(),
+                             settings.m_bSQLPlusCompatibility, settings.m_bSQLPlusCompatibility);
+    /*        
+            if (!settings.m_bSQLPlusCompatibility)
+                out.PutLine(m_strText.c_str(), skip_back_space(m_strText.c_str(), m_strText.size()));
+            else {
+                istrstream i(m_strText.c_str(), m_strText.size());
+                string buffer;
+
+                while (getline(i, buffer, '\n')) 
+                {
+                    int len = skip_back_space(buffer.c_str(), buffer.size());
+                    if (len) out.PutLine(buffer.c_str(), len);
                 }
             }
+    */
+
+            out.PutLine("/");
             out.NewLine();
-            nHeaderLines++;
         }
-
-        out.MoveIndent(-2);
-        out.PutLine(") AS");
-        nHeaderLines++;
-
-        write_text_block(out, m_strText.c_str(), m_strText.size(),
-                         settings.m_bSQLPlusCompatibility, settings.m_bSQLPlusCompatibility);
-/*        
-        if (!settings.m_bSQLPlusCompatibility)
-            out.PutLine(m_strText.c_str(), skip_back_space(m_strText.c_str(), m_strText.size()));
-        else {
-            istrstream i(m_strText.c_str(), m_strText.size());
-            string buffer;
-
-            while (getline(i, buffer, '\n')) 
-            {
-                int len = skip_back_space(buffer.c_str(), buffer.size());
-                if (len) out.PutLine(buffer.c_str(), len);
-            }
-        }
-*/
-
-        out.PutLine("/");
-        out.NewLine();
 
         if (settings.m_bViewWithTriggers) 
             WriteTriggers(out, settings);
@@ -1498,6 +1818,15 @@ namespace OraMetaDict
 
     int Sequence::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDDL("SEQUENCE"));
+
+            return 0;
+        }
+
         out.PutIndent();
         out.Put("CREATE");
         
@@ -1572,6 +1901,52 @@ namespace OraMetaDict
 
     int PlsCode::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            string theType = m_strType;
+            /*
+            if (theType == "PACKAGE" || theType == "TYPE")
+            {
+                if (((SQLToolsSettings &) settings).m_bSpecWithBody)
+                    SetDBMS_MetaDataOption("BODY", true);
+                else
+                    SetDBMS_MetaDataOption("BODY", false);
+
+                SetDBMS_MetaDataOption("SPECIFICATION", true);
+            }
+
+            if (theType == "PACKAGE BODY" || theType == "TYPE BODY")
+            {
+                if (theType == "PACKAGE BODY")
+                    theType = "PACKAGE";
+
+                if (theType == "TYPE BODY")
+                    theType = "TYPE";
+
+                if (((SQLToolsSettings &) settings).m_bBodyWithSpec)
+                    SetDBMS_MetaDataOption("SPECIFICATION", true);
+                else
+                    SetDBMS_MetaDataOption("SPECIFICATION", false);
+
+                SetDBMS_MetaDataOption("BODY", true);
+            }
+            */
+            if (theType == "PACKAGE")
+                theType = "PACKAGE_SPEC";
+            else if (theType == "TYPE")
+                theType = "TYPE_SPEC";
+            else if (theType == "PACKAGE BODY")
+                theType = "PACKAGE_BODY";
+            else if (theType == "TYPE BODY")
+                theType = "TYPE_BODY";
+
+            out.Put(DBMS_MetaDataGetDDL(theType.c_str()));
+
+            return 0;
+        }
+
         out.PutIndent();
         out.Put("CREATE OR REPLACE");
 
@@ -1639,6 +2014,15 @@ namespace OraMetaDict
 
     void Type::WriteAsIncopmlete (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDDL("TYPE"));
+
+            return;
+        }
+
         bool parseError = false;
 
         const char* pszBuff = m_strText.c_str();
@@ -1673,6 +2057,14 @@ namespace OraMetaDict
 
     int Synonym::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDDL("SYNONYM"));
+
+            return 0;
+        }
         out.PutIndent();
         
         // 16.11.2003 bug fix, missing public keyword for public synonyms
@@ -1879,6 +2271,16 @@ namespace OraMetaDict
 
     int GrantContainer::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            if (m_mapGrants.begin() != m_mapGrants.end())
+                out.Put(DBMS_MetaDataGetGrantedDDL("OBJECT_GRANT", (*m_mapGrants.begin()).second.get()->m_strGrantee.c_str()));
+
+            return 0;
+        }
+
         GrantVector vecObjGrants;
 
         GrantMapConstIter mapIt(m_mapGrants.begin()), 
@@ -1962,79 +2364,93 @@ namespace OraMetaDict
 
     int Cluster::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        out.PutIndent();
-        out.Put("CREATE");
-
-        if (settings.m_bSQLPlusCompatibility) 
+        if (UseDbms_MetaData())
         {
-            out.Put(" ");
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            SetDBMS_MetaDataOption("CONSTRAINTS", false);
+            SetDBMS_MetaDataOption("REF_CONSTRAINTS", false);
+
+            out.Put(DBMS_MetaDataGetDDL("CLUSTER"));
         }
-        else 
-        {
-            out.NewLine();
-            out.PutIndent();
-        }
-
-        out.Put("CLUSTER ");
-        out.PutOwnerAndName(m_strOwner, m_strName, settings.m_bShemaName);
-        out.Put(" (");
-        out.NewLine();
-
-        out.MoveIndent(2);
-
-        ColContainer::const_iterator 
-            it(m_Columns.begin()), 
-            end(m_Columns.end());
-
-        string type;
-
-        for (int i = m_Columns.size() - 1; it != end; it++, i--) 
-        {
-            const Column& column = *it->second.get();
-
-            out.PutIndent();
-            out.SafeWriteDBName(column.m_strColumnName);
-            out.Put(" ");
-            column.GetSpecString(type);
-            out.Put(type);
-            //out.Put(column.m_bNullable ? " NULL" : " NOT NULL");
-            if (i) out.Put(",");
-            out.NewLine();
-        }
-        out.MoveIndent(-2);
-        out.PutLine(")");
-        out.MoveIndent(2);
-        
-        if (!m_strSize.empty()) 
+        else
         {
             out.PutIndent();
-            out.Put("SIZE ");
-            out.Put(m_strSize);
-            out.NewLine();
-        }
-        
-        if (m_bIsHash) 
-        {
-            out.PutIndent();
-            out.Put("HASHKEYS ");
-            out.Put(m_strHashKeys);
-            out.NewLine();
+            out.Put("CREATE");
 
-            if (!m_strHashExpression.empty()) 
+            if (settings.m_bSQLPlusCompatibility) 
             {
+                out.Put(" ");
+            }
+            else 
+            {
+                out.NewLine();
                 out.PutIndent();
-                out.Put("HASH IS ");
-                out.Put(m_strHashExpression);
+            }
+
+            out.Put("CLUSTER ");
+            out.PutOwnerAndName(m_strOwner, m_strName, settings.m_bShemaName);
+            out.Put(" (");
+            out.NewLine();
+
+            out.MoveIndent(2);
+
+            ColContainer::const_iterator 
+                it(m_Columns.begin()), 
+                end(m_Columns.end());
+
+            string type;
+
+            for (int i = m_Columns.size() - 1; it != end; it++, i--) 
+            {
+                const Column& column = *it->second.get();
+
+                out.PutIndent();
+                out.SafeWriteDBName(column.m_strColumnName);
+                out.Put(" ");
+                column.GetSpecString(type);
+                out.Put(type);
+                //out.Put(column.m_bNullable ? " NULL" : " NOT NULL");
+                if (i) out.Put(",");
                 out.NewLine();
             }
+            out.MoveIndent(-2);
+            out.PutLine(")");
+            out.MoveIndent(2);
+            
+            if (!m_strSize.empty()) 
+            {
+                out.PutIndent();
+                out.Put("SIZE ");
+                out.Put(m_strSize);
+                out.NewLine();
+            }
+            
+            if (m_bIsHash) 
+            {
+                out.PutIndent();
+                out.Put("HASHKEYS ");
+                out.Put(m_strHashKeys);
+                out.NewLine();
+
+                if (!m_strHashExpression.empty()) 
+                {
+                    out.PutIndent();
+                    out.Put("HASH IS ");
+                    out.Put(m_strHashExpression);
+                    out.NewLine();
+                }
+            }
+
+            StorageExt::Write(out, m_Dictionary, m_strOwner.c_str(), settings, false, true, false);
+            if (m_bCache) out.PutLine("CACHE");
+
+            out.MoveIndent(-2);
+            out.PutLine("/");
+            out.NewLine();
         }
-
-        StorageExt::Write(out, m_Dictionary, m_strOwner.c_str(), settings, false, true, false);
-        if (m_bCache) out.PutLine("CACHE");
-
-        out.MoveIndent(-2);
-        out.PutLine("/");
-        out.NewLine();
 
         // write indexes
         {
@@ -2052,6 +2468,15 @@ namespace OraMetaDict
     
     int DBLink::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            out.Put(DBMS_MetaDataGetDDL("DB_LINK"));
+
+            return 0;
+        }
+
         out.PutIndent();
 
         // 10.11.2003 bug fix, missing public keyword for public database links
@@ -2096,6 +2521,17 @@ namespace OraMetaDict
 
     int SnapshotLog::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            out.Put(DBMS_MetaDataGetDDL("MATERIALIZED_VIEW_LOG"));
+
+            return 0;
+        }
+
         out.PutIndent();
         out.Put("CREATE");
         
@@ -2129,6 +2565,17 @@ namespace OraMetaDict
 
     int Snapshot::Write (TextOutput& out, const WriteSettings& settings) const
     {
+        if (UseDbms_MetaData())
+        {
+            InitDBMS_MetaData();
+
+            InitDBMS_MetaDataStorage(settings);
+
+            out.Put(DBMS_MetaDataGetDDL("MATERIALIZED_VIEW"));
+
+            return 0;
+        }
+
         out.PutIndent();
         out.Put("CREATE");
         
