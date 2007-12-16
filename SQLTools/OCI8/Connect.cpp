@@ -102,8 +102,15 @@ void Exception::CHECK (ConnectBase* conn, sword status)
         case 1406: // ORA-01406: fetched column value was truncated
             break;
         case 28002: // ORA-28002: the password will expire within <x> days
-            MessageBeep(MB_ICONHAND);
-            Global::SetStatusText((const char*)message);
+            // if encountered while connection is open, report it as usual
+            if (conn->IsOpen())
+                throw Exception(errcode, (const char*)message);
+            // if encountered while opening the connection, report it but continue
+            else
+            {
+                MessageBeep(MB_ICONHAND);
+                Global::SetStatusText((const char*)message);
+            }
             break;
         }
     }
@@ -189,6 +196,7 @@ bool ConnectBase::IsXMLTypeSupported ()
 ConnectBase::ConnectBase (unsigned mode)
 {
     m_open  = false;
+    m_openShadow = false;
     m_interrupted = false;
 
     m_envhp = 0;
