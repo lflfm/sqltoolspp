@@ -670,7 +670,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL("INDEX"));
 
-            return 0;
+            return 1;
         }
 
         out.PutIndent();
@@ -810,7 +810,7 @@ namespace OraMetaDict
             else
                 out.Put(DBMS_MetaDataGetDDL("CONSTRAINT"));
 
-            return 0;
+            return 1;
         }
 
         out.PutIndent();
@@ -1456,7 +1456,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL("TRIGGER"));
 
-            return 0;
+            return 1;
         }
 
         // TODO: move this class into a separated file
@@ -1558,10 +1558,20 @@ namespace OraMetaDict
         int nHeaderLines = 0;
         out.PutIndent();
         out.Put("CREATE OR REPLACE TRIGGER ");
-        out.PutOwnerAndName(m_strOwner, m_strName, settings.m_bShemaName || m_strOwner != m_strTableOwner);
+        if (m_strTableName.empty() || m_strTableName == "")
+        {
+            if (settings.m_bShemaName || m_strOwner != m_strTableOwner) {
+                out.SafeWriteDBName(m_strOwner);
+                out.Put(".");
+            }
+        }
+        else
+            out.PutOwnerAndName(m_strOwner, m_strName, settings.m_bShemaName || m_strOwner != m_strTableOwner);
         {
             string buffer;
             istringstream in(
+                (m_strTableName.empty() || m_strTableName == "") ? 
+                m_strDescription + ' ' :
                 sub_str(m_strDescription, triggerNameTokens.rbegin()->line, triggerNameTokens.rbegin()->endCol(),
                         tableNameTokens.begin()->line, tableNameTokens.begin()->begCol())
                 );
@@ -1576,8 +1586,9 @@ namespace OraMetaDict
                 out.Put(buffer);
             }
         }
-        out.PutOwnerAndName(m_strTableOwner, m_strTableName, settings.m_bShemaName);
+        if (! (m_strTableName.empty() || m_strTableName == ""))
         {
+            out.PutOwnerAndName(m_strTableOwner, m_strTableName, settings.m_bShemaName);
             string buffer;
             istringstream in(
                 sub_str(m_strDescription, tableNameTokens.rbegin()->line, tableNameTokens.rbegin()->endCol())
@@ -1589,7 +1600,6 @@ namespace OraMetaDict
                 nHeaderLines++;
             }
         }
-
 
         if (!m_strWhenClause.empty()) 
         {
@@ -1824,7 +1834,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL("SEQUENCE"));
 
-            return 0;
+            return 1;
         }
 
         out.PutIndent();
@@ -1944,7 +1954,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL(theType.c_str()));
 
-            return 0;
+            return 1;
         }
 
         out.PutIndent();
@@ -2063,7 +2073,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL("SYNONYM"));
 
-            return 0;
+            return 1;
         }
         out.PutIndent();
         
@@ -2278,7 +2288,7 @@ namespace OraMetaDict
             if (m_mapGrants.begin() != m_mapGrants.end())
                 out.Put(DBMS_MetaDataGetGrantedDDL("OBJECT_GRANT", (*m_mapGrants.begin()).second.get()->m_strGrantee.c_str()));
 
-            return 0;
+            return 1;
         }
 
         GrantVector vecObjGrants;
@@ -2460,7 +2470,7 @@ namespace OraMetaDict
                 m_Dictionary.LookupIndex(it->c_str()).Write(out, settings);
         }
 
-        return 0;
+        return UseDbms_MetaData() ? 1 : 0;
     }
 
 
@@ -2474,7 +2484,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL("DB_LINK"));
 
-            return 0;
+            return 1;
         }
 
         out.PutIndent();
@@ -2529,7 +2539,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL("MATERIALIZED_VIEW_LOG"));
 
-            return 0;
+            return 1;
         }
 
         out.PutIndent();
@@ -2573,7 +2583,7 @@ namespace OraMetaDict
 
             out.Put(DBMS_MetaDataGetDDL("MATERIALIZED_VIEW"));
 
-            return 0;
+            return 1;
         }
 
         out.PutIndent();
