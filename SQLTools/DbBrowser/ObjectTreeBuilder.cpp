@@ -254,6 +254,7 @@ CTypeMap::TData __TypeMap [] = {
     { titSequence,    7, 1, "SEQUENCE"     },
     { titSynonym,     8, 1, "SYNONYM"      },
     { titView,       10, 1, "VIEW"         },
+    { titIndex,       5, 1, "INDEX"        },
     { titPackage,     6, 1, "PACKAGE"      },
     { titPackageBodies, 24, 1, "PACKAGE BODY" },
     { titFunction,   12, 1, "FUNCTION"     },
@@ -468,16 +469,19 @@ bool FindObject (OciConnect& connect, const char* str,
             ",decode(object_type, 'PACKAGE BODY', 1, 'TYPE BODY', 1, 'TRIGGER', 2, 'INDEX', 3, 'CLUSTER', 4, 0) subinx"
             " from sys.all_objects"
             " where owner = user and object_name = :p_a"
+            " and object_type not like '%PARTITION%'"
             " union "
             "select /*+RULE*/ owner, object_name, object_type, 2 inx"
             ",decode(object_type, 'PACKAGE BODY', 1, 'TYPE BODY', 1, 'TRIGGER', 2, 'INDEX', 3, 'CLUSTER', 4, 0) subinx"
             " from sys.all_objects"
             " where owner = 'PUBLIC' and object_name = :p_a"
+            " and object_type not like '%PARTITION%'"
             " union "
             "select /*+RULE*/ owner, object_name, object_type, 3 inx"
             ",decode(object_type, 'PACKAGE BODY', 1, 'TYPE BODY', 1, 'TRIGGER', 2, 'INDEX', 3, 'CLUSTER', 4, 0) subinx"
             " from sys.all_objects"
             " where owner = :p_a and object_name = :p_b"
+            " and object_type not like '%PARTITION%'"
             " order by inx, subinx"
             );
 
@@ -539,12 +543,15 @@ BOOL DescribeObject (OciConnect& connect, CTreeCtrl& tree,
         cursor.Prepare(
             "select /*+RULE*/ owner, object_name, object_type, 1 inx from sys.all_objects"
             " where owner = user and object_name = :p_a"
+            " and object_type not like '%PARTITION%'"
             " union "
             "select /*+RULE*/ owner, object_name, object_type, 2 inx from sys.all_objects"
             " where owner = 'PUBLIC' and object_name = :p_a"
+            " and object_type not like '%PARTITION%'"
             " union "
             "select /*+RULE*/ owner, object_name, object_type, 3 inx from sys.all_objects"
             " where owner = :p_a and object_name = :p_b"
+            " and object_type not like '%PARTITION%'"
             " order by inx"
             );
 
