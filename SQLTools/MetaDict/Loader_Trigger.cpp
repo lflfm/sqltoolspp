@@ -57,8 +57,8 @@ namespace OraMetaDict
             "<ACTION_TYPE> "
         "FROM sys.all_triggers "
         "WHERE <OWNER> = :owner "       // may be "owner" or "table_owner"
-#pragma message ("   Loss of functionality - dll and database trigger support")
-            "AND table_name IS NOT NULL " 
+// #pragma message ("   Loss of functionality - dll and database trigger support")
+            //"AND table_name IS NOT NULL " 
             "AND <NAME> <EQUAL> :name"; // may be "trigger_name" or "table_name"
 
     const int cn_owner             = 0;
@@ -111,7 +111,7 @@ void Loader::LoadTriggers (const char* owner, const char* name, bool byTables, b
         {
             if (cur.IsRecordGood())
             {
-                _CHECK_AND_THROW_(!cur.IsNull(cn_table_name) ,"Trigger loading error:\nunsupporded trigger type!");
+                // _CHECK_AND_THROW_(!cur.IsNull(cn_table_name) ,"Trigger loading error:\nunsupporded trigger type!");
 
                 Trigger& trigger = dict.CreateTrigger(cur.ToString(cn_owner).c_str(), 
                                                       cur.ToString(cn_trigger_name).c_str());
