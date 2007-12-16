@@ -377,7 +377,7 @@ static const char* cszSelectFromAllObjects =
     "SELECT /*+RULE*/ owner, object_name, object_type FROM sys.all_objects"
     " WHERE object_type in ("
     "'TABLE','VIEW','SYNONYM','SEQUENCE','PROCEDURE','FUNCTION',"
-    "'PACKAGE','PACKAGE BODY','TRIGGER','TYPE','TYPE BODY')";//",'OPERATOR')"
+    "'PACKAGE','PACKAGE BODY','TRIGGER','TYPE','TYPE BODY', 'INDEX')";//",'OPERATOR')"
 static const char* cszOrderByClause =
     " ORDER BY owner, object_name, object_type";
 
