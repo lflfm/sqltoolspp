@@ -580,7 +580,7 @@ void CDbSourceWnd::OnSize (UINT nType, int cx, int cy)
             ScreenToClient(rect);
             rect.InflateRect(1, 0);
             for (int i(0); i < sizeof m_wndTabLists/ sizeof m_wndTabLists[0]; i++)
-                m_wndTabLists[i]->SetWindowPos(0, rect.left, rect.top, rect.Width(), rect.Height(), SWP_NOZORDER);
+                m_wndTabLists[i]->SetWindowPos(0, rect.left, rect.top, rect.Width(), rect.Height(), 0);
         }
     }
 	Invalidate();// to fix some 'strange' cases (parts of buttons over components, etc.)
@@ -1537,7 +1537,7 @@ void CDbSourceWnd::OnRClickOnTab (NMHDR*, LRESULT* pResult)
     rect.InflateRect(1, 0);
 
     for (i = 0; i < sizeof m_wndTabLists/ sizeof m_wndTabLists[0]; i++)
-        m_wndTabLists[i]->SetWindowPos(0, rect.left, rect.top, rect.Width(), rect.Height(), SWP_NOZORDER);
+        m_wndTabLists[i]->SetWindowPos(0, rect.left, rect.top, rect.Width(), rect.Height(), 0);
 
     *pResult = 0;
 }
