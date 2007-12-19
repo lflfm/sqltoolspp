@@ -5,26 +5,51 @@ SQLTools++ Version 1.10RC2:
     Improvements:
     - Tested with Oracle 11g Server and Client, recognizes 11g as server/client version
     - 11g session statistics supported
+    - Filter header bars added to connection dialog and schema browser object list, similar to SQLTools 1.5
+    - Freshened GUI look, the initial SQLTools++ release used accidentally the "old" Win9x style
+    - Execute script and halt on errors (new toolbar button)
+    - Execute script in external tool (new toolbar button)
+    - Use optionally DBMS_METADATA to generate DDL (can be used from Server version 9i onwards)
+    - Optionally save all files automatically before executing database operation
+    - Test connection/Reconnect in case you were disconnected from the database, similar to TOAD functionality (new 
+      toolbar button)
+    - Schema browser object list supports now Snapshots, Snapshot logs and the Recyclebin in 10g onwards
+    - Index as lookup object supported
+    - DDL generation support for database and DDL triggers
+    - Cleanup of Settings dialog: PlusPlus settings are now in a separate page grouped together
+    - Copy selected entries from schema browser and object viewer separated by newlines using new 
+      shortcut Ctrl+Alt+C in addition to the already supported Ctrl+C shortcut
+    - Handle NULL passwords better by offering a separate dialog to enter the missing password
     - DBMS_OUTPUT now allows max. linesize of 32767 beginning with 10g
-    - Unlimited DBMS_OUTPUT supported on 10g or later (not reflected in the GUI yet, set output size
-      to > 1.000.000 to get support for unlimited output size in 10g onwards)
-    - DBMS_XPLAN.DISPLAY_CURSOR emulation now available for Oracle9i, see "Data\display_cursor_9i.sql"
+    - Unlimited DBMS_OUTPUT supported in 10g or later
+    - 10g DBMS_XPLAN.DISPLAY_CURSOR emulation now available for Oracle9i, see "Data\display_cursor_9i.sql"
       You may change the contents of the file to meet your needs, or even save the code in a persistent
       procedure/package and change the file contents to just call this procedure/package.
       The file content is re-read each time the DISPLAY_CURSOR functionality is called
     - MERGE sql statement now recognized and appropriate feedback provided (no. of rows merged)
     - Popup Editor window can now be closed using the ESC key as shortcut
-    - Handle Oracle error ORA-28002 ("password expires in next <x> days") more gracefully
+    - Handle Oracle error ORA-28002 ("password expires in next <x> days") more gracefully when opening a connection
     - Check for update on web site with a single click. Although not yet automated, you will be redirected
       to a web page using the default browser of your system that shows you if there is a newer version
       available for download.
     - Installation cleanup, default settings, files and web links updated
+
     Bugfixes:
     - Fixed issue with background session connection (timing issue while establishing the connection)
     - Explain plan did not adhere to "whitespace line" setting
     - Auto-fit columns is now executed even if the column descriptions stay the same (there was a caching
       active that compared the current columns of the result set with the previous and in case they were the 
       same no resizing took place. I deactivated that comparison because it annoyed me)
+    - Object lookup in Object Viewer for similar object names used previous object in case previous object name 
+      is superset (OBJECT_NAME1 vs. OBJECT_NAME) of current object name. Now an exact match is performed
+    - Lookup of partitioned object fails due to unknown object type error message, this has been fixed
+
+    Known Issues:
+    - Believe it or not, but the DBMS_METADATA package sometimes generates invalid and incomplete DDL. For instance
+      generating the indexes of an table having LOB columns by calling DBMS_METADATA.GET_DEPENDENT_DDL attempts to 
+      create the LOB indexes explicitly using an incomplete and invalid CREATE INDEX command. 
+      This holds true even for Oracle 11g, nevertheless I doubt that this is something you would dare to call 
+      a "feature"... Still I render the option to use DBMS_METADATA as useful.
 
 SQLTools++ Version 1.02RC1 (28-MAR-2007):
     Improvements (for detailed description see http://www.sqltools-plusplus.org:7676/sqltools_pp.html):
