@@ -222,8 +222,8 @@ void ListCtrlManager::OnFilterBtnClick (int col)
     {
         CManagedListCtrlFilterDlg(&m_list, rc, *this, col).DoModal();
         m_list.SetFocus();
-        m_list.Invalidate();
-        m_list.GetHeaderCtrl()->Invalidate();
+        //m_list.Invalidate();
+        //m_list.GetHeaderCtrl()->Invalidate();
     }
 }
 
