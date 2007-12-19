@@ -1442,6 +1442,9 @@ void CPLSWorksheetDoc::OnSqlLoad ()
                     Dictionary dict;
                     {
                         CAbortController abortCtrl(*GetAbortThread(), &m_connect);
+                        CString strBuff;
+                        strBuff.Format("Loading %s...", name.c_str());
+                        abortCtrl.SetActionText(strBuff);
 
                         OraMetaDict::Loader loader(m_connect, dict);
                         loader.Init();
