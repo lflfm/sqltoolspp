@@ -108,7 +108,7 @@ void Exception::CHECK (ConnectBase* conn, sword status)
             // if encountered while opening the connection, report it but continue
             else
             {
-                MessageBeep(MB_ICONHAND);
+                AfxMessageBox((const char*)message, MB_OK|MB_ICONEXCLAMATION);
                 Global::SetStatusText((const char*)message);
             }
             break;
