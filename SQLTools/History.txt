@@ -1,7 +1,8 @@
  History
 ~~~~~~~~~
 
-SQLTools++ Version 1.10RC2:
+SQLTools++ Version 1.10RC2 (22-DEC-2007):
+
     Improvements:
     - Tested with Oracle 11g Server and Client, recognizes 11g as server/client version
     - 11g session statistics supported
@@ -32,6 +33,8 @@ SQLTools++ Version 1.10RC2:
     - Check for update on web site with a single click. Although not yet automated, you will be redirected
       to a web page using the default browser of your system that shows you if there is a newer version
       available for download.
+    - Customizable settings regarding the "whitespace" and "blank" lines act as statement delimiter in the new
+      "PlusPlus" settings page
     - Installation cleanup, default settings, files and web links updated
 
     Bugfixes:
@@ -52,7 +55,8 @@ SQLTools++ Version 1.10RC2:
       a "feature"... Still I render the option to use DBMS_METADATA as useful.
 
 SQLTools++ Version 1.02RC1 (28-MAR-2007):
-    Improvements (for detailed description see http://www.sqltools-plusplus.org:7676/sqltools_pp.html):
+
+    Improvements (for detailed description see http://www.sqltools-plusplus.org:7676/sqltools_pp_102RC1.html):
     - Scan for beginning of SQL statement (empty line or additionally lines only consisting of whitesplace
       are considered as statement delimiters)
     - Scan for end of SQL statement, same as above. So you don't need to separate statements by semicolons,
@@ -69,6 +73,7 @@ SQLTools++ Version 1.02RC1 (28-MAR-2007):
     - Improved session statistics (Auto detection, 9iR2, 10gR2 statistics sets)
     - Popup window for large grid cell contents supporting optional wordwrap
     - Reload NLS settings after executing "ALTER SESSION"
+
     Bugfixes:
     - Correct formatting of execution times greater than one minute
     - Various keybaord accelerator and handling issues improved
