@@ -1,6 +1,6 @@
 Version=1026
 Locale=English
-KeymapLayout=Custom
+KeymapLayout=Default
 AllowMultipleInstances=1
 NewDocOnStartup=1
 MaximizeFirstDocument=1
