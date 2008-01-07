@@ -391,7 +391,7 @@ void ConnectBase::CheckShadowSession(const bool bForceConnectShadow)
 {
 	if (bForceConnectShadow) // || GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
 	{
-		if (! m_openShadow)
+		if ((! m_openShadow) && m_open)
 		{
 			CHECK(OCISessionBegin(m_svchp, m_errhp, m_auth_shadowp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
 			m_openShadow = true;
@@ -409,12 +409,14 @@ void ConnectBase::CheckShadowSession(const bool bForceConnectShadow)
 
 void ConnectBase::SetSession()
 {
-    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
+    if (m_open)
+        CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
 }
 
 void ConnectBase::SetShadowSession()
 {
-    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_auth_shadowp, 0, OCI_ATTR_SESSION, m_errhp));
+    if (m_openShadow)
+        CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_auth_shadowp, 0, OCI_ATTR_SESSION, m_errhp));
 }
 
 void ConnectBase::Close (bool purge)
