@@ -469,7 +469,10 @@ void CSQLToolsApp::OnSqlSessionStatistics()
         GetSQLToolsSettingsForUpdate().SetSessionStatistics(!GetSQLToolsSettings().GetSessionStatistics());
 
         if (GetSQLToolsSettings().GetSessionStatistics())
-            CStatView::OpenAll(*m_connect);
+            if (CStatView::GetStatMode() != GetSQLToolsSettings().GetSessionStatisticsMode() && m_connect->IsOpen())
+            {
+                CStatView::OpenAll(*m_connect);
+            }
         else
             CStatView::CloseAll();
     }
@@ -479,6 +482,7 @@ void CSQLToolsApp::OnSqlSessionStatistics()
         {
             MessageBeep(MB_ICONHAND);
             AfxMessageBox(cszStatNotAvailable);
+            GetSQLToolsSettingsForUpdate().SetSessionStatistics(false);
         }
         else
             DEFAULT_OCI_HANDLER(x);
