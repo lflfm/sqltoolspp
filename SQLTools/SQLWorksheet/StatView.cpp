@@ -147,6 +147,7 @@ void StatGauge::Open (OciConnect& connect)
 void StatGauge::Close ()
 {
     m_StatisticAccessible = false;
+    m_StatSet.m_stat_mode = "";
 }
 
 void StatGauge::LoadStatistics (OciConnect& connect, map<int,int>& data)
@@ -370,16 +371,36 @@ BEGIN_MESSAGE_MAP(CStatView, StrGridView)
 END_MESSAGE_MAP()
 */
 
-void CStatView::OnSettingsChanged ()
+  LPSCSTR cszStatNotAvailable =
+      "V$SESSION, V$STATNAME or V$SESSTAT is not accessible!"
+      "\nStatistics collection is disabled. If it is necessary,"
+      "\nask the DBA to grant the privileges required to access these views.";
+
+  void CStatView::OnSettingsChanged ()
 {
     SQLToolsSettings settings = GetSQLToolsSettings();
-    if (settings.GetSessionStatistics())
+    try 
     {
-        if (m_StatGauge.GetStatMode() != settings.GetSessionStatisticsMode())
+        if (settings.GetSessionStatistics())
         {
-            CloseAll();
-            OpenAll(*(GetApp()->m_connect));
+            if (m_StatGauge.GetStatMode() != settings.GetSessionStatisticsMode() && GetApp()->GetConnect().IsOpen())
+            {
+                OpenAll(*(GetApp()->m_connect));
+            }
         }
+        else
+            CloseAll();
+    }
+    catch (const OciException& x)
+    {
+        if (x == 942)
+        {
+            MessageBeep(MB_ICONHAND);
+            AfxMessageBox(cszStatNotAvailable);
+            GetSQLToolsSettingsForUpdate().SetSessionStatistics(false);
+        }
+        else
+            DEFAULT_OCI_HANDLER(x);
     }
 
     StrGridView::OnSettingsChanged();
