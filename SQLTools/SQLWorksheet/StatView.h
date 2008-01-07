@@ -104,6 +104,7 @@ public:
 
     static void OpenAll  (OciConnect& connect);
     static void CloseAll ();
+    static const std::string GetStatMode() {return m_StatGauge.GetStatMode();}
 
     //{{AFX_VIRTUAL(CStatView)
     protected:
