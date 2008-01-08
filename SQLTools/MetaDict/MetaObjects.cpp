@@ -2537,7 +2537,7 @@ namespace OraMetaDict
 
             InitDBMS_MetaDataStorage(settings);
 
-            out.Put(DBMS_MetaDataGetDDL("MATERIALIZED_VIEW_LOG"));
+            out.Put(DBMS_MetaDataGetDependentDDL("MATERIALIZED_VIEW_LOG"));
 
             return 1;
         }
