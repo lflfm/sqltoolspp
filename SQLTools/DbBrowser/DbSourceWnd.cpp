@@ -1100,6 +1100,8 @@ bool CDbSourceWnd::DoDelete (CDoContext& doContext)
         CConfirmationDlg dlg(this);
 		if (stricmp(doContext.m_szType, "RECYCLEBIN") == 0)
             dlg.m_strText.Format("Are you sure you want to purge \"%s\".\"%s\"?", doContext.m_szOwner, doContext.m_pvParam3);
+        else if ((stricmp(doContext.m_szType, "MATERIALIZED VIEW LOG") == 0) || (stricmp(doContext.m_szType, "SNAPSHOT LOG") == 0))
+            dlg.m_strText.Format("Are you sure you want to drop %s on \"%s\"?", doContext.m_szType, doContext.m_szName);
         else
             dlg.m_strText.Format("Are you sure you want to drop \"%s\" %s?", doContext.m_szName,
                                                      isTable ? "\r\ncascade constraints" : "");
@@ -1132,6 +1134,9 @@ bool CDbSourceWnd::DoDelete (CDoContext& doContext)
 		
 		} else if(!stricmp(doContext.m_szType, "RECYCLEBIN")) {
             cmd.Format("PURGE %s \"%s\".\"%s\"", doContext.m_szName, doContext.m_szOwner, doContext.m_szTable);
+		
+		} else if((stricmp(doContext.m_szType, "MATERIALIZED VIEW LOG") == 0) || (stricmp(doContext.m_szType, "SNAPSHOT LOG") == 0)) {
+            cmd.Format("DROP %s ON \"%s\".\"%s\"", doContext.m_szType, doContext.m_szOwner, doContext.m_szName);
 		
 		// ANOTHER DROPS
 		} else {

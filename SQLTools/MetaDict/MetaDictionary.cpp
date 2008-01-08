@@ -330,6 +330,8 @@ DbObject& Dictionary::LookupObject (const char* szOwner, const char* szName, con
         if (!stricmp(szType, "USER"))         return LookupUser(szName);
         if (!stricmp(szType, "SNAPSHOT"))     return LookupSnapshot(szOwner, szName);
         if (!stricmp(szType, "SNAPSHOT LOG")) return LookupSnapshotLog(szOwner, szName);
+        if (!stricmp(szType, "MATERIALIZED VIEW"))     return LookupSnapshot(szOwner, szName);
+        if (!stricmp(szType, "MATERIALIZED VIEW LOG")) return LookupSnapshotLog(szOwner, szName);
         if (!stricmp(szType, "DATABASE LINK"))return LookupDBLink(szOwner, szName);
         if (!stricmp(szType, "TYPE"))         return LookupType(szOwner, szName);
         if (!stricmp(szType, "TYPE BODY"))    return LookupTypeBody(szOwner, szName);
@@ -424,6 +426,8 @@ const DbObject& Dictionary::LookupObject (const char* szOwner, const char* szNam
         if (!stricmp(szType, "USER"))         return LookupUser(szName);
         if (!stricmp(szType, "SNAPSHOT"))     return LookupSnapshot(szOwner, szName);
         if (!stricmp(szType, "SNAPSHOT LOG")) return LookupSnapshotLog(szOwner, szName);
+        if (!stricmp(szType, "MATERIALIZED VIEW"))     return LookupSnapshot(szOwner, szName);
+        if (!stricmp(szType, "MATERIALIZED VIEW LOG")) return LookupSnapshotLog(szOwner, szName);
         if (!stricmp(szType, "DATABASE LINK"))return LookupDBLink(szOwner, szName);
         if (!stricmp(szType, "TYPE"))         return LookupType(szOwner, szName);
         if (!stricmp(szType, "TYPE BODY"))    return LookupTypeBody(szOwner, szName);

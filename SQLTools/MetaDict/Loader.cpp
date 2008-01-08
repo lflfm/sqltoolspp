@@ -240,14 +240,14 @@ void Loader::LoadObjects (const char* owner, const char* name, const char* type,
         return;
     }
 
-    if (!stricmp(type, "SNAPSHOT"))
+    if ((!stricmp(type, "SNAPSHOT")) || (!stricmp(type, "MATERIALIZED VIEW")))
     {
         LoadSnapshots(owner, name, useLike);
 
         return;
     }
 
-    if (!stricmp(type, "SNAPSHOT LOG"))
+    if ((!stricmp(type, "SNAPSHOT LOG")) || (!stricmp(type, "MATERIALIZED VIEW LOG")))
     {
         LoadSnapshotLogs(owner, name, useLike);
 
