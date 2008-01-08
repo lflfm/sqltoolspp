@@ -600,6 +600,7 @@ void ConnectBase::MakeTNSString (std::string& str, const char* host, const char*
 Connect::Connect ()
 {
     m_OutputEnable = false;
+    m_UnlimitedOutputSize = false;
     m_bypassTns = false;
     m_OutputSize = 20000L;
 	m_GetSIDFailed = false;
@@ -750,7 +751,10 @@ void Connect::ExecuteShadowStatement (const char* sttm, bool guaranteedSafe)
 void Connect::EnableOutput (bool enable, unsigned long size, bool connectInit)
 {
     // 22.03.2003 small improvement, removed redundant server calls
-    if (m_OutputEnable != enable || m_OutputEnable && connectInit || m_OutputSize != size)
+    if (m_OutputEnable != enable 
+        || m_OutputEnable && connectInit 
+        || m_OutputSize != size
+        || m_UnlimitedOutputSize != GetSQLToolsSettings().GetUnlimitedOutputSize())
     {
         if (size != ULONG_MAX)
             m_OutputSize = size;
@@ -777,6 +781,7 @@ void Connect::EnableOutput (bool enable, unsigned long size, bool connectInit)
         }
 
         m_OutputEnable = enable;
+        m_UnlimitedOutputSize = GetSQLToolsSettings().GetUnlimitedOutputSize();
     }
 }
 

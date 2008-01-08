@@ -278,6 +278,7 @@ public:
     void LoadSessionNlsParameters ();
 protected:
     bool m_OutputEnable;
+    bool m_UnlimitedOutputSize;
     unsigned long m_OutputSize;
     string m_strVersion, m_strGlobalName;
     string m_strHost, m_strPort, m_strSid;
