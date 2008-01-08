@@ -757,6 +757,14 @@ void CConnectDlg::OnBnClicked_Help()
 bool GetOciDllPath (string& path)
 {
     char fullpath[1024], *filename;
+    CString oraHome_Env;
+    oraHome_Env.GetEnvironmentVariable("ORACLE_HOME");
+    if (! oraHome_Env.IsEmpty())
+    {
+        path.assign(oraHome_Env);
+        return true;
+    }
+        
     DWORD length = SearchPath(NULL, "OCI.DLL", NULL, sizeof(fullpath), fullpath, &filename);
     
     if (length > 0 && length < sizeof(fullpath))
@@ -827,6 +835,14 @@ bool GetTnsPath (string& path)
 
     if (GetOciDllPath(ocipath))
     {
+        CString tnsAdmin_Env;
+        tnsAdmin_Env.GetEnvironmentVariable("TNS_ADMIN");
+        if (!tnsAdmin_Env.IsEmpty())
+        {
+            path = tnsAdmin_Env + "\\TNSNAMES.ORA";
+            return true;
+        }
+
         vector<string> subkeys;
         if (GetSubkeys("SOFTWARE\\ORACLE", subkeys))
         {
