@@ -897,9 +897,26 @@ void GetTnsEntries (std::vector<string>& entries)
                     entry += *it;
                 else
                 {
-                    Common::trim_symmetric(entry);
-                    Common::to_lower_str(entry.c_str(), entry);
-                    entries.push_back(entry);
+                    if (entry.find(",") != string::npos)
+                    {
+                        int curPos = 0;
+                        CString multi_entry = entry.c_str();
+                        CString curr_entry = multi_entry.Tokenize(",", curPos);
+                        while (!curr_entry.IsEmpty()) 
+                        {
+                            entry = curr_entry;
+                            Common::trim_symmetric(entry);
+                            Common::to_lower_str(entry.c_str(), entry);
+                            entries.push_back(entry);
+                            curr_entry = multi_entry.Tokenize(",", curPos);
+                        }
+                    }
+                    else
+                    {
+                        Common::trim_symmetric(entry);
+                        Common::to_lower_str(entry.c_str(), entry);
+                        entries.push_back(entry);
+                    }
                     entry.clear();
                     decription = true;
                 }
