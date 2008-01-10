@@ -469,10 +469,12 @@ void CSQLToolsApp::OnSqlSessionStatistics()
         GetSQLToolsSettingsForUpdate().SetSessionStatistics(!GetSQLToolsSettings().GetSessionStatistics());
 
         if (GetSQLToolsSettings().GetSessionStatistics())
+        {
             if (CStatView::GetStatMode() != GetSQLToolsSettings().GetSessionStatisticsMode() && m_connect->IsOpen())
             {
                 CStatView::OpenAll(*m_connect);
             }
+        }
         else
             CStatView::CloseAll();
     }
