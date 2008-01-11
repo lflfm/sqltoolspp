@@ -103,12 +103,13 @@ void Exception::CHECK (ConnectBase* conn, sword status)
             break;
         case 28002: // ORA-28002: the password will expire within <x> days
             // if encountered while connection is open, report it as usual
-            if (conn->IsOpen())
+            if (conn->IsOpen() && (conn->IsOpenShadow() || !(GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())))
                 throw Exception(errcode, (const char*)message);
             // if encountered while opening the connection, report it but continue
             else
             {
-                AfxMessageBox((const char*)message, MB_OK|MB_ICONEXCLAMATION);
+                if (! conn->IsOpen())
+                    AfxMessageBox((const char*)message, MB_OK|MB_ICONEXCLAMATION);
                 Global::SetStatusText((const char*)message);
             }
             break;
@@ -298,6 +299,9 @@ void ConnectBase::DoOpen()
     CHECK_ALLOC(OCIHandleAlloc(m_envhp, (dvoid **)&m_svchp, OCI_HTYPE_SVCCTX, 0, 0));
     CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_srvhp, 0, OCI_ATTR_SERVER, m_errhp));
     CHECK(OCISessionBegin(m_svchp, m_errhp, m_authp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
+    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
+
+	m_open = true;
 	if (GetSQLToolsSettings().GetDbmsXplanDisplayCursor() || GetSQLToolsSettings().GetSessionStatistics())
 	{
 		CHECK(OCISessionBegin(m_svchp, m_errhp, m_auth_shadowp, m_ext_auth ? OCI_CRED_EXT : OCI_CRED_RDBMS, m_mode));
@@ -305,7 +309,6 @@ void ConnectBase::DoOpen()
     }
 	else
 		m_openShadow = false;
-    CHECK(OCIAttrSet(m_svchp, OCI_HTYPE_SVCCTX, m_authp, 0, OCI_ATTR_SESSION, m_errhp));
 
 #ifdef XMLTYPE_SUPPORT
     if (IsXMLTypeSupported())
@@ -322,8 +325,6 @@ void ConnectBase::DoOpen()
                 (const OraText*)0, 0, OCI_DURATION_SESSION, OCI_TYPEGET_HEADER, &m_xmltype));
     }
 #endif//XMLTYPE_SUPPORT
-
-	m_open = true;
 }
 
 void ConnectBase::Open (const char* uid, const char* pswd, const char* alias, EConnectionMode mode, ESafety safety)
