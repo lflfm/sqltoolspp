@@ -406,8 +406,8 @@ void CSQLToolsApp::OnSqlSubstitutionVariables()
 
 void CSQLToolsApp::OnSqlDbmsXplanDisplayCursor()
 {
-	m_connect->CheckShadowSession(!GetSQLToolsSettings().GetDbmsXplanDisplayCursor() ||
-                                   GetSQLToolsSettings().GetSessionStatistics());
+	//m_connect->CheckShadowSession(!GetSQLToolsSettings().GetDbmsXplanDisplayCursor() ||
+    //                               GetSQLToolsSettings().GetSessionStatistics());
 
     GetSQLToolsSettingsForUpdate().SetDbmsXplanDisplayCursor(!GetSQLToolsSettings().GetDbmsXplanDisplayCursor());
 }
