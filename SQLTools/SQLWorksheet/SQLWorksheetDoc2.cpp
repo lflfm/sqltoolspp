@@ -220,6 +220,7 @@ void CPLSWorksheetDoc::DoSqlDbmsXPlanDisplayCursor()
 		            cursor.ExecuteShadow(1, true);
 
                     cursor.Close();
+            		m_pXPlan->SetIsDisplayCursor(true);
                 }
                 catch (const OCI8::Exception& x)
                 {
