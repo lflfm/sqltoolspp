@@ -42,10 +42,15 @@ void default_oci_handler (const OciException& x, const char* file, int line)
         AfxMessageBox(x.what(), MB_OK|MB_ICONEXCLAMATION);
         break;
     // connection lost
-    case 28: 
-    case 1012: 
-    case 3113: 
-    case 3114:
+    case 22: // invalid session ID
+    case 28: // your session has been killed
+    case 41: // RESOURCE MANAGER: active time limit exceeded
+    case 1012: // not logged on
+    case 3113: // end-of-file communication channel
+    case 3114: // not connected to Oracle
+    case 2396: // exceeded maximum idle time
+    case 2397: // exceeded PRIVATE_SGA limit
+    case 2399: // exceeded maximum connect time
         MessageBeep(MB_ICONSTOP);
         AfxMessageBox(x.what(), MB_OK|MB_ICONSTOP);
         break;
