@@ -366,6 +366,13 @@ void CPLSWorksheetDoc::OnSqlExecuteExternal()
     subst.AddPair("<CMD>", GetSQLToolsSettings().GetExternalToolCommand().c_str());
     subst.AddPair("<USER>", m_connect.GetUID());
     subst.AddPair("<PASSWORD>", m_connect.GetPassword());
+    string sys_privs;
+    switch (m_connect.GetMode())
+    {
+        case OCI8::ecmSysDba:  sys_privs = " AS SYSDBA"; break;
+        case OCI8::ecmSysOper: sys_privs = " AS SYSOPER"; break;
+    }
+    subst.AddPair("<SYS_PRIVS>", sys_privs);
     subst.AddPair("<CONNECT_STRING>", m_connect.GetAlias());
     subst.AddPair("<FILENAME>", string(string("\"") + sFilename + "\"").c_str());
     subst << "\"<CMD>\" " << GetSQLToolsSettings().GetExternalToolParameters().c_str();
