@@ -463,10 +463,10 @@ void CSQLToolsApp::OnSqlSessionStatistics()
 {
     try { EXCEPTION_FRAME;
 
-		m_connect->CheckShadowSession(!GetSQLToolsSettings().GetSessionStatistics() || 
-                                       GetSQLToolsSettings().GetDbmsXplanDisplayCursor());
-
         GetSQLToolsSettingsForUpdate().SetSessionStatistics(!GetSQLToolsSettings().GetSessionStatistics());
+
+		m_connect->CheckShadowSession(GetSQLToolsSettings().GetSessionStatistics() || 
+                                      GetSQLToolsSettings().GetDbmsXplanDisplayCursor());
 
         if (GetSQLToolsSettings().GetSessionStatistics())
         {
