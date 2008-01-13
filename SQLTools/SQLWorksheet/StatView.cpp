@@ -385,6 +385,8 @@ END_MESSAGE_MAP()
         {
             if (m_StatGauge.GetStatMode() != settings.GetSessionStatisticsMode() && GetApp()->GetConnect().IsOpen())
             {
+                if (! GetApp()->m_connect->IsOpenShadow())
+                    GetApp()->m_connect->CheckShadowSession(true);
                 OpenAll(*(GetApp()->m_connect));
             }
         }
