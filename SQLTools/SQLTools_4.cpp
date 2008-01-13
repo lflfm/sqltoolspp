@@ -56,7 +56,8 @@ void CSQLToolsApp::OnSettingsChanged ()
         m_connect->EnableOutput(settings.GetOutputEnable(), settings.GetOutputSize());
         m_connect->SetNlsDateFormat(settings.GetDateFormat());
         m_connect->AlterSessionNlsParams();
-        m_connect->CheckShadowSession(settings.GetDbmsXplanDisplayCursor());
+        m_connect->CheckShadowSession(settings.GetSessionStatistics() || 
+                                      settings.GetDbmsXplanDisplayCursor());
     }
     _DEFAULT_HANDLER_
 
