@@ -348,6 +348,10 @@ int AddItemByDynamicDesc (OciConnect& connect,
                           const CDynamicDescs& descs,
                           const CTypeMap& _map)
 {
+	if (! connect.IsOpen()) {
+		throw Common::AppException("AddItemByDynamicDesc: not connected to database!");
+	}
+	
     CWaitCursor wait;
     CAbortController abortCtrl(*GetAbortThread(), &connect, 10);
     abortCtrl.SetActionText("Loading object description...");
@@ -426,6 +430,10 @@ int AddItemByDynamicDesc (OciConnect& connect,
 bool FindObject (OciConnect& connect, const char* str, 
                  std::string& _owner, std::string& _name, std::string& _type)
 {
+	if (! connect.IsOpen()) {
+		throw Common::AppException("FindObject: not connected to database!");
+	}
+	
     CWaitCursor wait;
     CAbortController abortCtrl(*GetAbortThread(), &connect, 10);
     abortCtrl.SetActionText("Searching for object...");
@@ -504,6 +512,10 @@ bool FindObject (OciConnect& connect, const char* str,
 BOOL DescribeObject (OciConnect& connect, CTreeCtrl& tree,
                      const char* str, const CTypeMap& _map)
 {
+	if (! connect.IsOpen()) {
+		throw Common::AppException("DescribeObject: not connected to database!");
+	}
+	
     CWaitCursor wait;
     CAbortController abortCtrl(*GetAbortThread(), &connect, 10);
     abortCtrl.SetActionText("Searching for object...");
