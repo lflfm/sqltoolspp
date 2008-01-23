@@ -62,6 +62,8 @@ static char THIS_FILE[] = __FILE__;
                 {
                     source->Fetch(rows);
                     RecalcRuller(dir, false/*adjust*/, true/*invalidate*/);
+                    if (GetSQLToolsSettings().GetGridAutoResizeColWidthFetch())
+                        ((OciGridView *) m_pClientWnd)->ApplyColumnFit();
                 }
             }
         }
@@ -224,10 +226,8 @@ void OciGridView::SetCursor (std::auto_ptr<OCI8::AutoCursor>& cursor)
 
     // 12.10.2002 bug fix, grid column autofit has been brocken since build 38
 
-    // RG: I don't like this mode if the result set differs but the columns
-    // stay the same columns weren't resized, but now I do it always
-    // if (!same)
-    ApplyColumnFit();
+    if (!same)
+        ApplyColumnFit();
 
 #pragma message("\nCHECK: grid refresh\n")
     //m_pManager->Refresh(); 
@@ -295,6 +295,7 @@ void OciGridView::ApplyColumnFit ()
 				if (byData)
 				{
 					PaintGridManager::m_Dcc.m_Type[edVert] = efNone;
+#pragma message("\tTODO: Do not iterate over all rows, just the last set of rows fetched\n")
 					for (int row = 0; row < rowCount; row++)
 					{
 						PaintGridManager::m_Dcc.m_Row = row;
