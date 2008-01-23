@@ -86,6 +86,7 @@ public:
     OES_DECLARE_PROPERTY(string, GridDateFormat          ); // obsolete
     OES_DECLARE_PROPERTY(bool,   GridAllowLessThanHeader );
     OES_DECLARE_PROPERTY(bool,   GridAllowRememColWidth  );
+    OES_DECLARE_PROPERTY(bool,   GridAutoResizeColWidthFetch  );
     OES_DECLARE_PROPERTY(int,    GridColumnFitType       );
 
     OES_DECLARE_PROPERTY(string, GridNlsNumberFormat     );

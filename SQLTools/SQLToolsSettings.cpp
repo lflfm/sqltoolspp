@@ -59,6 +59,7 @@ SQLToolsSettings::SQLToolsSettings ()
     m_GridNullRepresentation     = "";
     m_GridAllowLessThanHeader    = false;
     m_GridAllowRememColWidth     = true;
+    m_GridAutoResizeColWidthFetch = false;
     m_GridColumnFitType          = 0;
     m_GridExpFormat              = 0;
     m_GridExpWithHeader          = 0;
@@ -205,6 +206,7 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_READ_MEMBER(settings, GridAllowLessThanHeader   );
     OESMS_READ_MEMBER(settings, GridAllowRememColWidth    );
     OESMS_READ_MEMBER(settings, GridColumnFitType         );
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, GridAutoResizeColWidthFetch, false);
 
     OESMS_VER_READ_MEMBER(1016, settings, GridNlsNumberFormat,      "");
     OESMS_VER_READ_MEMBER(1016, settings, GridNlsDateFormat,        "");
@@ -308,6 +310,7 @@ void SQLToolsSettingsWriter::operator << (const SQLToolsSettings& settings)
     OESMS_WRITE_MEMBER(settings, GridDateFormat            ); // obsolete
     OESMS_WRITE_MEMBER(settings, GridAllowLessThanHeader   );
     OESMS_WRITE_MEMBER(settings, GridAllowRememColWidth    );
+    OESMS_WRITE_MEMBER(settings, GridAutoResizeColWidthFetch    );
     OESMS_WRITE_MEMBER(settings, GridColumnFitType         );
 
     OESMS_WRITE_MEMBER(settings, GridNlsNumberFormat       );

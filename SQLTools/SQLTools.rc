@@ -189,9 +189,12 @@ BEGIN
     CONTROL         "&Auto fit can resize column to less than the header width",
                     IDC_GRID_PROP_ALLOW_LESS_THAN_HEADER,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,41,91,189,10
-    CONTROL         "Allow r&emember manually changed collumn width",
+    CONTROL         "Allow r&emember manually changed column width",
                     IDC_GRID_PROP_ALLOW_REMEM_COL_WIDTH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,41,102,169,10
+    CONTROL         "Auto resize columns with each &fetch",
+                    IDC_GRID_PROP_AUTO_RESIZE_FETCH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,41,113,169,10
 END
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 268, 114
