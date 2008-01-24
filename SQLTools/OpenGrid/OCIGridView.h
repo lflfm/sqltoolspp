@@ -46,6 +46,9 @@ protected:
     } 
     m_statusCxt;
 
+    int m_lastRow;
+    bool m_bKeepColSize;
+
 public:
 	OciGridView();
 	virtual ~OciGridView();
@@ -55,6 +58,8 @@ public:
     void Refresh ();
     void SetCursor (std::auto_ptr<OCI8::AutoCursor>& cursor);
 	void ApplyColumnFit ();
+    void ResetLastRow() { m_lastRow = 0;}
+    bool GetKeepColSize() { return m_bKeepColSize; }
 
     int  GetCurrentRecord () const;
     int  GetRecordCount () const;

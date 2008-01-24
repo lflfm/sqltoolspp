@@ -63,7 +63,8 @@ static char THIS_FILE[] = __FILE__;
                     source->Fetch(rows);
                     RecalcRuller(dir, false/*adjust*/, true/*invalidate*/);
                     if (GetSQLToolsSettings().GetGridAutoResizeColWidthFetch())
-                        ((OciGridView *) m_pClientWnd)->ApplyColumnFit();
+                        if (! ((OciGridView *) m_pClientWnd)->GetKeepColSize())
+                            ((OciGridView *) m_pClientWnd)->ApplyColumnFit();
                 }
             }
         }
@@ -118,6 +119,8 @@ OciGridView::OciGridView()
     m_pManager->m_Options.m_Editing = true;
     m_pManager->m_Options.m_ExpandLastCol = true;
     m_pManager->m_Options.m_Rotation = true;
+    m_lastRow = 0;
+    m_bKeepColSize = false;
 }
 
 OciGridView::~OciGridView()
@@ -197,20 +200,20 @@ void OciGridView::SetCursor (std::auto_ptr<OCI8::AutoCursor>& cursor)
 
     m_pOciSource->SetCursor(cursor); 
 
-    bool same = false;
+    m_bKeepColSize = false;
     if (m_pOciSource->IsTableOrientation())
     if (m_pOciSource->GetCount(edHorz) == static_cast<int>(headers.size()))
     {
-        same = true;
+        m_bKeepColSize = true;
         for (int i = 0; i < m_pOciSource->GetCount(edHorz); i++)
             if (m_pOciSource->GetColHeader(i) != headers[i])
             {
-                same = false;
+                m_bKeepColSize = false;
                 break;
             }
     }
 
-    if (same)
+    if (m_bKeepColSize)
         m_pManager->SetCacheItems(edHorz, itemSizes);
 
     // 07.11.2003 bug fix, "Invalid vector<T> subscript" happens continually
@@ -226,7 +229,8 @@ void OciGridView::SetCursor (std::auto_ptr<OCI8::AutoCursor>& cursor)
 
     // 12.10.2002 bug fix, grid column autofit has been brocken since build 38
 
-    if (!same)
+    ResetLastRow();
+    if (!m_bKeepColSize)
         ApplyColumnFit();
 
 #pragma message("\nCHECK: grid refresh\n")
@@ -257,6 +261,7 @@ void OciGridView::OnChangeColumnFit (UINT id)
     case ID_OCIGRID_COLS_TO_HEADERS:    GetSQLToolsSettingsForUpdate().SetGridColumnFitType(1); break;
     }
 
+    ResetLastRow();
     ApplyColumnFit();
 }
 
@@ -295,8 +300,11 @@ void OciGridView::ApplyColumnFit ()
 				if (byData)
 				{
 					PaintGridManager::m_Dcc.m_Type[edVert] = efNone;
-#pragma message("\tTODO: Do not iterate over all rows, just the last set of rows fetched\n")
-					for (int row = 0; row < rowCount; row++)
+                    int row = m_lastRow;
+                    if (row > 0)
+                        width = m_pManager->m_Rulers[edHorz].GetPixelSize(col);
+
+					for (; row < rowCount; row++)
 					{
 						PaintGridManager::m_Dcc.m_Row = row;
 						m_pOciSource->CalculateCell(PaintGridManager::m_Dcc, maxColLen);
@@ -305,6 +313,8 @@ void OciGridView::ApplyColumnFit ()
 				}
 				m_pManager->m_Rulers[edHorz].SetPixelSize(col, width);
 			}
+
+            m_lastRow = rowCount;
 		}
         m_pManager->LightRefresh(edHorz);
 	}
@@ -326,7 +336,10 @@ void OciGridView::OnRotate ()
 {
     GridView::OnRotate();
     if (m_pOciSource->IsTableOrientation())
+    {
+        ResetLastRow();
         ApplyColumnFit();
+    }
 }
 
 void OciGridView::OnUpdate_OciGridIndicator (CCmdUI* pCmdUI)
