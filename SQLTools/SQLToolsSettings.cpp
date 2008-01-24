@@ -205,8 +205,8 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_READ_MEMBER(settings, GridDateFormat            );
     OESMS_READ_MEMBER(settings, GridAllowLessThanHeader   );
     OESMS_READ_MEMBER(settings, GridAllowRememColWidth    );
-    OESMS_READ_MEMBER(settings, GridColumnFitType         );
     OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, GridAutoResizeColWidthFetch, false);
+    OESMS_READ_MEMBER(settings, GridColumnFitType         );
 
     OESMS_VER_READ_MEMBER(1016, settings, GridNlsNumberFormat,      "");
     OESMS_VER_READ_MEMBER(1016, settings, GridNlsDateFormat,        "");
