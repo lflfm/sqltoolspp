@@ -75,6 +75,7 @@ void Exception::CHECK (ConnectBase* conn, sword status)
         oratext message[512];
         memset(message, 0, sizeof message);
         OCIErrorGet(conn->GetOCIError(), 1, 0, &errcode, message, sizeof message, OCI_HTYPE_ERROR);
+        bool bIsRemote = CString(message).Find("ORA-02063") > 0;
 
         switch (errcode)
         {
@@ -87,8 +88,9 @@ void Exception::CHECK (ConnectBase* conn, sword status)
         case 2396: // exceeded maximum idle time
         case 2397: // exceeded PRIVATE_SGA limit
         case 2399: // exceeded maximum connect time
-            if (conn->IsOpen())
-                conn->Close(true); // connect losed, not logged on
+            if (! bIsRemote)
+                if (conn->IsOpen())
+                    conn->Close(true); // connect losed, not logged on
         }
 
         switch (errcode)
