@@ -56,6 +56,7 @@ void CPlusPlusPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_PROP_PLUS_USE_DBMS_METADATA, m_Settings.m_UseDbmsMetaData);
 	DDX_Check(pDX, IDC_PROP_PLUS_HALT_ON_ERRORS,    m_Settings.m_HaltOnErrors);
 	DDX_Check(pDX, IDC_PROP_PLUS_SAVE_BEF_EXECUTE,  m_Settings.m_SaveFilesBeforeExecute);
+    DDX_Check(pDX, IDC_PROP_PLUS_ORDERBY_NAME,      m_Settings.m_ColumnOrderByName);
 }
 
 BEGIN_MESSAGE_MAP(CPlusPlusPage, CPropertyPage)

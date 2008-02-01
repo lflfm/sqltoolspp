@@ -305,6 +305,7 @@
 #define IDC_PROP_PLUS_HALT_ON_ERRORS    1705
 #define IDC_PROP_PLUS_SAVE_BEF_EXECUTE  1706
 #define IDC_PROP_PLUS_SELECT_DIR        1707
+#define IDC_PROP_PLUS_ORDERBY_NAME      1710
 #define IDD_DFP_DIRSELECT               2000
 #define IDC_PFC_RESET_ALL               2001
 #define IDC_PFC_ITEMS                   2002

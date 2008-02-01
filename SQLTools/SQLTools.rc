@@ -340,6 +340,8 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,146,240,10
     CONTROL         "&Save files before executing SQL",IDC_PROP_PLUS_SAVE_BEF_EXECUTE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,159,240,10
+    CONTROL         "Order column &names of tables alphabetically",IDC_PROP_PLUS_ORDERBY_NAME,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,172,240,10
 END
 
 IDD_DBS_PROP_TABLE DIALOGEX 0, 0, 266, 135
