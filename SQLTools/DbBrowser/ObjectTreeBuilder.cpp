@@ -28,6 +28,7 @@
 #include "ObjectTreeBuilder.h"
 #include "SQLTools.h"
 #include "AbortThread/AbortThread.h"
+#include "COMMON\StrHelpers.h"
 #include <OCI8/BCursor.h>
 
 #ifdef _DEBUG
@@ -160,7 +161,7 @@ const char* p_tab_col_sttm =
 " where t.owner=:p_schema and t.table_name=:p_parent"
 " and t.owner=c.owner and t.table_name=c.table_name"
 " and t.column_name=c.column_name"
-" order by t.column_id";
+" order by t.<ORDERBY_COLUMN>";
 const char* p_tab_idx_sttm =
 "select /*+RULE*/ decode(owner,:p_schema,index_name,owner||'.'||index_name)||decode(index_type,'NORMAL',NULL,'   '||lower(index_type))||decode(uniqueness,'NONUNIQUE',NULL,'   '||Lower(uniqueness)) from sys.all_indexes"
 " where table_owner=:p_schema and table_name=:p_parent";
@@ -388,7 +389,28 @@ int AddItemByDynamicDesc (OciConnect& connect,
             CString parent_name, schema_name;
             GetObjectName(tree, hItem, parent_name, schema_name);
 
-            OciCursor cursor(connect, descs.m_Data[i].m_SqlStatement);
+            bool bOrderByName = GetSQLToolsSettings().GetColumnOrderByName();
+            string sOrderByDefault;
+            switch (itemType)
+            {
+                case titTable:
+                case titView:
+                    sOrderByDefault = "column_id";
+                    break;
+                case titIndex:
+                    sOrderByDefault = "column_position";
+                    break;
+                case titConstraint:
+                    sOrderByDefault = "position";
+                    break;
+            }
+
+            Common::Substitutor subst;
+            subst.AddPair("<ORDERBY_COLUMN>", bOrderByName ? "column_name" : sOrderByDefault);
+
+            subst << descs.m_Data[i].m_SqlStatement;
+
+            OciCursor cursor(connect, subst.GetResult());
 
             try {  
                 cursor.Bind(":p_schema", schema_name);
