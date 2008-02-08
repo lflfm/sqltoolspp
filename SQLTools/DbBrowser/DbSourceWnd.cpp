@@ -203,6 +203,7 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_BN_CLICKED(IDC_DS_INVALID, OnDataChanged2)
     ON_BN_CLICKED(IDC_DS_REFRESH, OnRefresh)
     ON_NOTIFY(NM_DBLCLK, IDC_TAB_LIST, OnDblClikList)
+    ON_COMMAND(IDC_DS_REFRESH_ALL, OnRefreshAll)    
     ON_COMMAND(IDC_DS_LOAD, OnLoad)
     ON_COMMAND(IDC_DS_LOAD_ALL_IN_ONE, OnLoadAsOne)
     ON_COMMAND(IDC_DS_COMPILE, OnCompile)
@@ -695,6 +696,16 @@ void CDbSourceWnd::OnRefresh ()
                                      m_bValid ? true : false,
                                      m_bInvalid ? true : false,
                                      true);
+}
+
+void CDbSourceWnd::OnRefreshAll ()
+{
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+        ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetObjectLookupCache().Init();
+    
+    DirtyObjectsLists();
+
+    OnRefresh();
 }
 
 void CDbSourceWnd::OnShowAsList ()

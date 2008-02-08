@@ -125,6 +125,7 @@ protected:
     afx_msg void OnDataChanged();
     afx_msg void OnDataChanged2();
     afx_msg void OnRefresh();
+    afx_msg void OnRefreshAll();
     afx_msg void OnDblClikList(NMHDR* pNMHDR, LRESULT* pResult);
     afx_msg void OnLoad();
     afx_msg void OnCopy();
