@@ -310,7 +310,7 @@ void CDbObjListCtrl::ApplyQuickFilter (bool valid, bool invalid)
         else if  (invalid)
             val = "INVALID";
         else
-            val = "NA";
+            val = "N/A";
 
         for (int j(0); j < m_Data.m_nColumns; j++)
             if (m_mapColumns[j] == m_nStatusColumn)
