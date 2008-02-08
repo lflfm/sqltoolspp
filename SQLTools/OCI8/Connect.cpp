@@ -312,6 +312,9 @@ void ConnectBase::DoOpen()
 	else
 		m_openShadow = false;
 
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+        m_ObjectLookupCache.Init();
+
 #ifdef XMLTYPE_SUPPORT
     if (IsXMLTypeSupported())
     {
@@ -427,6 +430,9 @@ void ConnectBase::Close (bool purge)
     SHOW_WAIT;
 
     STACK_OVERFLOW_GUARD(3);
+
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+        m_ObjectLookupCache.Reset();
 
 	if (m_open)
     {

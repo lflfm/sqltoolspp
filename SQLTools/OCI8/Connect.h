@@ -33,6 +33,7 @@ extern "C" {
 #include <set>
 #include <string>
 #include <COMMON/Handler.h>
+#include <MetaDict/MetaDictionary.h>
 
 namespace OCI8
 {
@@ -156,6 +157,8 @@ public:
 	void SetSession();
 	void SetShadowSession();
 
+    OraMetaDict::ObjectLookupCache & GetObjectLookupCache() {return m_ObjectLookupCache;};
+
     OCIEnv*    GetOCIEnv ()     { return m_envhp; }
     OCISvcCtx* GetOCISvcCtx ()  { return m_svchp; }
     OCIError*  GetOCIError ()   { return m_errhp; }
@@ -226,6 +229,7 @@ private:
     string m_uid, m_password, m_alias;
     EConnectionMode m_mode;
     ESafety m_safety;
+    OraMetaDict::ObjectLookupCache m_ObjectLookupCache;
 
     set<Object*> m_dependencies;
 
