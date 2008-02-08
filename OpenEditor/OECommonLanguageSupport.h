@@ -40,11 +40,12 @@ namespace OpenEditor
         CommonLanguageSupport (Storage* pstorage) 
             : LanguageSupport(pstorage), MultilineQuotesScanner(*pstorage) {}
 
-        virtual bool FindMatch (int line, int offset, Match&);
+        virtual bool FindMatch (int line, int offset, Match&, bool bEnableBroken = true);
 
     private:
         struct Context;
         void setupMatch (Context&);
+        void setupLimitedMatch (Context& cxt, string limitTo);
         void readTokens (int line, Context&);
     };
 

@@ -94,6 +94,7 @@ namespace OpenEditor
         vector<MatchTokenPos> tokens;
 
         void init (const LanguagePtr&);
+        void init_limited(const LanguagePtr&, string limitTo);
     };
 
     void CommonLanguageSupport::Context::init (const LanguagePtr& lang)
@@ -139,6 +140,80 @@ namespace OpenEditor
         }
     }
 
+    void CommonLanguageSupport::Context::init_limited (const LanguagePtr& lang, string limitTo)
+    {
+        bool bFound = false;
+
+        const vector<vector<string> >& braces = lang->GetMatchBraces();
+
+        for (unsigned i = 0; i < braces.size(); i++)
+        {
+            const vector<string>& braceSet = braces[i];
+
+            bFound = false;
+
+            for (unsigned j = 0; j < braceSet.size(); j++)
+            {
+                string brace;
+                
+                if (casesensitive)
+                {
+                    brace = braceSet[j];
+                }
+                else
+                {
+                    to_upper_str(braceSet[j].c_str(), brace);
+                    to_upper_str(limitTo.c_str(), limitTo);
+                }
+
+                if (brace == limitTo)
+                {
+                    bFound = true;
+                    fastmap.erase();
+                    fullmap.clear();
+                    break;
+                }
+            }
+
+            if (bFound)
+                for (unsigned j = 0; j < braceSet.size(); j++)
+                {
+                    string brace;
+                    
+                    if (casesensitive)
+                    {
+                        brace = braceSet[j];
+                        fastmap[brace[0]] = 1;
+                    }
+                    else
+                    {
+                        to_upper_str(braceSet[j].c_str(), brace);
+                        fastmap[toupper(brace[0])] = true;
+                        fastmap[tolower(brace[0])] = true;
+                    }
+
+                    std::map<string, MatchToken>::iterator it = fullmap.find(brace);
+                    if (it == fullmap.end())
+                    {
+                        int orientation = (j == 0) ? 1 : ((j == braceSet.size()-1) ? -1 : 0);
+                        fullmap.insert(
+                            std::map<string, MatchToken>::value_type(
+                                    brace, MatchToken(brace, orientation) 
+                                )
+                            );
+                        it = fullmap.find(brace);
+                    }
+                    it->second.lexemes.insert(i);
+                }
+        }
+    }
+
+void CommonLanguageSupport::setupLimitedMatch (Context& cxt, string limitTo)
+{
+    const LanguagePtr langPtr = LanguagesCollection::Find(m_pStorage->GetSettings().GetLanguage());
+    cxt.init_limited(langPtr, limitTo);
+}
+
 void CommonLanguageSupport::setupMatch (Context& cxt)
 {
     const LanguagePtr langPtr = LanguagesCollection::Find(m_pStorage->GetSettings().GetLanguage());
@@ -161,7 +236,7 @@ void CommonLanguageSupport::setupMatch (Context& cxt)
     cxt.init(langPtr);
 }
 
-bool CommonLanguageSupport::FindMatch (int _line, int _offset, Match& match)
+bool CommonLanguageSupport::FindMatch (int _line, int _offset, Match& match, bool bEnableBroken)
 {
     _CHECK_AND_THROW_(m_pStorage, "CommonLanguageSupport has not been initialized!");
 
@@ -178,26 +253,29 @@ bool CommonLanguageSupport::FindMatch (int _line, int _offset, Match& match)
     match.offset[0] = _offset;
     match.length[0] = 0;
 
+    readTokens(_line, cxt);
+
+    vector<MatchTokenPos>::const_iterator it = cxt.tokens.begin();
+    for (; it != cxt.tokens.end(); ++it)
     {
-        readTokens(_line, cxt);
-
-        vector<MatchTokenPos>::const_iterator it = cxt.tokens.begin();
-        for (; it != cxt.tokens.end(); ++it)
+        if (it->position <= _offset 
+        && _offset < it->position + static_cast<int>(it->keyword.length()))
         {
-            if (it->position <= _offset 
-            && _offset < it->position + static_cast<int>(it->keyword.length()))
-            {
-                _offset = it->position;
-                cxt.matchStack.pop(); // empty stack - search for the current lexeme
-                cxt.backward = it->orientation == -1 ? true : false;
+            _offset = it->position;
+            cxt.matchStack.pop(); // empty stack - search for the current lexeme
+            cxt.backward = it->orientation == -1 ? true : false;
 
-                match.backward  = cxt.backward;
-                match.partial   = false;
-                match.offset[0] = it->position;
-                match.length[0] = it->keyword.length();
-                break;
-            }
+            match.backward  = cxt.backward;
+            match.partial   = false;
+            match.offset[0] = it->position;
+            match.length[0] = it->keyword.length();
+            break;
         }
+    }
+
+    if (! bEnableBroken && it != cxt.tokens.end())
+    {
+        setupLimitedMatch(cxt, it->keyword);
     }
 
     int offset = _offset;
@@ -242,8 +320,9 @@ bool CommonLanguageSupport::FindMatch (int _line, int _offset, Match& match)
                         if (!top.balance)
                             cxt.matchStack.pop();
                     }
-                    else
+                    else 
                         match.broken = true;
+
 
                     if (match.broken || cxt.matchStack.empty()) 
                     {
