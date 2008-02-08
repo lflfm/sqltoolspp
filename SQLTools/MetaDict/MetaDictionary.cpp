@@ -21,6 +21,9 @@
 #include "COMMON/ExceptionHelper.h"
 #include "MetaDict/MetaObjects.h"
 #include "MetaDict/MetaDictionary.h"
+#include "OCI8/Connect.h"
+#include "OCI8/BCursor.h"
+#include "SQLTools.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -42,6 +45,53 @@ XAlreadyExists::XAlreadyExists (const char* name)
 {
 }
 
+void ObjectLookupCache::Init()
+{
+    static const string lookupQuery = 
+    "SELECT distinct upper(o.object_name)"
+    " FROM sys.user_objects o "
+    " WHERE object_type in "
+    " ('TABLE', 'VIEW', 'PACKAGE', 'PROCEDURE', 'FUNCTION', 'INDEX', 'SEQUENCE', 'SYNONYM', 'TRIGGER', 'TYPE')"
+    " and o.object_name is not null";
+
+    OciConnect & m_connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
+
+    Reset();
+
+    if (m_connect.IsOpen())
+    {
+        CWaitCursor wait;
+        CAbortController abortCtrl(*GetAbortThread(), &m_connect);
+        abortCtrl.SetActionText("Loading object cache...");
+
+        try
+        {
+            OciCursor cursor(m_connect, lookupQuery.c_str());
+            cursor.Execute();
+            string sObjectName;
+            while (cursor.Fetch())
+            {
+                cursor.GetString(0, sObjectName);
+                m_ObjectCache.insert(sObjectName);
+                if (sObjectName.length() > 0)
+                    m_Fastmap[sObjectName[0]] = true;
+            }
+        }
+        catch (const OciException& x)
+        {
+            MessageBeep((UINT)-1);
+            MessageBox(NULL, x.what(), "Error populating Object Lookup Cache", MB_OK|MB_ICONEXCLAMATION);
+        }
+    }
+}
+
+bool ObjectLookupCache::Lookup(const string sLookup) const
+{
+    if ((sLookup.length() > 0) && m_Fastmap[sLookup[0]])
+        return (m_ObjectCache.find(sLookup) != m_ObjectCache.end());
+    else
+        return false;
+}
 
 const char* make_key (char szKey[cnDbKeySize], const char* szOwner, const char* szName)
 {

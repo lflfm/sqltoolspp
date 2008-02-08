@@ -37,9 +37,10 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <hash_set>
 #include "arg_shared.h"
 #include "MetaDict\MetaObjects.h"
-
+#include "COMMON/Fastmap.h"
 
 namespace OraMetaDict 
 {
@@ -49,6 +50,7 @@ namespace OraMetaDict
     using std::map;
     using std::list;
     using std::vector;
+    using stdext::hash_set;
     using arg::counted_ptr;
 
     class XNotFound : public std::exception 
@@ -169,6 +171,17 @@ namespace OraMetaDict
     typedef SnapshotMap::iterator          SnapshotMapIter;
     typedef SnapshotMap::const_iterator    SnapshotMapConstIter;
 
+    class ObjectLookupCache
+    {
+    public:
+        void Reset() {m_ObjectCache.clear(); m_Fastmap.erase();};
+        void Init();
+        bool Lookup (const string sLookup) const;
+
+    private:
+        hash_set<string> m_ObjectCache;
+        Common::Fastmap<bool> m_Fastmap;
+    };
 
     class Dictionary 
     {
