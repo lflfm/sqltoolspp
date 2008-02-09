@@ -57,6 +57,8 @@ void CPlusPlusPage::DoDataExchange(CDataExchange* pDX)
 	DDX_Check(pDX, IDC_PROP_PLUS_HALT_ON_ERRORS,    m_Settings.m_HaltOnErrors);
 	DDX_Check(pDX, IDC_PROP_PLUS_SAVE_BEF_EXECUTE,  m_Settings.m_SaveFilesBeforeExecute);
     DDX_Check(pDX, IDC_PROP_PLUS_ORDERBY_NAME,      m_Settings.m_ColumnOrderByName);
+    DDX_Check(pDX, IDC_PROP_PLUS_ENHANCED_VISUALS,  m_Settings.m_EnhancedVisuals);
+    DDX_Text(pDX,  IDC_PROP_PLUS_MAX_IDENT_LENGTH,  m_Settings.m_MaxIdentLength);
 }
 
 BEGIN_MESSAGE_MAP(CPlusPlusPage, CPropertyPage)

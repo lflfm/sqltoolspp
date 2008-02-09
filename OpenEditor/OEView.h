@@ -29,6 +29,7 @@
 #include "OpenEditor/OEContext.h"
 #include "OpenEditor/OEAutocompleteCtrl.h"
 #include "OpenEditor/OEViewPaintAccessories.h"
+#include "OpenEditor/OELanguageSupport.h"
 
     using arg::counted_ptr;
     class COEDocument;
@@ -103,6 +104,9 @@ class COEditorView : public CView, protected OpenEditor::EditContext
     void AdjustHorzSibling ();
     void DoPageDown ();
     void DoPageUp ();
+
+    bool IsBrace(char ch);
+    bool IsCurPosBrace(OpenEditor::LanguageSupport::Match &match);
 
     COEViewPaintAccessoriesPtr m_paintAccessories; // container for shared GDI objects
     counted_ptr<OpenEditor::HighlighterBase> m_highlighter;
