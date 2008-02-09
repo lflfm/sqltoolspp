@@ -25,6 +25,8 @@
 #include "stdafx.h"
 #include "OpenEditor/OEHighlighter.h"
 #include "COMMON/VisualAttributes.h"
+#include "SQLTools.h"
+#include "COMMON/StrHelpers.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -88,6 +90,8 @@ void PlSqlHighlighter::Init (const VisualAttributesSet& set_)
     m_bindVarAttrs = set_.FindByName("Bind Variable");
     m_substitutionAttrs = set_.FindByName("Substitution");
     m_fileNameAttrs = set_.FindByName("File name (@ & @@)");
+    m_KnownObjectAttr = m_fileNameAttrs;
+    m_KnownObjectAttr.color = set_.FindByName("Random Bookmark").m_Background;
 }
 
 void PlSqlHighlighter::NextLine (const char* currentLine, int currentLineLength)
@@ -102,8 +106,50 @@ void PlSqlHighlighter::NextLine (const char* currentLine, int currentLineLength)
     CommonHighlighter::NextLine(currentLine, currentLineLength);
 }
 
+bool PlSqlHighlighter::IsPlainText()
+{
+    if ((m_openBrace == '@') && GetSQLToolsSettings().GetEnhancedVisuals()) 
+        return false; 
+    else return CommonHighlighter::IsPlainText(); 
+}
+
+int PlSqlHighlighter::GetActualTokenLength(const char* str, int len)
+{
+    if (len > 0)
+    {
+        if (*(str + len - 1) == '"')
+            len--;
+        if (len > 0 && (*str == '"'))
+            len--;
+    }
+    return len;
+}
+
+bool PlSqlHighlighter::IsQuotedIdentifier(const char* str, int len)
+{
+    if (len > 2)
+        return ((*(str + len - 1) == '"') && (*str == '"')) ? true : false;
+    else
+        return false;
+}
+
 void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
 {
+    string sKeyword;
+    if (len > 0 && GetSQLToolsSettings().GetEnhancedVisuals() && 
+        (m_seqOf & ePlainGroup) && 
+        (m_openBrace == 0) && 
+        (! IsKeyword(str, len, sKeyword) || IsQuotedIdentifier(str, len)))
+    {
+        string sLookup(str + ((*str == '"') ? 1 : 0), GetActualTokenLength(str, len));
+        Common::to_upper_str(sLookup.c_str(), sLookup);
+        if (m_ObjectLookupCache.Lookup(sLookup))
+        {
+            m_current = m_KnownObjectAttr;
+            return;
+        }
+    }
+
     switch (m_openBrace)
     {
     case '@':
@@ -135,7 +181,7 @@ void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
         if (m_seqOf == eString) m_current = m_stringAttr;
     }
 
-    if (!(m_seqOf & eCommentGroup))
+    if (!(m_seqOf & eCommentGroup) && (!(m_seqOf & eStringGroup) || !GetSQLToolsSettings().GetEnhancedVisuals()))
     {
         switch (*str)
         {
