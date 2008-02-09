@@ -559,8 +559,10 @@ void CPLSWorksheetDoc::PrintExecTime (std::ostream& out, double seconds)
             << ':' << setw(2) << setfill('0') << n_seconds
             << &s_fraction[1]
             << " (" << seconds << " sec.)";
-    else
+    else if (n_seconds > 0)
         out << seconds << " sec.";
+    else
+        out << int(n_fraction * 1000) << " ms";
 }
 
 bool CPLSWorksheetDoc::IsBlankLine(const char *linePtr, const int len)
