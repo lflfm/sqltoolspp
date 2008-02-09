@@ -47,7 +47,7 @@ namespace OpenEditor
             Match () { memset(this, 0, sizeof(*this)); }
         };
 
-        virtual bool FindMatch (int line, int offset, Match&) = 0;
+        virtual bool FindMatch (int line, int offset, Match&, bool bEnableBroken = true) = 0;
 
         // for background processing
         virtual bool OnIdle () { return false; };
