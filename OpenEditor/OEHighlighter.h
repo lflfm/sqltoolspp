@@ -29,6 +29,8 @@
 #include <OpenEditor/OEHelpers.h>
 #include <OpenEditor/OELanguage.h>
 #include <Common/Fastmap.h>
+#include <MetaDict/MetaDictionary.h>
+#include "SQLTools.h"
 
 
 namespace Common
@@ -84,6 +86,7 @@ namespace OpenEditor
         // export some additional functionality
         virtual bool IsKeyword (const char* str, int len, string&) = 0;
         virtual bool IsPlainText () = 0;
+        virtual int GetActualTokenLength(const char* , int len) = 0;
     protected:
         struct Attrib
         {
@@ -115,6 +118,7 @@ namespace OpenEditor
         // export some additional functionality
         virtual bool IsKeyword (const char* str, int len, string&);
         virtual bool IsPlainText () { return m_seqOf & ePlainText? true : false; };
+        virtual int GetActualTokenLength(const char* , int len) { return len; };
     protected:
         bool openingOfSeq (const char* str, int len, int pos);
         bool closingOfSeq (const char* str, int len, int pos);
@@ -196,12 +200,18 @@ namespace OpenEditor
 	    virtual void Init (const VisualAttributesSet&);
 	    virtual void NextLine (const char*, int);
 	    virtual void NextWord (const char*, int, int);
+        virtual bool IsPlainText ();
+        virtual int GetActualTokenLength(const char* str, int len);
 
     private:
         char m_openBrace;
         Attrib m_bindVarAttrs;
         Attrib m_substitutionAttrs;
         Attrib m_fileNameAttrs;
+        Attrib m_KnownObjectAttr;
+        const OraMetaDict::ObjectLookupCache &m_ObjectLookupCache;
+        bool IsQuotedIdentifier(const char* str, int len);
+
     };
 
     ///////////////////////////////////////////////////////////////////////
@@ -301,7 +311,8 @@ namespace OpenEditor
 
     inline
     PlSqlHighlighter::PlSqlHighlighter () 
-        : CommonHighlighter("PL/SQL") {} 
+        : CommonHighlighter("PL/SQL"), 
+          m_ObjectLookupCache(((CSQLToolsApp*)AfxGetApp())->GetConnect().GetObjectLookupCache()) {} 
 
     inline
     SqrHighlighter::SqrHighlighter () 
