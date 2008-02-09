@@ -329,7 +329,7 @@ BEGIN
     LTEXT           "External Tool &Executable",IDC_STATIC,15,64,240,10
     EDITTEXT        IDC_PROP_PLUS_EXTERNAL_TOOL_CMD,15,77,230,12,
                     ES_AUTOHSCROLL,WS_EX_LEFT
-    PUSHBUTTON      ">>",IDC_PROP_PLUS_SELECT_DIR,250,77,12,12
+    PUSHBUTTON      "..",IDC_PROP_PLUS_SELECT_DIR,250,77,12,12
     LTEXT           "&Parameters, use the following placeholders:<USER>,<PASSWORD>,",IDC_STATIC,15,92,240,10
     LTEXT           "<CONNECT_STRING>,<SYS_PRIVS>,<FILENAME>",IDC_STATIC,15,105,240,10
     EDITTEXT        IDC_PROP_PLUS_EXTERNAL_TOOL_PAR,15,118,230,12,
@@ -342,6 +342,12 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,159,240,10
     CONTROL         "Order column &names of tables alphabetically",IDC_PROP_PLUS_ORDERBY_NAME,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,172,240,10
+    CONTROL         "Enhanced &Visuals",IDC_PROP_PLUS_ENHANCED_VISUALS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,185,80,10
+    LTEXT           "Max Length &Identifier:",IDC_STATIC,95,186,80,10
+    EDITTEXT        IDC_PROP_PLUS_MAX_IDENT_LENGTH,170,184,22,12,
+                    ES_AUTOHSCROLL | ES_NUMBER,WS_EX_LEFT
+    LTEXT           "0 for unlimited",IDC_STATIC,195,186,60,10
 END
 
 IDD_DBS_PROP_TABLE DIALOGEX 0, 0, 266, 135
@@ -1598,7 +1604,7 @@ BEGIN
         MENUITEM "D&isable",                    IDC_DS_DISABLE, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "Select &All",                 ID_EDIT_SELECT_ALL
-        MENUITEM "&Refresh All",                IDC_DS_REFRESH
+        MENUITEM "&Refresh All",                IDC_DS_REFRESH_ALL
     END
 END
 
@@ -1629,6 +1635,7 @@ BEGIN
         MENUITEM "D&isable",                    IDC_DS_DISABLE, GRAYED
         MENUITEM SEPARATOR
         MENUITEM "Select &All",                 ID_EDIT_SELECT_ALL
+        MENUITEM "&Refresh All",                IDC_DS_REFRESH_ALL
     END
 END
 

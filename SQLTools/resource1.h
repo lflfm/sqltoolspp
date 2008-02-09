@@ -306,6 +306,9 @@
 #define IDC_PROP_PLUS_SAVE_BEF_EXECUTE  1706
 #define IDC_PROP_PLUS_SELECT_DIR        1707
 #define IDC_PROP_PLUS_ORDERBY_NAME      1710
+#define IDC_PROP_PLUS_ENHANCED_VISUALS  1711
+#define IDC_PROP_PLUS_MAX_IDENT_LENGTH  1712
+#define IDC_DS_REFRESH_ALL              1713
 #define IDD_DFP_DIRSELECT               2000
 #define IDC_PFC_RESET_ALL               2001
 #define IDC_PFC_ITEMS                   2002
