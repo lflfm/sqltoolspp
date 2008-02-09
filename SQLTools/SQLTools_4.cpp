@@ -58,6 +58,10 @@ void CSQLToolsApp::OnSettingsChanged ()
         m_connect->AlterSessionNlsParams();
         m_connect->CheckShadowSession(settings.GetSessionStatistics() || 
                                       settings.GetDbmsXplanDisplayCursor());
+        if (settings.GetEnhancedVisuals())
+            m_connect->GetObjectLookupCache().Init();
+        else
+            m_connect->GetObjectLookupCache().Reset();
     }
     _DEFAULT_HANDLER_
 
