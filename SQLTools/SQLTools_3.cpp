@@ -77,6 +77,21 @@ bool CSQLToolsApp::EvAfterOpenConnect (OciConnect&)
 
     ((CMDIMainFrame*)m_pMainWnd)->GetConnectionBar().SetConnectionDescription(m_displayConnectionString, color);
 
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+    {
+        if (m_pMainWnd != NULL)
+        {
+            CFrameWnd *activeFrame = ((CMDIMainFrame*)m_pMainWnd)->GetActiveFrame();
+            if (activeFrame != NULL)
+            {
+                CView *activeView = activeFrame->GetActiveView();
+                
+                if (activeView != NULL)
+                    activeView->Invalidate();
+            }
+        }
+    }
+
     CDbSourceWnd::EvOnConnectAll();
 
     if (GetSQLToolsSettings().GetSessionStatistics())
@@ -197,6 +212,21 @@ bool CSQLToolsApp::EvAfterCloseConnect (OciConnect&)
             CStatView::CloseAll();
         }
         _DEFAULT_HANDLER_
+    }
+
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+    {
+        if (m_pMainWnd != NULL)
+        {
+            CFrameWnd *activeFrame = ((CMDIMainFrame*)m_pMainWnd)->GetActiveFrame();
+            if (activeFrame != NULL)
+            {
+                CView *activeView = activeFrame->GetActiveView();
+                
+                if (activeView != NULL)
+                    activeView->Invalidate();
+            }
+        }
     }
 
     return true;
