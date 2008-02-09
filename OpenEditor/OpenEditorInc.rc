@@ -1186,7 +1186,7 @@ BEGIN
     ID_INDICATOR_BLOCK_TYPE " Sel:Columnar "
     ID_INDICATOR_FILE_LINES "============"
     ID_INDICATOR_FILE_TYPE  " Unix "
-    ID_INDICATOR_POS        "================"
+    ID_INDICATOR_POS        "======================="
     ID_INDICATOR_SCROLL_POS "=================="
     ID_INDICATOR_CUR_CHAR   " Chr: ' '=0x00=000 "
 END
