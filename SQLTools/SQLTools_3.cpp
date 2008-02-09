@@ -79,17 +79,7 @@ bool CSQLToolsApp::EvAfterOpenConnect (OciConnect&)
 
     if (GetSQLToolsSettings().GetEnhancedVisuals())
     {
-        if (m_pMainWnd != NULL)
-        {
-            CFrameWnd *activeFrame = ((CMDIMainFrame*)m_pMainWnd)->GetActiveFrame();
-            if (activeFrame != NULL)
-            {
-                CView *activeView = activeFrame->GetActiveView();
-                
-                if (activeView != NULL)
-                    activeView->Invalidate();
-            }
-        }
+        COEDocument::GetSettingsManager().GetGlobalSettings()->NotifySettingsChanged();
     }
 
     CDbSourceWnd::EvOnConnectAll();
@@ -216,17 +206,7 @@ bool CSQLToolsApp::EvAfterCloseConnect (OciConnect&)
 
     if (GetSQLToolsSettings().GetEnhancedVisuals())
     {
-        if (m_pMainWnd != NULL)
-        {
-            CFrameWnd *activeFrame = ((CMDIMainFrame*)m_pMainWnd)->GetActiveFrame();
-            if (activeFrame != NULL)
-            {
-                CView *activeView = activeFrame->GetActiveView();
-                
-                if (activeView != NULL)
-                    activeView->Invalidate();
-            }
-        }
+        COEDocument::GetSettingsManager().GetGlobalSettings()->NotifySettingsChanged();
     }
 
     return true;
