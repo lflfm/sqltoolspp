@@ -54,6 +54,8 @@ SQLToolsSettings::SQLToolsSettings ()
     m_HaltOnErrors        = false;
     m_SaveFilesBeforeExecute = false;
     m_ColumnOrderByName = false;
+    m_EnhancedVisuals = true;
+    m_MaxIdentLength = 30;
                                  
     m_GridMaxColLength           = 16;
     m_GridMultilineCount         = 3;
@@ -200,6 +202,8 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
     OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, HaltOnErrors, false);
     OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, SaveFilesBeforeExecute, false);
     OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, ColumnOrderByName, false);    
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, EnhancedVisuals, true);    
+    OESMS_VER_READ_MEMBER_DEFAULT(1017, settings, MaxIdentLength, 30);    
                                 
     OESMS_READ_MEMBER(settings, GridMaxColLength          );
     OESMS_READ_MEMBER(settings, GridMultilineCount        );
@@ -306,6 +310,8 @@ void SQLToolsSettingsWriter::operator << (const SQLToolsSettings& settings)
     OESMS_WRITE_MEMBER(settings, HaltOnErrors );
     OESMS_WRITE_MEMBER(settings, SaveFilesBeforeExecute );
     OESMS_WRITE_MEMBER(settings, ColumnOrderByName );
+    OESMS_WRITE_MEMBER(settings, EnhancedVisuals);    
+    OESMS_WRITE_MEMBER(settings, MaxIdentLength);    
                                 
     OESMS_WRITE_MEMBER(settings, GridMaxColLength          );
     OESMS_WRITE_MEMBER(settings, GridMultilineCount        );

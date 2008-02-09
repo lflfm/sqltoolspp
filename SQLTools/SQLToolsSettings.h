@@ -80,6 +80,8 @@ public:
     OES_DECLARE_PROPERTY(bool,   UseDbmsMetaData);
     OES_DECLARE_PROPERTY(bool,   SaveFilesBeforeExecute);
     OES_DECLARE_PROPERTY(bool,   ColumnOrderByName);
+    OES_DECLARE_PROPERTY(bool,   EnhancedVisuals);
+    OES_DECLARE_PROPERTY(int,    MaxIdentLength);
 
     OES_DECLARE_PROPERTY(int,    GridMaxColLength        );
     OES_DECLARE_PROPERTY(int,    GridMultilineCount      );
