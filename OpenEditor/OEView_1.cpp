@@ -1068,11 +1068,255 @@ void COEditorView::OnUpdate_Mode (CCmdUI* pCmdUI)
     pCmdUI->Enable(m_isOverWriteMode);
 }
 
+bool COEditorView::IsBrace(char ch)
+{
+    string theChar(&ch, 1);
+    const LanguagePtr langPtr = LanguagesCollection::Find(GetSettings().GetLanguage());
+    const vector<vector<string> >& braces = langPtr->GetMatchBraces();
+    const static string defaultBraces = "()[]{}<>";
+    bool bIsBrace = false;
+
+    if (! langPtr->IsCaseSensitive())
+        Common::to_upper_str(theChar.c_str(), theChar);
+
+    for (unsigned i = 0; i < braces.size(); i++)
+    {
+        const vector<string>& braceSet = braces[i];
+
+        for (unsigned j = 0; j < braceSet.size(); j++)
+        {
+            string brace;
+            
+            if (langPtr->IsCaseSensitive())
+            {
+                brace = braceSet[j];
+            }
+            else
+            {
+                Common::to_upper_str(braceSet[j].c_str(), brace);
+            }
+
+            if ((brace == theChar) && (defaultBraces.find(ch) != string::npos))
+            {
+                bIsBrace = true;
+                break;
+            }
+        }
+    }
+    
+    return bIsBrace;
+}
+
+bool COEditorView::IsCurPosBrace(LanguageSupport::Match &match)
+{
+    static OpenEditor::Position curPosCache = OpenEditor::Position(m_curCharCache.pos);
+    Position pos = GetPosition();
+    static bool bIsBrace = false;
+    static LanguageSupport::Match matchCache;
+
+    if ((m_curCharCache.pos.column == -1) && (m_curCharCache.pos.line == -1))
+        curPosCache = m_curCharCache.pos;
+
+    if (curPosCache != pos)
+    {
+        curPosCache = pos;
+        bIsBrace = false;
+        if (pos.line < GetLineCount()
+        && pos.column <= GetLineLength(pos.line))
+        {
+            int len;
+            const char* str;
+            GetLine(pos.line, str, len);
+            int inx;
+            if (pos.column < GetLineLength(pos.line))
+            {
+                inx = pos2inx(str, len, pos.column);
+                if (IsBrace(str[inx]))
+                {
+                    GetMatchInfo(matchCache, false, true);
+                    bIsBrace = true;
+                    if (matchCache.found && (matchCache.length[0] == 0 || matchCache.length[1] == 0))
+                        bIsBrace = false;
+                }
+            }
+            if (! bIsBrace && pos.column > 0)
+            {
+                inx = pos2inx(str, len, pos.column - 1);
+                if (IsBrace(str[inx]))
+                {
+                    GetMatchInfo(matchCache);
+                    bIsBrace = true;
+                    if (matchCache.found && (matchCache.length[0] == 0 || matchCache.length[1] == 0))
+                        bIsBrace = false;
+                }
+            }
+        }
+    }
+
+    match = matchCache;
+    return bIsBrace;
+}
+
 void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
 {
     char buff[80];
     Position pos = GetPosition();
-    sprintf(buff, " Ln: %d, Col: %d", pos.line + 1, pos.column + 1);
+    static bool bPrevIsBrace = false;
+    static LanguageSupport::Match prevMatch;
+    static Square blk;
+    static int nChars = 0;
+    static bool blockExist = false;
+    static EBlockMode blkMode;
+    static bool bLastCharStartLine = false;
+    Square curBlk;
+    static Square cacheBlk;
+#ifdef _XDEBUG
+    static int testCounter = 0;
+#endif
+
+    GetSelection(curBlk);
+
+    if (m_curCharCache.pos != pos || (cacheBlk != curBlk && GetSQLToolsSettings().GetEnhancedVisuals()))
+    {
+#ifdef _XDEBUG
+        testCounter++;
+#endif
+    
+        m_curCharCache.pos = pos;
+        cacheBlk = curBlk;
+        bool bIsBrace = false;
+        LanguageSupport::Match match;
+
+        if (GetSQLToolsSettings().GetEnhancedVisuals())
+        {
+            bIsBrace = IsCurPosBrace(match);
+
+            if (bPrevIsBrace)
+            {
+                CRect rc;
+                rc.left   = m_Rulers[0].PosToPix(prevMatch.offset[0]);
+                rc.right  = m_Rulers[0].PosToPix(prevMatch.offset[0] + prevMatch.length[0]);
+                rc.top    = m_Rulers[1].PosToPix(prevMatch.line[0]);
+                rc.bottom = m_Rulers[1].PosToPix(prevMatch.line[0] + 1);
+                InvalidateRect(&rc);
+
+                if (prevMatch.found && ! prevMatch.broken)
+                {
+                    rc.left   = m_Rulers[0].PosToPix(prevMatch.offset[1]);
+                    rc.right  = m_Rulers[0].PosToPix(prevMatch.offset[1] + prevMatch.length[1]);
+                    rc.top    = m_Rulers[1].PosToPix(prevMatch.line[1]);
+                    rc.bottom = m_Rulers[1].PosToPix(prevMatch.line[1] + 1);
+                    InvalidateRect(&rc);
+                }
+            }
+
+            if (bIsBrace)
+            {
+                CRect rc;
+                rc.left   = m_Rulers[0].PosToPix(match.offset[0]);
+                rc.right  = m_Rulers[0].PosToPix(match.offset[0] + match.length[0]);
+                rc.top    = m_Rulers[1].PosToPix(match.line[0]);
+                rc.bottom = m_Rulers[1].PosToPix(match.line[0] + 1);
+                InvalidateRect(&rc);
+
+                if (match.found && ! match.broken)
+                {
+                    rc.left   = m_Rulers[0].PosToPix(match.offset[1]);
+                    rc.right  = m_Rulers[0].PosToPix(match.offset[1] + match.length[1]);
+                    rc.top    = m_Rulers[1].PosToPix(match.line[1]);
+                    rc.bottom = m_Rulers[1].PosToPix(match.line[1] + 1);
+                    InvalidateRect(&rc);
+                }
+            }
+            bPrevIsBrace = bIsBrace;
+            prevMatch = match;
+
+            GetSelection(blk);
+            blockExist = !blk.is_empty();
+            blkMode = GetBlockMode();
+
+            if (blockExist)
+            {
+                if (blkMode == ebtColumn)
+                {
+                    if (blk.start.line > blk.end.line)
+                        std::swap(blk.start.line, blk.end.line);
+                    if (blk.start.column > blk.end.column)
+                        std::swap(blk.start.column, blk.end.column);
+                }
+                else
+                {
+                    if ((blk.start.line == blk.end.line) && (blk.start.column > blk.end.column))
+                        std::swap(blk.start.column, blk.end.column);
+                    if (blk.start.line > blk.end.line)
+                    {
+                        std::swap(blk.start.column, blk.end.column);
+                        std::swap(blk.start.line, blk.end.line);
+                    }
+                    const char* currentLine; 
+                    int currentLineLength;
+                    nChars = 0;
+                    for (int i = blk.start.line; i <= blk.end.line; i++)
+                    {
+                        if (i >= GetLineCount())
+                            break;
+                        GetLine(i, currentLine, currentLineLength);
+                        if ((i == blk.start.line) && (i == blk.end.line))
+                        {
+                            bLastCharStartLine = false;
+                            nChars += blk.end.column - blk.start.column;
+                        }
+                        else if (i == blk.start.line)
+                        {
+                            nChars += currentLineLength - blk.start.column;
+                            if (currentLineLength == blk.start.column)
+                                bLastCharStartLine = true;
+                            else
+                                bLastCharStartLine = false;
+                        }
+                        else if (i == blk.end.line)
+                            nChars += blk.end.column;
+                        else
+                            nChars += currentLineLength;
+                    }
+                }
+            }
+        }
+        else
+        {
+            blockExist = false;
+        }
+    }
+
+    if (blockExist)
+        if (blkMode == ebtColumn)
+            sprintf(buff, " Ln: %d, Col: %d [RxC: %dx%d, %d]", 
+                    pos.line + 1, 
+                    pos.column + 1,
+                    blk.end.line - blk.start.line + 1,
+                    blk.end.column - blk.start.column,
+                    (blk.end.line - blk.start.line + 1) * (blk.end.column - blk.start.column));
+        else
+#ifdef _XDEBUG
+            sprintf(buff, " Ln: %d, Col: %d [R: %d, %d] tst: %d", 
+                    pos.line + 1, 
+                    pos.column + 1,
+                    blk.end.line - blk.start.line + ((blk.end.column > 0 && ! bLastCharStartLine) ? 1 : 0),
+                    nChars,
+                    testCounter);
+#else
+            sprintf(buff, " Ln: %d, Col: %d [R: %d, %d]", 
+                    pos.line + 1, 
+                    pos.column + 1,
+                    blk.end.line - blk.start.line + ((blk.end.column > 0 && ! bLastCharStartLine) ? 1 : 0),
+                    nChars);
+#endif
+    else
+#ifdef _XDEBUG
+        sprintf(buff, " Ln: %d, Col: %d tst: %d", pos.line + 1, pos.column + 1, testCounter);
+#else
+        sprintf(buff, " Ln: %d, Col: %d", pos.line + 1, pos.column + 1);
+#endif
     pCmdUI->SetText(buff);
     pCmdUI->Enable(TRUE);
 }
@@ -1132,16 +1376,22 @@ void COEditorView::OnUpdate_CurChar (CCmdUI* pCmdUI)
 void COEditorView::OnEditToggleColumnarSelection()
 {
     SetBlockMode(ebtColumn);
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+        m_curCharCache.Reset();
 }
 
 void COEditorView::OnEditToggleStreamSelection()
 {
     SetBlockMode(ebtStream);
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+        m_curCharCache.Reset();
 }
 
 void COEditorView::OnEditToggleSelectionMode()
 {
     SetBlockMode(GetBlockMode() == ebtStream ? ebtColumn : ebtStream);
+    if (GetSQLToolsSettings().GetEnhancedVisuals())
+        m_curCharCache.Reset();
 }
 
 void COEditorView::OnUpdate_SelectionType(CCmdUI* pCmdUI)
@@ -2195,6 +2445,9 @@ void COEditorView::OnActivateView(BOOL bActivate, CView* pActivateView, CView* p
         if (m_autocompleteList.IsActive()) 
             m_autocompleteList.HideControl();
     }
+
+    if (bActivate && GetSQLToolsSettings().GetEnhancedVisuals())
+        m_curCharCache.Reset();
 
     CView::OnActivateView(bActivate, pActivateView, pDeactiveView);
 }
