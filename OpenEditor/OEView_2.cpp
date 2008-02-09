@@ -29,6 +29,7 @@
 #include "OpenEditor/OEDocument.h"
 #include "OpenEditor/OEView.h"
 #include "OpenEditor/OEHighlighter.h"
+#include "SQLTools.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -314,6 +315,14 @@ void COEditorView::OnPaint ()
         int endFileLine = GetLineCount() - m_Rulers[1].m_Topmost;
         int curLine = GetPosition().line -  m_Rulers[1].m_Topmost;
 
+        LanguageSupport::Match match;
+        bool bIsBrace = false;
+        
+        if (GetSQLToolsSettings().GetEnhancedVisuals())
+        {
+            bIsBrace = IsCurPosBrace(match);
+        }
+
         for (int i(scr.start.line); i <= scr.end.line; i++)
         {
             int firstWordPos = -1;
@@ -401,7 +410,53 @@ void COEditorView::OnPaint ()
                                 {
                                     m_paintAccessories->SelectFont(memDc, phighlighter->GetFontIndex());
                                     memDc.SetTextColor(phighlighter->GetTextColor());
+                                    
+                                    if (GetSQLToolsSettings().GetEnhancedVisuals())
+                                    {
+                                        if (bIsBrace)
+                                        {
+                                            if (((i + m_Rulers[1].m_Topmost == match.line[0]) && (pos == match.offset[0])) ||
+                                                (match.found && ! match.broken && (i + m_Rulers[1].m_Topmost == match.line[1]) && (pos == match.offset[1])))
+                                            {
+                                                if (! phighlighter->IsPlainText() || ! IsBrace(*str))
+                                                {
+                                                    bIsBrace = false;
+                                                }
+                                                else
+                                                {
+                                                    RECT rcToken;
+                                                    rcToken.left = m_Rulers[0].PosToPix(pos);
+                                                    rcToken.right = rcToken.left + m_Rulers[0].m_CharSize * len;
+                                                    rcToken.top = rcLine.top;
+                                                    rcToken.bottom = rcLine.bottom;
+                                                    static CBrush brush(RGB(255,0,0));
+                                                    memDc.FillRect(&rcToken, 
+                                                                   (match.found && ! match.broken) ? 
+                                                                   &m_paintAccessories->m_RndBmkBrush : &brush);
+                                                                   // &m_paintAccessories->m_BmkBrush);
+                                                }
+                                            }
+                                        }
+
+                                        int nMaxIdentLength = GetSQLToolsSettings().GetMaxIdentLength();
+
+                                        if ((nMaxIdentLength > 0) && 
+                                            phighlighter->IsPlainText() && 
+                                            phighlighter->GetActualTokenLength(str, len) > nMaxIdentLength)
+                                        {
+                                            RECT rcToken;
+                                            rcToken.left = m_Rulers[0].PosToPix(pos);
+                                            rcToken.right = rcToken.left + m_Rulers[0].m_CharSize * len;
+                                            rcToken.top = rcLine.top;
+                                            rcToken.bottom = rcLine.bottom;
+                                            memDc.SetTextColor(m_paintAccessories->m_SelTextForeground);
+                                            memDc.FillRect(&rcToken, &m_paintAccessories->m_BmkBrush);
+                                            // CBrush brush(RGB(255,0,0));
+                                            // memDc.FillRect(&rcToken, &brush);
+                                        }
+                                    }
                                 }
+
                                 memDc.TextOut(m_Rulers[0].PosToPix(pos), rcLine.top, str, len);
                             }
 
@@ -564,6 +619,9 @@ void COEditorView::OnSettingsChanged ()
         ShowCaret(::GetFocus() == m_hWnd, true/*dont_destroy_caret*/);
         AdjustCaretPosition();
     }
+
+    // if (GetSQLToolsSettings().GetEnhancedVisuals())
+    m_curCharCache.Reset();
 
     Invalidate(FALSE);
 }
