@@ -451,7 +451,7 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 //            m_connect.Commit(true/*guaranteedSafe*/);
 
         tree.Invalidate();
-        tree.SetFocus();
+        // tree.SetFocus();
 
 		ActivateTab(m_pExplainPlan);
 
@@ -460,7 +460,7 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 			{
 				m_pBooklet->getActiveView()->ShowWindow(SW_HIDE);
 				m_pXPlan->ShowWindow(SW_SHOW);
-				m_pXPlan->SetFocus();
+				// m_pXPlan->SetFocus();
 			}
     //} 
     //_DEFAULT_HANDLER_
