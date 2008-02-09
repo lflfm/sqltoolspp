@@ -45,7 +45,7 @@ PlSqlSupport::PlSqlSupport (Storage* pstorage)
 
 #pragma message ("\tSmall improvement: show message box \"Syntax parsing problem\" if pl/sql parser fails")
 
-bool PlSqlSupport::FindMatch (int line, int offset, Match& match)
+bool PlSqlSupport::FindMatch (int line, int offset, Match& match, bool )
 {
     _CHECK_AND_THROW_(m_pStorage, "PlSqlSupport has not been initialized!")
 

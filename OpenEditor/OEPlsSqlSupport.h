@@ -38,7 +38,7 @@ namespace OpenEditor
         PlSqlSupport (Storage*);
 
     // Services:
-        virtual bool FindMatch (int line, int offset, Match&);
+        virtual bool FindMatch (int line, int offset, Match&, bool bEnableBroken = true);
 
         // for background processing
         virtual bool OnIdle ();
