@@ -642,7 +642,7 @@ DECL_DATA(Snapshot) =
     "name",
     "status", ":p_status", // m_szStatusColumn, m_szStatusParam
     0,
-    false, false, true,
+    true, false, true,
     INIT_COL_REF(Snapshot)
 };
 
