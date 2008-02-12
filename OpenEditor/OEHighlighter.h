@@ -209,6 +209,7 @@ namespace OpenEditor
         Attrib m_substitutionAttrs;
         Attrib m_fileNameAttrs;
         Attrib m_KnownObjectAttr;
+        bool m_IsQuotedIdentifier;
         const OraMetaDict::ObjectLookupCache &m_ObjectLookupCache;
         bool IsQuotedIdentifier(const char* str, int len);
 
@@ -312,7 +313,8 @@ namespace OpenEditor
     inline
     PlSqlHighlighter::PlSqlHighlighter () 
         : CommonHighlighter("PL/SQL"), 
-          m_ObjectLookupCache(((CSQLToolsApp*)AfxGetApp())->GetConnect().GetObjectLookupCache()) {} 
+          m_ObjectLookupCache(((CSQLToolsApp*)AfxGetApp())->GetConnect().GetObjectLookupCache()),
+          m_IsQuotedIdentifier(false) {} 
 
     inline
     SqrHighlighter::SqrHighlighter () 

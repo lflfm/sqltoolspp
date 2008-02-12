@@ -103,12 +103,14 @@ void PlSqlHighlighter::NextLine (const char* currentLine, int currentLineLength)
             m_current = m_stringAttr;
     }
 
+    m_IsQuotedIdentifier = false;
+
     CommonHighlighter::NextLine(currentLine, currentLineLength);
 }
 
 bool PlSqlHighlighter::IsPlainText()
 {
-    if ((m_openBrace == '@') && GetSQLToolsSettings().GetEnhancedVisuals()) 
+    if (((m_openBrace == '@') || m_IsQuotedIdentifier) && GetSQLToolsSettings().GetEnhancedVisuals()) 
         return false; 
     else return CommonHighlighter::IsPlainText(); 
 }
@@ -135,11 +137,13 @@ bool PlSqlHighlighter::IsQuotedIdentifier(const char* str, int len)
 
 void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
 {
+    m_IsQuotedIdentifier = IsQuotedIdentifier(str, len);
+
     string sKeyword;
     if (len > 0 && GetSQLToolsSettings().GetEnhancedVisuals() && 
         (m_seqOf & ePlainGroup) && 
         (m_openBrace == 0) && 
-        (! IsKeyword(str, len, sKeyword) || IsQuotedIdentifier(str, len)))
+        (! IsKeyword(str, len, sKeyword) || m_IsQuotedIdentifier))
     {
         string sLookup(str + ((*str == '"') ? 1 : 0), GetActualTokenLength(str, len));
         Common::to_upper_str(sLookup.c_str(), sLookup);
