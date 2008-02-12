@@ -258,30 +258,36 @@ void Loader::loadIndexes (const char* owner, const char* table, bool byTable, bo
                 string type;
                 cur.GetString(cn_inx_index_type, type);
 
+                if (type.find("/REV") != string::npos)
+                {
+                    index.m_bReverse = true;
+                    type = string(type.c_str(), type.length() - 4);
+                }
+                else
+                    index.m_bReverse = false;
+
+
                 if (type == "NORMAL")
                     index.m_Type = eitNormal;
-                else if (type == "NORMAL/REV")
-                {
-                    index.m_Type = eitNormal;
-                    index.m_bReverse = true;
-                }
                 else if (type == "BITMAP")
                     index.m_Type = eitBitmap;
                 else if (type == "CLUSTER")
                     index.m_Type = eitCluster;
                 else if (type == "FUNCTION-BASED NORMAL")
                     index.m_Type = eitFunctionBased;
+                else if (type == "FUNCTION-BASED BITMAP")
+                    index.m_Type = eitBitmapFunctionBased;
                 else if (type == "IOT - TOP")
                     index.m_Type = eitIOT_TOP;
                 else if (type == "DOMAIN") // 03.08.2003 improvement, domain index support
                     index.m_Type = eitDomain;
                 else
-                    _CHECK_AND_THROW_(0 ,"Index loading error:\nunsupporded index type!");
+                    _CHECK_AND_THROW_(0 ,"Index loading error:\nunsupported index type!");
 
                 index.m_bUniqueness = (cur.ToString(cn_inx_uniqueness) == "UNIQUE") ? true : false;
                 index.m_bTemporary  = IsYes(cur.ToString(cn_inx_temporary));
 
-                if (index.m_Type == eitFunctionBased)
+                if ((index.m_Type == eitFunctionBased) || (index.m_Type == eitBitmapFunctionBased))
                 {
                     OciCursor cur_exp(m_connect, csz_ind_exp_sttm, 1, 4 * 1024);
                     
@@ -359,7 +365,7 @@ void Loader::loadIndexes (const char* owner, const char* table, bool byTable, bo
             
                 if (index.m_Columns.find(pos - 1) == index.m_Columns.end())
                     index.m_Columns[pos - 1] = cur.ToString(cn_inx_column_name);
-                else if (index.m_Type != eitFunctionBased)
+                else if ((index.m_Type != eitFunctionBased) && (index.m_Type != eitBitmapFunctionBased))
                     _CHECK_AND_THROW_(0, "Index reengineering algorithm failure!");
             }
         }
@@ -369,7 +375,7 @@ void Loader::loadIndexes (const char* owner, const char* table, bool byTable, bo
         if (useDba && x == 942)
         {
             _CHECK_AND_THROW_(0, "DBA_INDEXES or DBA_CLUSTERS is not accessble! "
-                               "Can't capture claster table definition. "
+                               "Can't capture cluster table definition. "
                                "Reconnect as schema owner and repeat");
         }
         else
