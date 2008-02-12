@@ -429,7 +429,7 @@ void GridView::OnLButtonDown(UINT nFlags, CPoint point)
 
         if (m_pManager->IsFixedCorner(point))
             GetGridSource()->DoDragDrop(row, col, ecDragTopLeftCorner);
-        else if (m_pManager->IsFixedCol(point.x))
+        else if (m_pManager->IsFixedCol(point.x) && GetGridSource()->GetCount(edVert) > row)
             GetGridSource()->DoDragDrop(row, col, ecDragRowHeader);
         else if (m_pManager->IsFixedRow(point.y))
             GetGridSource()->DoDragDrop(row, col, ecDragColumnHeader);
