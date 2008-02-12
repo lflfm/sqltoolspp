@@ -375,6 +375,26 @@ void COEditorView::OnPrint (CDC* pDC, CPrintInfo* pInfo)
                         pDC->SelectObject(&pc.m_Fonts[phighlighter->GetFontIndex()]);
                         pDC->SetTextCharacterExtra(pc.m_FontCharacterExtra[phighlighter->GetFontIndex()]);
                         if (!pc.m_blackAndWhite) pDC->SetTextColor(phighlighter->GetTextColor());
+
+                        if (!pc.m_blackAndWhite && GetSQLToolsSettings().GetEnhancedVisuals())
+                        {
+                            int nMaxIdentLength = GetSQLToolsSettings().GetMaxIdentLength();
+
+                            if ((nMaxIdentLength > 0) && 
+                                phighlighter->IsPlainText() && 
+                                phighlighter->GetActualTokenLength(str, len) > nMaxIdentLength)
+                            {
+                                RECT rcToken;
+                                rcToken.left = pc.m_Rulers[0](pos - pc.m_cacheWordWrapOffset);
+                                rcToken.right = rcToken.left + pc.m_Rulers[0].m_CharSize * len;
+                                rcToken.top = pc.m_Rulers[1](pageLine);
+                                rcToken.bottom = rcToken.top + pc.m_Rulers[1].m_CharSize;
+                                pDC->SetTextColor(m_paintAccessories->m_SelTextForeground);
+                                pDC->FillRect(&rcToken, &m_paintAccessories->m_BmkBrush);
+                                // CBrush brush(RGB(255,0,0));
+                                // memDc.FillRect(&rcToken, &brush);
+                            }
+                        }
                     }
 
                     pDC->TextOut(pc.m_Rulers[0](pos - pc.m_cacheWordWrapOffset),
