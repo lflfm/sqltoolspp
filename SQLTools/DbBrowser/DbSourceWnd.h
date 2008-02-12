@@ -122,6 +122,7 @@ protected:
     //{{AFX_MSG(CDbSourceWnd)
     afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg void OnSetFocusSchema();
+    afx_msg void OnDataChangedFilter();
     afx_msg void OnDataChanged();
     afx_msg void OnDataChanged2();
     afx_msg void OnRefresh();

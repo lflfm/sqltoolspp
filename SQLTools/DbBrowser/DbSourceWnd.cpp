@@ -221,8 +221,8 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_COMMAND(ID_DS_SHOW_OPTIONS, OnShowOptions)
     ON_NOTIFY(TCN_SELCHANGE, IDC_DS_TAB, OnSelChangeTab)
     ON_NOTIFY(NM_RCLICK, IDC_DS_TAB, OnRClickOnTab)
-    ON_CBN_SELCHANGE(IDC_DS_FILTER, OnDataChanged)
-    ON_CBN_EDITCHANGE(IDC_DS_FILTER, OnDataChanged)
+    ON_CBN_SELCHANGE(IDC_DS_FILTER, OnDataChangedFilter)
+    ON_CBN_EDITCHANGE(IDC_DS_FILTER, OnDataChangedFilter)
     ON_BN_CLICKED(IDC_DS_VALID, OnDataChanged2)
     ON_COMMAND(IDC_DS_CANCEL, OnCancel)
 	ON_WM_SETFOCUS()
@@ -668,6 +668,11 @@ void CDbSourceWnd::DirtyObjectsLists ()
 void CDbSourceWnd::OnDataChanged ()
 {
     DirtyObjectsLists();
+    OnDataChangedFilter();
+}
+
+void CDbSourceWnd::OnDataChangedFilter ()
+{
     UpdateData();
 
     int nTab = m_wndTab.GetCurSel();
@@ -679,11 +684,13 @@ void CDbSourceWnd::OnDataChanged ()
 
 void CDbSourceWnd::OnDataChanged2 ()
 {
+    DirtyObjectsLists();
     UpdateData();
 
     int nTab = m_wndTab.GetCurSel();
     if (nTab != -1)
-        m_wndTabLists[nTab]->ApplyQuickFilter(m_bValid, m_bInvalid);
+        m_wndTabLists[nTab]->ApplyQuickFilter(m_bValid ? true : false, 
+                                              m_bInvalid ? true : false);
         //m_wndTabLists[nTab]->RefreshList(m_bValid ? true : false,
         //                                 m_bInvalid ? true : false);
 }
@@ -701,7 +708,10 @@ void CDbSourceWnd::OnRefresh ()
 void CDbSourceWnd::OnRefreshAll ()
 {
     if (GetSQLToolsSettings().GetEnhancedVisuals())
+    {
         ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetObjectLookupCache().Init();
+        COEDocument::GetSettingsManager().GetGlobalSettings()->NotifySettingsChanged();
+    }
     
     DirtyObjectsLists();
 
