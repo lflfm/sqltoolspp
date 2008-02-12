@@ -1415,7 +1415,7 @@ bool EditContext::ExpandTemplate (int index)
     return false;
 }
 
-bool EditContext::GetMatchInfo(LanguageSupport::Match & match, bool bPartial, bool bIsBrace)
+bool EditContext::GetMatchInfo(LanguageSupport::Match & match, bool bPartial, bool bIsBrace, bool bEnableBroken)
 {
     _CHECK_ALL_PTR_
     
@@ -1427,12 +1427,12 @@ bool EditContext::GetMatchInfo(LanguageSupport::Match & match, bool bPartial, bo
         int line = m_curPos.line, 
             offset = pos2inx(m_curPos.line, m_curPos.column);
 
-        ls->FindMatch(line, offset, match, false);
+        ls->FindMatch(line, offset, match, bEnableBroken);
 
         if (offset > 0 && (!match.found || match.partial) && (! bIsBrace))
         {
             LanguageSupport::Match match2;
-            ls->FindMatch(line, offset-1, match2, false); // step back and try again
+            ls->FindMatch(line, offset-1, match2, bEnableBroken); // step back and try again
             
             if (bPartial)
             {
@@ -1482,7 +1482,7 @@ void EditContext::FindMatch (bool select)
     LanguageSupportPtr ls = m_pStorage->GetLanguageSupport();
 
 
-    if (GetMatchInfo(match, true))
+    if (GetMatchInfo(match, true, false, true))
     {
         if (match.found)
         {

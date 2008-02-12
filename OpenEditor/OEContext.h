@@ -136,7 +136,7 @@ namespace OpenEditor
 
         bool ExpandTemplate (int = -1);
 
-        bool GetMatchInfo(LanguageSupport::Match & match, bool bPartial = false, bool bIsBrace = false);
+        bool GetMatchInfo(LanguageSupport::Match & match, bool bPartial = false, bool bIsBrace = false, bool bEnableBroken = false);
         void FindMatch (bool select = false);
 
         void SetBlockMode (EBlockMode);
