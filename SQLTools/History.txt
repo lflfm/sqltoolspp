@@ -13,7 +13,7 @@ SQLTools++ Version 1.11RC2 (17-FEB-2008):
     - New feature: Added external tool placeholder <SYS_PRIVS> which can be empty, " AS SYSOPER" or " AS SYSDBA" to support
       privileged connections in external tools
     - New feature: Order columns in Object Viewer for tables by column name can be selected in PlusPlus Settings dialog
-    - Improvement: Appropriate message when no connected to database and attempting to expand a node in Object Viewer
+    - Improvement: Appropriate message when not connected to database and attempting to expand a node in Object Viewer
     - Improvement: Use environment variable ORACLE_HOME if set in environment
     - Improvement: Use environment variable TNS_ADMIN if set in environment
     - Improvement: Support TNS entries having multiple aliases assigned delimited by comma
@@ -22,16 +22,26 @@ SQLTools++ Version 1.11RC2 (17-FEB-2008):
     - Improvement: More precise information about various data types in Object Viewer: NUMBER, FLOAT, *LOB
     - Improvement: Set filter to "N/A" if none of the QuickFilters "VALID/INVALID" are selected. This should filter on 
       objects like partitioned indexes that do not have a global status but an individual status for each partition object
-    - Change: No longer set focus to "Plan" pane when performing "Explain plan", use "Switch pane" (default: F6) to set focus
+    - Improvement: "Refresh All" in Object List now actually does a "refresh all" resp. marks all tabs for refresh the next time
+      they are used (It didn't do it before, it just did a "refresh" of the current tab). 
+      Note that this "Refresh All" also refreshes the "Known object" cache used by the enhanced editor highlighting, so in case 
+      you've added objects you can use this option to refresh the cache used for highlighting
+    - Improvement: All kinds of reverse indexes and function-based bitmap indexes are handled correctly
+    - Change: No longer set focus to "Plan" pane when performing "Explain plan", use "Switch pane" (default: F6) to set focus 
       if needed
     - Change: Show execution times that are less than one second as milliseconds
     - Fix: Materialized view log handling (drop) fixed in Object List
     - Fix: Re-enabled "Allow remember manually changed column width" which was broken due to my misunderstanding
     - Fix: Get DBMS_METADATA DDL for MATERIALIZED VIEW LOG fixed
     - Fix: If unlimited DBMS_OUTPUT size is selected in settings, apply the changed setting to current connection
-    - Fix: Consistent handling of statistics setting in current session if changing the setting in Settings dialog or in GUI
+    - Fix: Consistent handling of statistics setting in current session if changing the setting in Settings dialog or in GUI 
+      via button
     - Fix: 9i emulation of DBMS_XPLAN.DISPLAY_CURSOR now also enables the "Refresh" context menu entry
     - Fix: If "Connection lost" related error is thrown from remote do not close local connection
+    - Fix: Exception no longer raised when clicking in the row header of an empty result set
+    - Fix: Changing VALID/INVALID filters in Object List now invalidates all tabs so that changed filter is applied when 
+      activated
+    - Fix: Setting a filter in an Object list tab no longer invalidates all other tabs
     - Documentation bug: 9i unfortunately does not populate the V$SQL_PLAN_STATISTICS_ALL view if statistics_level is set 
       to default value TYPICAL, therefore you don't get the basic plan info. You only get the view populated if statistics_level
       is set to ALL. Whereas 10g already mirrors basic plan information from V$SQL_PLAN into V$SQL_PLAN_STATISTICS_ALL in
