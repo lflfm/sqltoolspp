@@ -676,7 +676,7 @@ namespace OraMetaDict
         out.PutIndent();
         out.Put("CREATE ");
 
-        if (m_Type == eitBitmap)
+        if ((m_Type == eitBitmap) || (m_Type == eitBitmapFunctionBased))
             out.Put("BITMAP ");
         else
             if (m_Type != eitCluster && m_bUniqueness) 
@@ -696,7 +696,7 @@ namespace OraMetaDict
             out.PutOwnerAndName(m_strTableOwner, m_strTableName, settings.m_bShemaName);
             out.Put(" (");
             out.NewLine();
-            out.WriteColumns(m_Columns, 2, m_Type != eitFunctionBased);
+            out.WriteColumns(m_Columns, 2, (m_Type != eitFunctionBased) && (m_Type != eitBitmapFunctionBased));
             out.PutLine(")");
         }
         else

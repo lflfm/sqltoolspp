@@ -287,7 +287,7 @@ namespace OraMetaDict
 
 
     /// INDEX object ////////////////////////////////////////////////////////
-    enum IndexType { eitNormal, eitBitmap, eitCluster, eitFunctionBased, eitIOT_TOP, eitDomain };
+    enum IndexType { eitNormal, eitBitmap, eitBitmapFunctionBased, eitCluster, eitFunctionBased, eitIOT_TOP, eitDomain };
 
     class Index : public DbObject, public StorageExt  
     {
