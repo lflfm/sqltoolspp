@@ -1,7 +1,7 @@
  History
 ~~~~~~~~~
 
-SQLTools++ Version 1.11RC2 (17-FEB-2008):
+SQLTools++ Version 1.20RC3 (17-FEB-2008):
 
     - New major feature: Enhanced editor highlighting
       * Match braces
