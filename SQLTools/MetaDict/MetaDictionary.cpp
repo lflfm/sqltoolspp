@@ -60,12 +60,12 @@ void ObjectLookupCache::Init()
 
     if (m_connect.IsOpen())
     {
-        CWaitCursor wait;
-        CAbortController abortCtrl(*GetAbortThread(), &m_connect);
-        abortCtrl.SetActionText("Loading object cache...");
-
         try
         {
+            CWaitCursor wait;
+            CAbortController abortCtrl(*GetAbortThread(), &m_connect);
+            abortCtrl.SetActionText("Loading object cache...");
+
             OciCursor cursor(m_connect, lookupQuery.c_str());
             cursor.Execute();
             string sObjectName;
