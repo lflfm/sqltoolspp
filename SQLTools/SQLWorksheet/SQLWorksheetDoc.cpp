@@ -92,6 +92,7 @@ CPLSWorksheetDoc::CPLSWorksheetDoc()
     m_LoadedFromDB = false;
     m_pEditor   = 0;
     m_pBooklet  = 0;
+    m_pXPlan    = 0;
 
     for (int i = 0; i < sizeof(m_BookletFamily) / sizeof(m_BookletFamily[0]); i++)
         m_BookletFamily[i] = 0;
