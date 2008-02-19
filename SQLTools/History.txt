@@ -1,7 +1,7 @@
  History
 ~~~~~~~~~
 
-SQLTools++ Version 1.20RC3 (17-FEB-2008):
+SQLTools++ Version 1.20RC3 (24-FEB-2008):
 
     - New major feature: Enhanced editor highlighting
       * Match braces
@@ -12,7 +12,7 @@ SQLTools++ Version 1.20RC3 (17-FEB-2008):
     - New feature: Auto resize columns after each fetch (analyses only the newly fetched array of rows)
     - New feature: Added external tool placeholder <SYS_PRIVS> which can be empty, " AS SYSOPER" or " AS SYSDBA" to support
       privileged connections in external tools
-    - New feature: Order columns in Object Viewer for tables by column name can be selected in PlusPlus Settings dialog
+    - New feature: Order columns in Object Viewer for tables by column name, can be selected in PlusPlus Settings dialog
     - Improvement: Appropriate message when not connected to database and attempting to expand a node in Object Viewer
     - Improvement: Use environment variable ORACLE_HOME if set in environment
     - Improvement: Use environment variable TNS_ADMIN if set in environment
@@ -42,6 +42,7 @@ SQLTools++ Version 1.20RC3 (17-FEB-2008):
     - Fix: Changing VALID/INVALID filters in Object List now invalidates all tabs so that changed filter is applied when 
       activated
     - Fix: Setting a filter in an Object list tab no longer invalidates all other tabs
+    - Fix: Opening a non-existing document from the most recently used file list no longer raises an Exception
     - Documentation bug: 9i unfortunately does not populate the V$SQL_PLAN_STATISTICS_ALL view if statistics_level is set 
       to default value TYPICAL, therefore you don't get the basic plan info. You only get the view populated if statistics_level
       is set to ALL. Whereas 10g already mirrors basic plan information from V$SQL_PLAN into V$SQL_PLAN_STATISTICS_ALL in
