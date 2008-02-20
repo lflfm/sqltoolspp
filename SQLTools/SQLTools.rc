@@ -195,6 +195,9 @@ BEGIN
     CONTROL         "Auto resize columns with each &fetch",
                     IDC_GRID_PROP_AUTO_RESIZE_FETCH,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,41,113,169,10
+    CONTROL         "&Wrap around selection in Grid",
+                    IDC_GRID_PROP_WRAPAROUND,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,41,124,169,10
 END
 
 IDD_ABOUTBOX DIALOGEX 0, 0, 268, 114

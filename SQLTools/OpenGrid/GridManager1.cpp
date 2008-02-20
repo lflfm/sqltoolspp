@@ -25,6 +25,7 @@
 
 #include "stdafx.h"
 #include "GridManager.h"
+#include "SQLTools.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -72,11 +73,15 @@ bool NavGridManager::EvKeyDown (unsigned key, unsigned repeatCount, unsigned /*f
         }
         while(repeatCount--)
             if (0xFF00 & GetKeyState(VK_SHIFT))
+            {
                 if (!MoveToLeft(edHorz)
-                    && (!MoveToLeft(edVert) || !MoveToEnd(edHorz))) break;
+                    && (GetSQLToolsSettings().GetGridWraparound() && (!MoveToLeft(edVert) || !MoveToEnd(edHorz)))) break;
+            }
             else
+            {
                 if (!MoveToRight(edHorz)
-                    && (!MoveToRight(edVert) || !MoveToHome(edHorz))) break;
+                    && (GetSQLToolsSettings().GetGridWraparound() && (!MoveToRight(edVert) || !MoveToHome(edHorz)))) break;
+            }
         break;
     case VK_UP:
         while(repeatCount-- && MoveToLeft(edVert));
@@ -87,14 +92,14 @@ bool NavGridManager::EvKeyDown (unsigned key, unsigned repeatCount, unsigned /*f
     case VK_LEFT:
         while(repeatCount--)
             if (!MoveToLeft(edHorz)
-                && (!MoveToLeft(edVert) || !MoveToEnd(edHorz))) break;
+                && (GetSQLToolsSettings().GetGridWraparound() && (!MoveToLeft(edVert) || !MoveToEnd(edHorz)))) break;
         break;
     case VK_RETURN:
         if (!m_Options.m_MoveOnEnter) return 0;
     case VK_RIGHT:
         while(repeatCount--)
             if (!MoveToRight(edHorz)
-                && (!MoveToRight(edVert) || !MoveToHome(edHorz))) break;
+                && (GetSQLToolsSettings().GetGridWraparound() && (!MoveToRight(edVert) || !MoveToHome(edHorz)))) break;
         break;
     case VK_HOME:
         if (0xFF00 & GetKeyState(VK_CONTROL))

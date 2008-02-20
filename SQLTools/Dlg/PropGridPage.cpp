@@ -77,7 +77,8 @@ void CPropGridPage1::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, IDC_GRID_PROP_SKIP_LOBS,              m_settings.m_GridSkipLobs);
     DDX_Check(pDX, IDC_GRID_PROP_ALLOW_LESS_THAN_HEADER, m_settings.m_GridAllowLessThanHeader);
     DDX_Check(pDX, IDC_GRID_PROP_ALLOW_REMEM_COL_WIDTH,  m_settings.m_GridAllowRememColWidth);
-    DDX_Check(pDX, IDC_GRID_PROP_AUTO_RESIZE_FETCH,  m_settings.m_GridAutoResizeColWidthFetch);
+    DDX_Check(pDX, IDC_GRID_PROP_AUTO_RESIZE_FETCH,      m_settings.m_GridAutoResizeColWidthFetch);
+    DDX_Check(pDX, IDC_GRID_PROP_WRAPAROUND,             m_settings.m_GridWraparound);
 }
 
 //BEGIN_MESSAGE_MAP(CPropGridPage1, CPropertyPage)
