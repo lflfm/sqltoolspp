@@ -137,6 +137,7 @@ BEGIN_MESSAGE_MAP(OciGridView, GridView)
 	//{{AFX_MSG_MAP(OciGridView)
 	//}}AFX_MSG_MAP
     ON_WM_INITMENUPOPUP()
+	ON_WM_LBUTTONDBLCLK()
     ON_COMMAND_RANGE(ID_OCIGRID_DATA_FIT, ID_OCIGRID_COLS_TO_HEADERS, OnChangeColumnFit)
     ON_UPDATE_COMMAND_UI(ID_OCIGRID_COLS_TO_HEADERS, OnUpdate_OciGridColsToHeaders)
     ON_UPDATE_COMMAND_UI(ID_OCIGRID_DATA_FIT, OnUpdate_OciGridDataFit)
@@ -265,7 +266,23 @@ void OciGridView::OnChangeColumnFit (UINT id)
     ApplyColumnFit();
 }
 
-void OciGridView::ApplyColumnFit ()
+void OciGridView::OnLButtonDblClk(UINT nFlags, CPoint point)
+{
+    int nItem;
+
+    if (!IsEmpty() 
+    && m_pOciSource->IsTableOrientation()
+    && m_pOciSource->GetCount(edVert) > 0
+    && m_pManager->checkMousePos(edHorz, point, nItem))
+    {
+        ResetLastRow();
+        ApplyColumnFit(nItem - 1);
+    }
+    else
+        GridView::OnLButtonDblClk(nFlags, point);
+}
+
+void OciGridView::ApplyColumnFit (int nItem)
 {
     if (!IsEmpty() 
     && m_pOciSource->IsTableOrientation()
@@ -281,10 +298,17 @@ void OciGridView::ApplyColumnFit ()
 			int maxColLen   = GetSQLToolsSettings().GetGridMaxColLength();
 			int columnCount = m_pOciSource->GetCount(edHorz);
 			int rowCount    = m_pOciSource->GetCount(edVert);
+            int colStart    = 0;
+
+            if (nItem >= 0 && nItem < columnCount)
+            {
+                colStart = nItem;
+                columnCount = nItem + 1;
+            }
 
 			PaintGridManager::m_Dcc.m_Type[edHorz] = efNone;
 
-			for (int col = 0; col < columnCount; col++) 
+			for (int col = colStart; col < columnCount; col++) 
 			{
 				int width = 0;
 

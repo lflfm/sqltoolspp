@@ -429,9 +429,9 @@ public:
     virtual void EvMouseMove   (unsigned modKeys, const CPoint& point);
 
     void LightRefresh (eDirection dir);
+    bool checkMousePos (eDirection, const CPoint&, int&);
 
 private:
-    bool checkMousePos (eDirection, const CPoint&, int&);
     void drawResizeLine (const CPoint&);
 };
 

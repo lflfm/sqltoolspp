@@ -57,7 +57,7 @@ public:
     void Clear ();
     void Refresh ();
     void SetCursor (std::auto_ptr<OCI8::AutoCursor>& cursor);
-	void ApplyColumnFit ();
+	void ApplyColumnFit (int nItem = -1);
     void ResetLastRow() { m_lastRow = 0;}
     bool GetKeepColSize() { return m_bKeepColSize; }
 
@@ -72,6 +72,7 @@ protected:
     afx_msg void OnUpdate_OciGridColsToHeaders(CCmdUI *pCmdUI);
     afx_msg void OnUpdate_OciGridDataFit(CCmdUI *pCmdUI);
     afx_msg void OnRotate ();   
+	afx_msg void OnLButtonDblClk(UINT nFlags, CPoint point);
 
 public:
     afx_msg void OnUpdate_OciGridIndicator (CCmdUI* pCmdUI);
