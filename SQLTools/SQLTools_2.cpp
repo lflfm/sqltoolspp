@@ -207,6 +207,7 @@ void CSQLToolsApp::InitGUICommand ()
     GUICommandDictionary::InsertCommand("Script.GetHistoryAndStepBack",    ID_SQL_HISTORY_GET_AND_STEPBACK);
     GUICommandDictionary::InsertCommand("Script.StepForwardAndGetHistory", ID_SQL_HISTORY_STEPFORWARD_AND_GET);
     GUICommandDictionary::InsertCommand("Script.FindObject",               ID_SQL_DESCRIBE);
+    GUICommandDictionary::InsertCommand("Script.FindObject",               ID_SQL_DESCRIBE);
     GUICommandDictionary::InsertCommand("Script.LoadDDL",                  ID_SQL_LOAD);
     GUICommandDictionary::InsertCommand("Script.LoadDDL",                  ID_SQL_LOAD);
     GUICommandDictionary::InsertCommand("Script.ExplainPlan",              ID_SQL_EXPLAIN_PLAN);

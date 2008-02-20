@@ -389,7 +389,9 @@ int AddItemByDynamicDesc (OciConnect& connect,
             CString parent_name, schema_name;
             GetObjectName(tree, hItem, parent_name, schema_name);
 
-            bool bOrderByName = GetSQLToolsSettings().GetColumnOrderByName();
+            bool bOrderByName = HIBYTE(GetKeyState(VK_SHIFT)) ? 
+                                ! GetSQLToolsSettings().GetColumnOrderByName() : 
+                                GetSQLToolsSettings().GetColumnOrderByName();
             string sOrderByDefault;
             switch (itemType)
             {
