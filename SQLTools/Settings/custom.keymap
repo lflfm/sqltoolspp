@@ -153,6 +153,7 @@ Script.PreviousError          Shift+F4
 Script.GetHistoryAndStepBack  Ctrl+D,S
 Script.StepForwardAndGetHistory Ctrl+D,F
 Script.FindObject             F12
+Script.FindObject             Shift+F12
 Script.LoadDDL                Ctrl+F12
 Script.LoadDDL                Ctrl+Shift+F12
 Script.ExplainPlan            F9
