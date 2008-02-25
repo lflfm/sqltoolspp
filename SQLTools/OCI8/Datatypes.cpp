@@ -586,10 +586,14 @@ void LobVar::getString (char* strbuff, int buffsize) const
     {
 	    ub4 offset = 1;
 	    ub4 readsize = buffsize;
+        ub1 csfrm;
+
+        m_connect.CHECK(
+            OCILobCharSetForm(m_connect.GetOCIEnv(), m_connect.GetOCIError(), (const OCILobLocator*)m_buffer, &csfrm));
 
         m_connect.CHECK(
             OCILobRead(m_connect.GetOCISvcCtx(), m_connect.GetOCIError(), (OCILobLocator*)m_buffer,
-                      &readsize, offset, strbuff, (ub4)buffsize, 0, 0, 0, SQLCS_IMPLICIT)
+            &readsize, offset, strbuff, (ub4)buffsize, 0, 0, 0, (csfrm == SQLCS_NCHAR) ? SQLCS_NCHAR : SQLCS_IMPLICIT)
             );
     }
 
