@@ -48,6 +48,7 @@ SQLTools++ Version 1.20RC3 (02-MAR-2008):
     - Fix: Setting a filter in an Object list tab no longer invalidates all other tabs
     - Fix: Opening a non-existing document from the most recently used file list no longer raises an Exception
     - Fix: Re-enabled TAB key in Grid
+    - Fix: "Find in Files" should work again. Correct "GREP.EXE" is now part of the installation package again
     - Documentation bug: 9i unfortunately does not populate the V$SQL_PLAN_STATISTICS_ALL view if statistics_level is set 
       to default value TYPICAL, therefore you don't get the basic plan info. You only get the view populated if statistics_level
       is set to ALL. Whereas 10g already mirrors basic plan information from V$SQL_PLAN into V$SQL_PLAN_STATISTICS_ALL in
