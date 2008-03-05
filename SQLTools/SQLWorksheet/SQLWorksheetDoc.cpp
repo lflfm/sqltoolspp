@@ -457,13 +457,14 @@ void CPLSWorksheetDoc::OnSqlExplainPlan()
                 }
                 // to the bottom
                 sel.end.column = INT_MAX;
+                sel.end.line   = INT_MAX;
 
                 // search from the current line to bottom for blank line
-                sel.end.line = m_pEditor->GetPosition().line;
-
                 if (GetSQLToolsSettings().GetEmptyLineDelim() || 
                     GetSQLToolsSettings().GetWhitespaceLineDelim())
                 {
+                    sel.end.line = m_pEditor->GetPosition().line;
+
 				    const char *linePtr;
 				    int len;
 
@@ -637,11 +638,13 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode, bool bHaltOnErrors)
 					sel.end.line   = INT_MAX;
                 else             // search from the current line to bottom for blank line
 				{
-                    sel.end.line = m_pEditor->GetPosition().line;
+					sel.end.line   = INT_MAX;
 
                     if (GetSQLToolsSettings().GetEmptyLineDelim() || 
                         GetSQLToolsSettings().GetWhitespaceLineDelim())
                     {
+                        sel.end.line = m_pEditor->GetPosition().line;
+
 					    const char *linePtr;
 					    int len;
 
