@@ -110,7 +110,7 @@ void PlSqlHighlighter::NextLine (const char* currentLine, int currentLineLength)
 
 bool PlSqlHighlighter::IsPlainText()
 {
-    if (((m_openBrace == '@') || m_IsQuotedIdentifier) && GetSQLToolsSettings().GetEnhancedVisuals()) 
+    if (((m_openBrace == 's') || (m_openBrace == '@') || m_IsQuotedIdentifier) && GetSQLToolsSettings().GetEnhancedVisuals()) 
         return false; 
     else return CommonHighlighter::IsPlainText(); 
 }
@@ -183,6 +183,10 @@ void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
     case '*':
         m_openBrace = 0;
         if (m_seqOf == eString) m_current = m_stringAttr;
+        break;
+    case 's':
+        m_current = m_fileNameAttrs;
+        return;
     }
 
     if (!(m_seqOf & eCommentGroup) && (!(m_seqOf & eStringGroup) || !GetSQLToolsSettings().GetEnhancedVisuals()))
@@ -204,6 +208,12 @@ void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
         case '@':
             if (m_isStartLine && !(m_seqOf & eStringGroup))
                 m_openBrace = *str;
+        }
+
+        if (GetSQLToolsSettings().GetEnhancedVisuals() && m_isStartLine && (CString(str, len).CompareNoCase("spool") == 0))
+        {
+            m_openBrace = 's';
+            return;
         }
     }
 
