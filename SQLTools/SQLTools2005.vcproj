@@ -445,6 +445,114 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="DevBuild|Win32"
+			OutputDirectory=".\..\_output_\DevBuild"
+			IntermediateDirectory=".\..\_output_\DevBuild\objs"
+			ConfigurationType="1"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC71.vsprops"
+			UseOfMFC="1"
+			UseOfATL="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			CharacterSet="0"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+				PreprocessorDefinitions="_DEBUG"
+				MkTypLibCompatible="true"
+				SuppressStartupBanner="true"
+				TargetEnvironment="1"
+				TypeLibraryName=".\..\_output_\Debug/SQLTools.tlb"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/EHa /Ob0"
+				Optimization="1"
+				EnableIntrinsicFunctions="true"
+				FavorSizeOrSpeed="2"
+				WholeProgramOptimization="true"
+				AdditionalIncludeDirectories=".;..;..\OpenEditor;..\3DPARTY;..\3DPARTY\ARG\include;..\3DPARTY\BOOST"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;BUILD_TYPE=3"
+				StringPooling="true"
+				MinimalRebuild="false"
+				ExceptionHandling="0"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				ForceConformanceInForLoopScope="false"
+				RuntimeTypeInfo="true"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderThrough="stdafx.h"
+				WarningLevel="3"
+				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
+				CompileAs="0"
+				DisableSpecificWarnings="4996;4482"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="1033"
+				AdditionalIncludeDirectories=".;.."
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalOptions="/MACHINE:I386 /OPT:REF,ICF=3"
+				AdditionalDependencies="version.lib htmlhelp.lib imagehlp.lib"
+				LinkIncremental="1"
+				SuppressStartupBanner="true"
+				AddModuleNamesToAssembly=""
+				DelayLoadDLLs="OLEACC.DLL"
+				GenerateDebugInformation="true"
+				GenerateMapFile="true"
+				MapExports="true"
+				SubSystem="2"
+				LinkTimeCodeGeneration="1"
+				SetChecksum="true"
+				ImportLibrary=""
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -707,6 +815,17 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="ReleasePlusPlus|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Making help file..."
+						CommandLine="start /wait hhc &quot;hlp\sqltools.hhp&quot;&#x0D;&#x0A;if not exist &quot;hlp\sqltools.chm&quot; goto :HelpError&#x0D;&#x0A;copy &quot;hlp\sqltools.chm&quot; &quot;$(OutDir)\sqltools.chm&quot;&#x0D;&#x0A;goto :HelpDone&#x0D;&#x0A;:HelpError&#x0D;&#x0A;echo hlp\sqltools.hhp(1) : error:Problem encountered creating help file&#x0D;&#x0A;echo.&#x0D;&#x0A;:HelpDone&#x0D;&#x0A;echo.&#x0D;&#x0A;"
+						AdditionalDependencies="hlp\HTMLDefines.h"
+						Outputs="$(OutDir)\$(ProjectName).chm"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DevBuild|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -1156,6 +1275,14 @@
 							UsePrecompiledHeader="0"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3dparty\ARG\include\arg_shared.h"
@@ -1203,6 +1330,15 @@
 							WarningLevel="3"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3DPARTY\BOOST\libs\regex\src\c_regex_traits_common.cpp"
@@ -1235,6 +1371,15 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="ReleasePlusPlus|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1281,6 +1426,15 @@
 							WarningLevel="3"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3DPARTY\BOOST\libs\regex\src\cregex.cpp"
@@ -1313,6 +1467,15 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="ReleasePlusPlus|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1359,6 +1522,15 @@
 							WarningLevel="3"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3DPARTY\BOOST\libs\regex\src\instances.cpp"
@@ -1391,6 +1563,15 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="ReleasePlusPlus|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1437,6 +1618,15 @@
 							WarningLevel="3"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3DPARTY\BOOST\libs\regex\src\regex.cpp"
@@ -1469,6 +1659,15 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="ReleasePlusPlus|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1515,6 +1714,15 @@
 							WarningLevel="3"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3DPARTY\BOOST\libs\regex\src\regex_synch.cpp"
@@ -1547,6 +1755,15 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="ReleasePlusPlus|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -1593,6 +1810,15 @@
 							WarningLevel="3"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3DPARTY\BOOST\libs\regex\src\wide_posix_api.cpp"
@@ -1632,6 +1858,15 @@
 							WarningLevel="3"
 						/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\3DPARTY\BOOST\libs\regex\src\winstances.cpp"
@@ -1664,6 +1899,15 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="ReleasePlusPlus|Win32"
+						>
+						<Tool
+							Name="VCCLCompilerTool"
+							UsePrecompiledHeader="0"
+							WarningLevel="3"
+						/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="DevBuild|Win32"
 						>
 						<Tool
 							Name="VCCLCompilerTool"
@@ -3181,6 +3425,16 @@
 						Outputs=""
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DevBuild|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating map file for help compiler..."
+						CommandLine=""
+						Outputs=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="resource1.h"
@@ -3197,6 +3451,16 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="ReleasePlusPlus|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						Description="Generating map file for help compiler..."
+						CommandLine="echo // Generated Help Map file.  Used by SQLTools.HHP. &gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo. &gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo // Commands (ID_* and IDM_*) &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;makehm /h ID_,HID_,0x10000 IDM_,HIDM_,0x10000 &quot;$(InputFileName)&quot; &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo. &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo // Prompts (IDP_*) &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;makehm /h IDP_,HIDP_,0x30000 &quot;$(InputFileName)&quot; &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo. &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo // Resources (IDR_*) &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;makehm /h IDR_,HIDR_,0x20000 &quot;$(InputFileName)&quot; &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo. &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo // Dialogs (IDD_*) &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;makehm /h IDD_,HIDD_,0x20000 &quot;$(InputFileName)&quot; &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo. &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;echo // Frame Controls (IDW_*) &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;makehm /h /a afxhh.h IDW_,HIDW_,0x50000 &quot;$(InputFileName)&quot; &gt;&gt; &quot;hlp\HTMLDefines.h&quot;&#x0D;&#x0A;"
+						Outputs="hlp\HTMLDefines.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DevBuild|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
@@ -3255,6 +3519,14 @@
 						AdditionalIncludeDirectories=""
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="DevBuild|Win32"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+						AdditionalIncludeDirectories=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\SQLTools.reg"
@@ -3281,6 +3553,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="ReleasePlusPlus|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DevBuild|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -3325,6 +3605,14 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="ReleasePlusPlus|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="DevBuild|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -3390,6 +3678,13 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="ReleasePlusPlus|Win32"
+				>
+				<Tool
+					Name="VCCustomBuildTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="DevBuild|Win32"
 				>
 				<Tool
 					Name="VCCustomBuildTool"

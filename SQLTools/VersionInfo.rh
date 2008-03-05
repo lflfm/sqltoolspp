@@ -23,6 +23,8 @@
 #define SQLTOOLS_BUILD_TYPE     " (Debug)"
 #elif BUILD_TYPE == 2
 #define SQLTOOLS_BUILD_TYPE     " (for trouble-shooting)"
+#elif BUILD_TYPE == 3
+#define SQLTOOLS_BUILD_TYPE     " (development build)"
 #else
 #define SQLTOOLS_BUILD_TYPE
 #endif
