@@ -275,6 +275,7 @@ void OciGridView::OnLButtonDblClk(UINT nFlags, CPoint point)
     && m_pOciSource->GetCount(edVert) > 0
     && m_pManager->checkMousePos(edHorz, point, nItem))
     {
+        nItem += m_pManager->m_Rulers[edHorz].GetTopmost();
         ResetLastRow();
         ApplyColumnFit(nItem - 1);
     }
