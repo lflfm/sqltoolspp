@@ -53,6 +53,13 @@ SQLTools++ Version 1.20RC3 (02-MAR-2008):
       to default value TYPICAL, therefore you don't get the basic plan info. You only get the view populated if statistics_level
       is set to ALL. Whereas 10g already mirrors basic plan information from V$SQL_PLAN into V$SQL_PLAN_STATISTICS_ALL in
       TYPICAL mode
+    - Known Issue: The original SQLTools SQL execution mode does not work correctly. It sends only the current line to the 
+      database rather than scanning for the end of the statement.Note: This has been addressed in the Development Build
+    - Known Issue: Filenames after a SPOOL command in a SQL*Plus script are marked as invalid identifiers if exceeding the maximum 
+      defined length. Note: This has been addressed in the Development Build
+    - Known Issue: Auto resizing columns by doubleclicking on the header border does not work correctly when the first column is not 
+      visible, which means that the grid has been scrolled to the right. It resizes the column to the left by the offset the grid has 
+      been scrolled to the right.
     - Known Issue: Quoted identifiers (using "<IDENTIFIER>") potentially are not correctly recognized by new "Known objects" 
       hightlighting since the current tokenizer does treat them as "normal" identifiers and therefore breaks them apart in 
       case of any special character encountered 
