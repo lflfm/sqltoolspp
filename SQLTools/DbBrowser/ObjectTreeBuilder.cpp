@@ -154,7 +154,7 @@ const char* p_tab_col_sttm =
 "'NCLOB',null,"
 "'BFILE',null,"
 "'CFILE',null,"
-"'DATE',null,'('||t.data_length||')')"
+"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')')"
 "||'   '||decode(nullable,'N','not null',null) "
 "||'   '||decode(c.comments,null,null,'/* '||c.comments||' */')"
 " from sys.all_tab_columns t,sys.all_col_comments c"
@@ -186,7 +186,7 @@ const char* p_idx_col_sttm =
 "'NCLOB',null,"
 "'BFILE',null,"
 "'CFILE',null,"
-"'DATE',null,'('||t.data_length||')')"
+"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')')"
 " ||'   '||decode(t.nullable,'N','not null',null)"
 " from sys.all_tab_columns t, sys.all_ind_columns i"
 " where i.index_owner=:p_schema"
@@ -207,7 +207,7 @@ const char* p_con_col_sttm =
 "'NCLOB',null,"
 "'BFILE',null,"
 "'CFILE',null,"
-"'DATE',null,'('||t.data_length||')')"
+"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')')"
 "||'   '||decode(nullable,'N','not null',null) "
 " from sys.all_tab_columns t, sys.all_cons_columns c"
 " where t.owner=:p_schema and t.owner=c.owner"
@@ -409,6 +409,8 @@ int AddItemByDynamicDesc (OciConnect& connect,
 
             Common::Substitutor subst;
             subst.AddPair("<ORDERBY_COLUMN>", bOrderByName ? "column_name" : sOrderByDefault);
+
+            subst.AddPair("<V1_CHAR_COL_DECL_LENGTH>", (connect.GetVersion() > OCI8::esvServer73X) ? "t.char_col_decl_length" : "NULL");
 
             subst << descs.m_Data[i].m_SqlStatement;
 
