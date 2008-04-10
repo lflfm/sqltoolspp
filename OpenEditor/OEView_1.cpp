@@ -1186,6 +1186,7 @@ void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
         cacheBlk = curBlk;
         bool bIsBrace = false;
         LanguageSupport::Match match;
+        int nOffset;
 
         if (GetSQLToolsSettings().GetEnhancedVisuals())
         {
@@ -1194,16 +1195,18 @@ void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
             if (bPrevIsBrace)
             {
                 CRect rc;
-                rc.left   = m_Rulers[0].PosToPix(prevMatch.offset[0]);
-                rc.right  = m_Rulers[0].PosToPix(prevMatch.offset[0] + prevMatch.length[0]);
+                nOffset = (prevMatch.line[0] < GetLineCount()) ? inx2pos(prevMatch.line[0], prevMatch.offset[0]) : prevMatch.offset[0];
+                rc.left   = m_Rulers[0].PosToPix(nOffset);
+                rc.right  = m_Rulers[0].PosToPix(nOffset + prevMatch.length[0]);
                 rc.top    = m_Rulers[1].PosToPix(prevMatch.line[0]);
                 rc.bottom = m_Rulers[1].PosToPix(prevMatch.line[0] + 1);
                 InvalidateRect(&rc);
 
                 if (prevMatch.found && ! prevMatch.broken)
                 {
-                    rc.left   = m_Rulers[0].PosToPix(prevMatch.offset[1]);
-                    rc.right  = m_Rulers[0].PosToPix(prevMatch.offset[1] + prevMatch.length[1]);
+                    nOffset = (prevMatch.line[1] < GetLineCount()) ? inx2pos(prevMatch.line[1], prevMatch.offset[1]) : prevMatch.offset[1];
+                    rc.left   = m_Rulers[0].PosToPix(nOffset);
+                    rc.right  = m_Rulers[0].PosToPix(nOffset + prevMatch.length[1]);
                     rc.top    = m_Rulers[1].PosToPix(prevMatch.line[1]);
                     rc.bottom = m_Rulers[1].PosToPix(prevMatch.line[1] + 1);
                     InvalidateRect(&rc);
@@ -1213,16 +1216,18 @@ void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
             if (bIsBrace)
             {
                 CRect rc;
-                rc.left   = m_Rulers[0].PosToPix(match.offset[0]);
-                rc.right  = m_Rulers[0].PosToPix(match.offset[0] + match.length[0]);
+                nOffset = (match.line[0] < GetLineCount()) ? inx2pos(match.line[0], match.offset[0]) : match.offset[0];
+                rc.left   = m_Rulers[0].PosToPix(nOffset);
+                rc.right  = m_Rulers[0].PosToPix(nOffset + match.length[0]);
                 rc.top    = m_Rulers[1].PosToPix(match.line[0]);
                 rc.bottom = m_Rulers[1].PosToPix(match.line[0] + 1);
                 InvalidateRect(&rc);
 
                 if (match.found && ! match.broken)
                 {
-                    rc.left   = m_Rulers[0].PosToPix(match.offset[1]);
-                    rc.right  = m_Rulers[0].PosToPix(match.offset[1] + match.length[1]);
+                    nOffset = (match.line[1] < GetLineCount()) ? inx2pos(match.line[1], match.offset[1]) : match.offset[1];
+                    rc.left   = m_Rulers[0].PosToPix(nOffset);
+                    rc.right  = m_Rulers[0].PosToPix(nOffset + match.length[1]);
                     rc.top    = m_Rulers[1].PosToPix(match.line[1]);
                     rc.bottom = m_Rulers[1].PosToPix(match.line[1] + 1);
                     InvalidateRect(&rc);
@@ -1243,6 +1248,22 @@ void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
                         std::swap(blk.start.line, blk.end.line);
                     if (blk.start.column > blk.end.column)
                         std::swap(blk.start.column, blk.end.column);
+
+                    int nStartColumn;
+                    int nEndColumn;
+
+                    nChars = 0;
+                    for (int i = blk.start.line; i <= blk.end.line; i++)
+                    {
+                        if (i >= GetLineCount())
+                            nChars += blk.end.column - blk.start.column;
+                        else
+                        {
+                            nStartColumn = pos2inx(i, blk.start.column);
+                            nEndColumn = pos2inx(i, blk.end.column);
+                            nChars += nEndColumn - nStartColumn;
+                        }
+                    }
                 }
                 else
                 {
@@ -1255,6 +1276,8 @@ void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
                     }
                     const char* currentLine; 
                     int currentLineLength;
+                    int nStartColumn = (blk.start.line < GetLineCount()) ? pos2inx(blk.start.line, blk.start.column) : blk.start.column;
+                    int nEndColumn = (blk.end.line < GetLineCount()) ? pos2inx(blk.end.line, blk.end.column) : blk.end.column;
                     nChars = 0;
                     for (int i = blk.start.line; i <= blk.end.line; i++)
                     {
@@ -1264,18 +1287,18 @@ void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
                         if ((i == blk.start.line) && (i == blk.end.line))
                         {
                             bLastCharStartLine = false;
-                            nChars += blk.end.column - blk.start.column;
+                            nChars += nEndColumn - nStartColumn;
                         }
                         else if (i == blk.start.line)
                         {
-                            nChars += currentLineLength - blk.start.column;
-                            if (currentLineLength == blk.start.column)
+                            nChars += currentLineLength - nStartColumn;
+                            if (currentLineLength == nStartColumn)
                                 bLastCharStartLine = true;
                             else
                                 bLastCharStartLine = false;
                         }
                         else if (i == blk.end.line)
-                            nChars += blk.end.column;
+                            nChars += nEndColumn;
                         else
                             nChars += currentLineLength;
                     }
@@ -1295,7 +1318,7 @@ void COEditorView::OnUpdate_Pos (CCmdUI* pCmdUI)
                     pos.column + 1,
                     blk.end.line - blk.start.line + 1,
                     blk.end.column - blk.start.column,
-                    (blk.end.line - blk.start.line + 1) * (blk.end.column - blk.start.column));
+                    nChars);
         else
 #ifdef _XDEBUG
             sprintf(buff, " Ln: %d, Col: %d [R: %d, %d] tst: %d", 

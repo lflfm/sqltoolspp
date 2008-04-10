@@ -415,8 +415,10 @@ void COEditorView::OnPaint ()
                                     {
                                         if (bIsBrace)
                                         {
-                                            if (((i + m_Rulers[1].m_Topmost == match.line[0]) && (pos == match.offset[0])) ||
-                                                (match.found && ! match.broken && (i + m_Rulers[1].m_Topmost == match.line[1]) && (pos == match.offset[1])))
+                                            int nOffset0 = (match.line[0] < GetLineCount()) ? inx2pos(match.line[0], match.offset[0]) : match.offset[0];
+                                            int nOffset1 = (match.line[1] < GetLineCount()) ? inx2pos(match.line[1], match.offset[1]) : match.offset[1];
+                                            if (((i + m_Rulers[1].m_Topmost == match.line[0]) && (pos == nOffset0)) ||
+                                                (match.found && ! match.broken && (i + m_Rulers[1].m_Topmost == match.line[1]) && (pos == nOffset1)))
                                             {
                                                 if (! phighlighter->IsPlainText() || ! IsBrace(*str))
                                                 {
