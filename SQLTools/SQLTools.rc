@@ -1672,7 +1672,8 @@ BEGIN
     BEGIN
         MENUITEM "&Copy to clipboard",          ID_EDIT_COPY
         MENUITEM "Copy to clipboard (&new lines)",ID_EDIT_COPY_NEW_LINES
-        MENUITEM "Hide Object Viewer",          ID_SQL_OBJ_VIEWER
+        MENUITEM "Hide Object &Viewer",         ID_SQL_OBJ_VIEWER
+        MENUITEM "&Objects List",               ID_SQL_DB_SOURCE
     END
 END
 
@@ -1683,6 +1684,7 @@ BEGIN
         MENUITEM "&Copy to clipboard",           ID_EDIT_COPY
         MENUITEM "Copy to clipboard (&new lines)",ID_EDIT_COPY_NEW_LINES
         MENUITEM "&Describe",                    ID_SQL_DESCRIBE
+        MENUITEM "&Load DDL script",             ID_SQL_LOAD
     END
 END
 
