@@ -205,6 +205,7 @@ BEGIN_MESSAGE_MAP(CDbSourceWnd, CWnd)
     ON_NOTIFY(NM_DBLCLK, IDC_TAB_LIST, OnDblClikList)
     ON_COMMAND(IDC_DS_REFRESH_ALL, OnRefreshAll)    
     ON_COMMAND(IDC_DS_LOAD, OnLoad)
+    ON_COMMAND(ID_SQL_LOAD, OnLoad)
     ON_COMMAND(IDC_DS_LOAD_ALL_IN_ONE, OnLoadAsOne)
     ON_COMMAND(IDC_DS_COMPILE, OnCompile)
     ON_COMMAND(IDC_DS_COPY, OnCopy)
@@ -773,7 +774,7 @@ void CDbSourceWnd::OnIdleUpdateCmdUI ()
             HWND btnDelete = ::GetDlgItem(*this, IDC_DS_DELETE);
             ::EnableWindow(btnDelete, m_wndTabLists[nTab]->m_Data.m_bCanDrop);
 
-            if (m_wndTabLists[nTab]->IsDirty())
+            if (m_wndTabLists[nTab]->IsDirty() && IsVisible())
                 m_wndTabLists[nTab]->Refresh(m_strSchema, m_strFilter, m_bValid ? true : false, m_bInvalid ? true : false);
         }
     }
