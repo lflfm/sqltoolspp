@@ -868,9 +868,6 @@ namespace OraMetaDict
             out.PutLine(")");
         }
 
-        if (m_strStatus == "DISABLED")
-            out.PutLine("DISABLE");
-
         if (m_bDeferrable)
         {
             out.PutIndent(); 
@@ -882,6 +879,8 @@ namespace OraMetaDict
             out.NewLine();
         }
 
+        if (m_strStatus == "DISABLED")
+            out.PutLine("DISABLE");
 
         if (!settings.m_bNoStorageForConstraint
         && (m_strType[0] == 'P' || m_strType[0] == 'U')) 
