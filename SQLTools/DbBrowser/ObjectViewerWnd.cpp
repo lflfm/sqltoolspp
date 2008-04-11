@@ -85,6 +85,12 @@ void CObjectViewerWnd::OnSqlObjViewer()
 	GetParentFrame()->SendMessage(WM_COMMAND, (1 << 16) | ID_SQL_OBJ_VIEWER, 0);
 }
 
+void CObjectViewerWnd::OnSqlDbSource()
+{
+    // ShowControlBar(&m_wndObjectViewerFrame, !m_wndObjectViewerFrame.IsVisible(), FALSE);
+	GetParentFrame()->SendMessage(WM_COMMAND, (1 << 16) | ID_SQL_DB_SOURCE, 0);
+}
+
 BOOL CObjectViewerWnd::Create (CWnd* pParentWnd)
 {
 	if (! m_accelTable)
@@ -198,6 +204,7 @@ BEGIN_MESSAGE_MAP(CObjectViewerWnd, CDialog)
     ON_CBN_SELCHANGE(IDC_OIT_INPUT, OnInput_SelChange)
     ON_CBN_CLOSEUP(IDC_OIT_INPUT, OnInput_CloseUp)
 	ON_COMMAND(ID_SQL_OBJ_VIEWER, OnSqlObjViewer)
+	ON_COMMAND(ID_SQL_DB_SOURCE, OnSqlDbSource)
 	ON_COMMAND(ID_EDIT_COPY, OnEditCopy)
 	ON_COMMAND(ID_EDIT_COPY_NEW_LINES, OnEditCopyWithNewLines)
 END_MESSAGE_MAP()
