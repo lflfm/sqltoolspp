@@ -1071,7 +1071,11 @@ void COEditorView::OnUpdate_Mode (CCmdUI* pCmdUI)
 bool COEditorView::IsBrace(char ch)
 {
     string theChar(&ch, 1);
-    const LanguagePtr langPtr = LanguagesCollection::Find(GetSettings().GetLanguage());
+    std::string sLanguage = GetSettings().GetLanguage();
+    if (sLanguage == "NONE")
+        return false;
+
+    const LanguagePtr langPtr = LanguagesCollection::Find(sLanguage);
     const vector<vector<string> >& braces = langPtr->GetMatchBraces();
     const static string defaultBraces = "()[]{}<>";
     bool bIsBrace = false;
