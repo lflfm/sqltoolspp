@@ -203,10 +203,10 @@ namespace OraMetaDict
 
     /// DbObject ///////////////////////////////////////////////////////////////
 
-    bool DbObject::UseDbms_MetaData()
+    bool DbObject::UseDbms_MetaData(const WriteSettings& settings)
     {
         OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
-        if ((GetSQLToolsSettings().GetUseDbmsMetaData()) && 
+        if ((((SQLToolsSettings &)settings).GetUseDbmsMetaData()) && 
             (connect.GetVersion() >= OCI8::esvServer9X))
             return true;
         else
@@ -355,7 +355,7 @@ namespace OraMetaDict
 
     void DbObject::WriteGrants (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData() && ! m_strOwner.empty() && (m_strOwner != ""))
+        if (UseDbms_MetaData(settings) && ! m_strOwner.empty() && (m_strOwner != ""))
         {
             InitDBMS_MetaData();
 
@@ -662,7 +662,7 @@ namespace OraMetaDict
 
     int Index::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -794,7 +794,7 @@ namespace OraMetaDict
 
     int Constraint::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -959,7 +959,7 @@ namespace OraMetaDict
     
     void TableBase::WriteIndexes (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1013,7 +1013,7 @@ namespace OraMetaDict
 
     void TableBase::WriteConstraints (TextOutput& out, const WriteSettings& settings, char chType) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1056,7 +1056,7 @@ namespace OraMetaDict
 
     void TableBase::WriteTriggers (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1085,7 +1085,7 @@ namespace OraMetaDict
 
     void Table::WriteDefinition (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1304,7 +1304,7 @@ namespace OraMetaDict
 
     void Table::WriteComments (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1361,7 +1361,7 @@ namespace OraMetaDict
 
         if (settings.m_bConstraints) 
         {
-            if (UseDbms_MetaData())
+            if (UseDbms_MetaData(settings))
             {
                 WriteConstraints(out, settings, 'A');
             }
@@ -1449,7 +1449,7 @@ namespace OraMetaDict
     // 30.11.2004 bug fix, trigger reverse-engineering fails in OF clause if column name contains "ON_"/"_ON"/"_ON_"
     int Trigger::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1626,7 +1626,7 @@ namespace OraMetaDict
 
     void View::WriteTriggers (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1644,7 +1644,7 @@ namespace OraMetaDict
 
     void View::WriteComments (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1693,7 +1693,7 @@ namespace OraMetaDict
     {
         int nHeaderLines = 0;
 
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1827,7 +1827,7 @@ namespace OraMetaDict
 
     int Sequence::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -1910,7 +1910,7 @@ namespace OraMetaDict
 
     int PlsCode::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -2023,7 +2023,7 @@ namespace OraMetaDict
 
     void Type::WriteAsIncopmlete (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -2066,7 +2066,7 @@ namespace OraMetaDict
 
     int Synonym::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -2280,13 +2280,19 @@ namespace OraMetaDict
 
     int GrantContainer::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
             if (m_mapGrants.begin() != m_mapGrants.end())
-                out.Put(DBMS_MetaDataGetGrantedDDL("OBJECT_GRANT", (*m_mapGrants.begin()).second.get()->m_strGrantee.c_str()));
-
+                if (string(GetTypeStr()) == "GRANTEE")
+                {
+                    out.Put(DBMS_MetaDataGetGrantedDDL("OBJECT_GRANT", (*m_mapGrants.begin()).second.get()->m_strGrantee.c_str()));
+                }
+                else
+                {
+                    out.Put(DBMS_MetaDataGetDependentDDL("OBJECT_GRANT", (*m_mapGrants.begin()).second.get()->m_strName.c_str(), (*m_mapGrants.begin()).second.get()->m_strOwner.c_str()));
+                }
             return 1;
         }
 
@@ -2373,7 +2379,7 @@ namespace OraMetaDict
 
     int Cluster::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -2469,7 +2475,7 @@ namespace OraMetaDict
                 m_Dictionary.LookupIndex(it->c_str()).Write(out, settings);
         }
 
-        return UseDbms_MetaData() ? 1 : 0;
+        return UseDbms_MetaData(settings) ? 1 : 0;
     }
 
 
@@ -2477,7 +2483,7 @@ namespace OraMetaDict
     
     int DBLink::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -2530,7 +2536,7 @@ namespace OraMetaDict
 
     int SnapshotLog::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
@@ -2574,7 +2580,7 @@ namespace OraMetaDict
 
     int Snapshot::Write (TextOutput& out, const WriteSettings& settings) const
     {
-        if (UseDbms_MetaData())
+        if (UseDbms_MetaData(settings))
         {
             InitDBMS_MetaData();
 
