@@ -314,7 +314,7 @@ void CExtractSchemaDlg::WriteSchema (OraMetaDict::Dictionary& dict, CAbortContro
                 //if (bUseDBMS_MetaData && 
                 //    ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetVersion() < OCI8::esvServer9X)
                 //    bUseDBMS_MetaData = false;
-                if (DbObject::UseDbms_MetaData())
+                if (DbObject::UseDbms_MetaData(GetSQLToolsSettings()))
                 {
                     dict.EnumTables(write_table_nonref_constraint, &context);
                     dict.EnumTables(write_table_ref_constraint,  &context);

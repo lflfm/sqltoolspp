@@ -114,7 +114,7 @@ namespace OraMetaDict
         virtual int  Write (TextOutput& out, const WriteSettings&) const = 0;
         virtual void WriteGrants (TextOutput& out, const WriteSettings&) const;
         // DBMS_METADATA base support
-        static bool UseDbms_MetaData();
+        static bool UseDbms_MetaData(const WriteSettings& settings);
         virtual void SetDBMS_MetaDataOption(const char *option, const char *value) const;
         virtual void SetDBMS_MetaDataOption(const char *option, const bool value) const;
         virtual void SetDBMS_MetaDataOption(const char *option, const int  value) const;

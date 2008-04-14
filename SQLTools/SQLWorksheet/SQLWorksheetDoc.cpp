@@ -977,7 +977,7 @@ CPLSWorksheetDoc::CLoader::~CLoader ()
 {
     try { EXCEPTION_FRAME;
 
-        Flush(true);
+        Flush(GetSQLToolsSettings(), true);
     }
     _DESTRUCTOR_HANDLER_;
 }
@@ -1091,7 +1091,7 @@ void CPLSWorksheetDoc::CLoader::Put (const DbObject& object,
                 out.Erase();
         }
 
-        if (object.UseDbms_MetaData())
+        if (object.UseDbms_MetaData(settings))
         {
             if (settings.m_bConstraints)
                 table.WriteConstraints(out, settings, 'E');
@@ -1266,10 +1266,10 @@ void CPLSWorksheetDoc::CLoader::Put (const DbObject& object,
 
     m_nCounter++;
 
-    Flush();
+    Flush(settings);
 }
 
-void CPLSWorksheetDoc::CLoader::Flush (bool bForce)
+void CPLSWorksheetDoc::CLoader::Flush (const SQLToolsSettings & settings, bool bForce)
 {
     if (m_nCounter
     && (bForce || !m_bAsOne))
@@ -1311,7 +1311,7 @@ void CPLSWorksheetDoc::CLoader::Flush (bool bForce)
                     "GRANTS",
                 };
 
-                bool bUseDBMS_MetaData = DbObject::UseDbms_MetaData();
+                bool bUseDBMS_MetaData = DbObject::UseDbms_MetaData(settings);
 
                 // bool bUseDBMS_MetaData = GetSQLToolsSettings().GetUseDbmsMetaData();
 

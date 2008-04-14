@@ -161,7 +161,7 @@ public:
         bool IsAsOne () const       { return m_bAsOne; }
         void SetAsOne (bool bAsOne) { m_bAsOne = bAsOne; }
         void Put (const OraMetaDict::DbObject&, const SQLToolsSettings&, BOOL putTitle);
-        void Flush (bool bForce = false);
+        void Flush (const SQLToolsSettings & settings, bool bForce = false);
         void Clear ();
     };
 
