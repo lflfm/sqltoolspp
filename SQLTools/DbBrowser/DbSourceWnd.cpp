@@ -597,10 +597,19 @@ void CDbSourceWnd::OnSelChangeTab (NMHDR*, LRESULT* pResult)
         for (int i(0); i < sizeof m_wndTabLists/ sizeof m_wndTabLists[0]; i++)
             m_wndTabLists[i]->ShowWindow(i == nTab ? SW_SHOW : SW_HIDE);
 
+        bool bPrevStyleList = (LVS_TYPEMASK & m_wndTabLists[nTab]->GetStyle()) == LVS_LIST;
         if (m_nViewAs == 0)
+        {
             m_wndTabLists[nTab]->ModifyStyle(LVS_REPORT, LVS_LIST, 0);
+            if (! bPrevStyleList)
+                m_wndTabLists[nTab]->Dirty();
+        }
         else
+        {
             m_wndTabLists[nTab]->ModifyStyle(LVS_LIST, LVS_REPORT, 0);
+            if (bPrevStyleList)
+                m_wndTabLists[nTab]->Dirty();
+        }
 
         if (m_connect.IsOpen())
             m_wndTabLists[nTab]->Refresh(m_strSchema, m_strFilter,
@@ -724,7 +733,15 @@ void CDbSourceWnd::OnShowAsList ()
     m_nViewAs = 0;
     int nTab = m_wndTab.GetCurSel();
     if (nTab != -1)
+    {
+        bool bPrevStyleList = (LVS_TYPEMASK & m_wndTabLists[nTab]->GetStyle()) == LVS_LIST;
         m_wndTabLists[nTab]->ModifyStyle(LVS_REPORT, LVS_LIST, 0);
+        if (! bPrevStyleList)
+        {
+            m_wndTabLists[nTab]->Dirty();
+            OnRefresh();
+        }
+    }
 
     ::SendMessage(::GetDlgItem(*this, IDC_DS_AS_REPORT), BM_SETCHECK, BST_UNCHECKED, 0L);
     ::SendMessage(::GetDlgItem(*this, IDC_DS_AS_LIST), BM_SETCHECK, BST_CHECKED, 0L);
@@ -733,8 +750,19 @@ void CDbSourceWnd::OnShowAsList ()
 void CDbSourceWnd::OnShowAsReport ()
 {
     m_nViewAs = 1;
-    for (int i(0); i < sizeof m_wndTabLists/ sizeof m_wndTabLists[0]; i++)
-        m_wndTabLists[i]->ModifyStyle(LVS_LIST, LVS_REPORT, 0);
+    int nTab = m_wndTab.GetCurSel();
+    if (nTab != -1)
+    {
+        bool bPrevStyleList = (LVS_TYPEMASK & m_wndTabLists[nTab]->GetStyle()) == LVS_LIST;
+        m_wndTabLists[nTab]->ModifyStyle(LVS_LIST, LVS_REPORT, 0);
+        if (bPrevStyleList)
+        {
+            m_wndTabLists[nTab]->Dirty();
+            OnRefresh();
+        }
+    }
+    //for (int i(0); i < sizeof m_wndTabLists/ sizeof m_wndTabLists[0]; i++)
+    //    m_wndTabLists[i]->ModifyStyle(LVS_LIST, LVS_REPORT, 0);
 
     ::SendMessage(::GetDlgItem(*this, IDC_DS_AS_REPORT), BM_SETCHECK, BST_CHECKED, 0L);
     ::SendMessage(::GetDlgItem(*this, IDC_DS_AS_LIST), BM_SETCHECK, BST_UNCHECKED, 0L);

@@ -126,7 +126,8 @@ class CDbSourceWnd;
         }
 
         virtual int GetMinDefColWidth (int col) const { 
-            return !col ? 40 : Common::ListCtrlDataProvider::GetMinDefColWidth(col);
+            return m_objListDef.m_pColumns[col].m_szWidth;
+            //return !col ? 40 : Common::ListCtrlDataProvider::GetMinDefColWidth(col);
         }
 
         virtual int getImageIndex (int /*row*/) const { return m_objListDef.m_nImageId; }
