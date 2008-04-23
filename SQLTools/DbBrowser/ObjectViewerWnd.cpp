@@ -191,7 +191,7 @@ void CObjectViewerWnd::OnOK ()
         DEFAULT_HANDLER(x);
         m_inputBox.SetFocus();
     }
-    _COMMON_DEFAULT_HANDLER_
+    _DEFAULT_HANDLER_
 }
 
 void CObjectViewerWnd::OnCancel ()
@@ -285,7 +285,7 @@ void CObjectViewerWnd::OnInput_SelChange ()
             }
         }
     }
-    _COMMON_DEFAULT_HANDLER_
+    _DEFAULT_HANDLER_
 }
 
 ///////////////////////////////////////////////////////////////////////////////
