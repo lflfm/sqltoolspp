@@ -56,6 +56,7 @@
 #include "OpenEditor/OETemplatesPage.h"
 #include "OpenEditor/OEDocument.h"
 #include "OpenEditor/OEOverwriteFileDlg.h"
+#include <WinException/WinException.h>
 
 
 #ifdef _DEBUG
@@ -687,16 +688,19 @@ void COEDocument::backupFile (LPCTSTR lpszPathName)
                 break;
             }
 
-// TODO: replace _CHECK_AND_THROW_ with THROW_APP_EXCEPTION and say why cannot create a backup file
             if (m_lastBackupPath != backupPath              // only for the first attemption
             && stricmp(GetPathName(), backupPath.c_str()))  // avoiding copy the file into itself
             {
-                _CHECK_AND_THROW_(
-                    CopyFile(lpszPathName, backupPath.c_str(), FALSE) != 0,
-                    "Cannot create backup file!"
-                    );
-
-                m_lastBackupPath = backupPath;
+                if(CopyFile(lpszPathName, backupPath.c_str(), FALSE) == 0)
+                {
+                    CString errorMsg;
+                    CWinException::ToString(::GetLastError(), errorMsg);
+                    AfxMessageBox(CString("Cannot create backup file: ") + errorMsg, MB_OK|MB_ICONSTOP);
+                }
+                else
+                {
+                    m_lastBackupPath = backupPath;
+                }
             }
         }
     }
