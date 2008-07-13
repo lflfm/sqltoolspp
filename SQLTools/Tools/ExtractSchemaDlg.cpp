@@ -291,11 +291,13 @@ void CExtractSchemaDlg::WriteSchema (OraMetaDict::Dictionary& dict, CAbortContro
         if (m_DDLSettings.m_bExtractCode) {
             NextAction(abortCtrl, "Writing types...");
 
+            /*
             context.SetDefExt("sql");
             context.SetSubDir("");
             context.BeginSingleStream("Types");
             dict.EnumTypes(write_incopmlete_type, &context);
             context.EndSingleStream();
+            */
 
             context.SetDefExt("pls");
             context.SetSubDir("Types");
