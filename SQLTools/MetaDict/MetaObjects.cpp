@@ -206,7 +206,7 @@ namespace OraMetaDict
     bool DbObject::UseDbms_MetaData(const WriteSettings& settings)
     {
         OciConnect& connect = ((CSQLToolsApp*)AfxGetApp())->GetConnect();
-        if ((((SQLToolsSettings &)settings).GetUseDbmsMetaData()) && 
+        if (settings.m_bUseDbmsMetaData && 
             (connect.GetVersion() >= OCI8::esvServer9X))
             return true;
         else
@@ -2025,9 +2025,9 @@ namespace OraMetaDict
     {
         if (UseDbms_MetaData(settings))
         {
-            InitDBMS_MetaData();
+            // InitDBMS_MetaData();
 
-            out.Put(DBMS_MetaDataGetDDL("TYPE"));
+            // out.Put(DBMS_MetaDataGetDDL("TYPE"));
 
             return;
         }

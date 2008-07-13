@@ -50,6 +50,13 @@ SQLToolsSettings::SQLToolsSettings ()
     m_UnlimitedOutputSize = false;
     m_ExternalToolCommand = "";
     m_ExternalToolParameters = "";
+    // Note: This is not in use anymore, only kept
+    // for not breaking the already existing order
+    // in the file
+    // Use the m_bUseDbmsMetaData member instead
+    // It was required to move this to the WriteSettings
+    // so that both Load DDL and Extract DDL could use
+    // this setting
     m_UseDbmsMetaData     = false;
     m_HaltOnErrors        = false;
     m_SaveFilesBeforeExecute = false;
@@ -91,6 +98,7 @@ SQLToolsSettings::SQLToolsSettings ()
     m_HistoryGlobal              = false;
 
     // start of OraMetaDict::WriteSettings
+    m_bUseDbmsMetaData        = false;
     m_bComments =               TRUE;
     m_bGrants =                 TRUE; 
     m_bLowerNames =             TRUE; 
@@ -273,6 +281,7 @@ void SQLToolsSettingsReader::operator >> (SQLToolsSettings& settings)
         m_in.read("PreloadStartPercent",    settings.m_bPreloadStartPercent);
         m_in.read("BodyWithSpec",           settings.m_bBodyWithSpec);
         m_in.read("SpecWithBody",           settings.m_bSpecWithBody);
+        m_in.read_with_default("UseDBMSMetaData",        settings.m_bUseDbmsMetaData, false);
 
         OESMS_VER_READ_MEMBER(1011, settings, NoPrompts,         false);
         OESMS_VER_READ_MEMBER(1011, settings, EndOfShortStatement, ";");
@@ -382,6 +391,7 @@ void SQLToolsSettingsWriter::operator << (const SQLToolsSettings& settings)
         m_out.write("PreloadStartPercent",    settings.m_bPreloadStartPercent);
         m_out.write("BodyWithSpec",           settings.m_bBodyWithSpec);
         m_out.write("SpecWithBody",           settings.m_bSpecWithBody);
+        m_out.write("UseDBMSMetaData",        settings.m_bUseDbmsMetaData);
 
         OESMS_WRITE_MEMBER(settings, NoPrompts);
         OESMS_WRITE_MEMBER(settings, EndOfShortStatement);

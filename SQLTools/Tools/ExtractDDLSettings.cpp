@@ -48,6 +48,7 @@ ExtractDDLSettings::ExtractDDLSettings ()
     m_bTableDefinition =        TRUE; 
     m_bTriggers =               FALSE; 
     m_bViewWithTriggers =       FALSE;
+    m_bUseDbmsMetaData         = FALSE;
     // end of OraMetaDict::WriteSettings
     m_bGroupByDDL =             TRUE;
     
@@ -93,6 +94,7 @@ void ExtractDDLSettingsReader::operator >> (ExtractDDLSettings& settings)
     m_in.read("GroupByDDL",             settings.m_bGroupByDDL            );
     m_in.read("UseDbAliasAs",           settings.m_nUseDbAliasAs          ); 
     m_in.read("OptimalViewOrder",       settings.m_bOptimalViewOrder      ); 
+    m_in.read_with_default("UseDbmsMetaData", settings.m_bUseDbmsMetaData, false); 
     m_in.read("ExtractCode",            settings.m_bExtractCode           ); 
     m_in.read("ExtractTables",          settings.m_bExtractTables         ); 
     m_in.read("ExtractTriggers",        settings.m_bExtractTriggers       ); 
@@ -126,6 +128,7 @@ void ExtractDDLSettingsWriter::operator << (const ExtractDDLSettings& settings)
     m_out.write("GroupByDDL",             settings.m_bGroupByDDL            );
     m_out.write("UseDbAliasAs",           settings.m_nUseDbAliasAs          ); 
     m_out.write("OptimalViewOrder",       settings.m_bOptimalViewOrder      ); 
+    m_out.write("UseDbmsMetaData",        settings.m_bUseDbmsMetaData        ); 
     m_out.write("ExtractCode",            settings.m_bExtractCode           ); 
     m_out.write("ExtractTables",          settings.m_bExtractTables         ); 
     m_out.write("ExtractTriggers",        settings.m_bExtractTriggers       ); 

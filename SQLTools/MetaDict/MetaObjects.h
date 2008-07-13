@@ -78,6 +78,7 @@ namespace OraMetaDict
         bool m_bSequnceWithStart;       // sequence with START clause
         bool m_bViewWithTriggers;       // view triggers (view writing)
         bool m_bViewWithForce;          // use FORCE for view statement
+        bool m_bUseDbmsMetaData;
 
         _WriteSettings () { memset(this, 0, sizeof(*this)); }
     };

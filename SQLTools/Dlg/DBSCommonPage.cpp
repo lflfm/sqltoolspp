@@ -61,7 +61,7 @@ void CDBSCommonPage::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, IDC_DBSP_VIEW_WITH_TRIGGERS, m_DDLSettings.m_bViewWithTriggers);
     DDX_Check(pDX, IDC_DBSP_PRELOAD_DICTIONARY, m_DDLSettings.m_bPreloadDictionary);
     DDX_Check(pDX, IDC_DBSP_SEQ_WITH_START,     m_DDLSettings.m_bSequnceWithStart);
-    DDX_Check(pDX, IDC_PROP_PLUS_USE_DBMS_METADATA, m_DDLSettings.m_UseDbmsMetaData);
+    DDX_Check(pDX, IDC_PROP_PLUS_USE_DBMS_METADATA, m_DDLSettings.m_bUseDbmsMetaData);
     DDX_Check(pDX, IDC_DBSP_VIEW_WITH_FORCE,    m_DDLSettings.m_bViewWithForce);
     DDX_Text (pDX, IDC_DBSP_PRELOAD_START_PERCENT, m_DDLSettings.m_bPreloadStartPercent);
     
