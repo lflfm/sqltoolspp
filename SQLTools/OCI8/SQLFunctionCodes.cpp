@@ -135,6 +135,13 @@ const char* GetSQLFunctionDescription (int code)
     case OFN_ALTER_PACKAGE_BODY:      return "Alter package body";
     case OFN_DROP_PACKAGE_BODY:       return "Drop package body";
 
+    case OFN_CREATE_TYPE:          return "Create type";
+    case OFN_ALTER_TYPE:           return "Alter type";
+    case OFN_DROP_TYPE:            return "Drop type";
+    case OFN_CREATE_TYPE_BODY:     return "Create type body";
+    case OFN_ALTER_TYPE_BODY:      return "Alter type body";
+    case OFN_DROP_TYPE_BODY:       return "Drop type body";
+
     case OFN_NOOP:                   return "Noop";
     case OFN_DROP_LIBRARY:           return "Drop library";
     case OFN_CREATE_BITMAPFILE:      return "Create bitmapfile";
