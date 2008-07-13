@@ -255,6 +255,13 @@ void CPLSWorksheetDoc::OnSqlExecuteHaltOnErrors()
 
 void CPLSWorksheetDoc::OnSqlExecuteExternal()
 {
+    if (! m_connect.IsOpen())
+    {
+        MessageBeep((UINT)-1);
+        AfxMessageBox("Not connected to database.", MB_OK|MB_ICONSTOP);
+        return;
+    }
+
     if (GetSQLToolsSettings().GetExternalToolCommand().empty() || (GetSQLToolsSettings().GetExternalToolCommand() == ""))
     {
         MessageBeep((UINT)-1);
@@ -1313,7 +1320,7 @@ void CPLSWorksheetDoc::CLoader::Flush (const SQLToolsSettings & settings, bool b
 
                 bool bUseDBMS_MetaData = DbObject::UseDbms_MetaData(settings);
 
-                // bool bUseDBMS_MetaData = GetSQLToolsSettings().GetUseDbmsMetaData();
+                // bool bUseDBMS_MetaData = GetSQLToolsSettings().m_bUseDbmsMetaData();
 
                 // if (bUseDBMS_MetaData && 
                 //    ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetVersion() < OCI8::esvServer9X)
