@@ -144,7 +144,7 @@ const char* p_others_sttm =
 " ORDER BY username";
 const char* p_tab_col_sttm =
 "select /*+RULE*/ t.column_name||'   '||lower(data_type)"
-"||decode(t.data_type,'NUMBER',decode(t.data_precision || t.data_scale,null,null,"
+"||decode(substr(data_type, 1, 9), 'TIMESTAMP', null, decode(t.data_type,'NUMBER',decode(t.data_precision || t.data_scale,null,null,"
 "'('||decode(t.data_precision,null, '*',t.data_precision)||decode(t.data_scale,null,null,','||t.data_scale)||')'),"
 "'FLOAT','('||t.data_precision||')',"
 "'LONG',null,"
@@ -154,7 +154,7 @@ const char* p_tab_col_sttm =
 "'NCLOB',null,"
 "'BFILE',null,"
 "'CFILE',null,"
-"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')')"
+"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')'))"
 "||'   '||decode(nullable,'N','not null',null) "
 "||'   '||decode(c.comments,null,null,'/* '||c.comments||' */')"
 " from sys.all_tab_columns t,sys.all_col_comments c"
@@ -176,7 +176,7 @@ const char* p_all_idx_sttm =
 " where index_name = :p_parent and index_owner = :p_schema";
 const char* p_idx_col_sttm =
 "select /*+RULE*/ t.column_name||'   '||lower(t.data_type)"
-"||decode(t.data_type,'NUMBER',decode(t.data_precision || t.data_scale,null,null,"
+"||decode(substr(data_type, 1, 9), 'TIMESTAMP', null, decode(t.data_type,'NUMBER',decode(t.data_precision || t.data_scale,null,null,"
 "'('||decode(t.data_precision,null, '*',t.data_precision)||decode(t.data_scale,null,null,','||t.data_scale)||')'),"
 "'FLOAT','('||t.data_precision||')',"
 "'LONG',null,"
@@ -186,7 +186,7 @@ const char* p_idx_col_sttm =
 "'NCLOB',null,"
 "'BFILE',null,"
 "'CFILE',null,"
-"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')')"
+"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')'))"
 " ||'   '||decode(t.nullable,'N','not null',null)"
 " from sys.all_tab_columns t, sys.all_ind_columns i"
 " where i.index_owner=:p_schema"
@@ -197,7 +197,7 @@ const char* p_idx_col_sttm =
 " order by i.column_position";
 const char* p_con_col_sttm =
 "select /*+RULE*/ t.column_name||'   '||lower(data_type)"
-"||decode(t.data_type,'NUMBER',decode(t.data_precision || t.data_scale,null,null,"
+"||decode(substr(data_type, 1, 9), 'TIMESTAMP', null, decode(t.data_type,'NUMBER',decode(t.data_precision || t.data_scale,null,null,"
 "'('||decode(t.data_precision,null, '*',t.data_precision)||decode(t.data_scale,null,null,','||t.data_scale)||')'),"
 "'FLOAT','('||t.data_precision||')',"
 "'LONG',null,"
@@ -207,7 +207,7 @@ const char* p_con_col_sttm =
 "'NCLOB',null,"
 "'BFILE',null,"
 "'CFILE',null,"
-"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')')"
+"'DATE',null,'('||nvl(<V1_CHAR_COL_DECL_LENGTH>, t.data_length)||')'))"
 "||'   '||decode(nullable,'N','not null',null) "
 " from sys.all_tab_columns t, sys.all_cons_columns c"
 " where t.owner=:p_schema and t.owner=c.owner"
