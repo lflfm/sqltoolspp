@@ -184,6 +184,8 @@ BEGIN_MESSAGE_MAP(CPLSWorksheetDoc, COEDocument)
 	//}}AFX_MSG_MAP
     ON_COMMAND(ID_SQL_EXECUTE, OnSqlExecute)
     ON_COMMAND(ID_SQL_EXECUTE_HALT_ON_ERRORS, OnSqlExecuteHaltOnErrors)
+    ON_COMMAND(ID_SQL_EXECUTE_FROM_CURSOR, OnSqlExecuteFromCursor)
+    ON_COMMAND(ID_SQL_EXECUTE_FROM_CURSOR_HALT_ON_ERRORS, OnSqlExecuteFromCursorHaltOnErrors)
     ON_COMMAND(ID_SQL_EXECUTE_CURRENT, OnSqlExecuteCurrent)
     ON_COMMAND(ID_SQL_EXECUTE_CURRENT_AND_STEP, OnSqlExecuteCurrentAndStep)
     ON_COMMAND(ID_SQL_EXECUTE_EXTERNAL, OnSqlExecuteExternal)
@@ -423,6 +425,16 @@ void CPLSWorksheetDoc::OnSqlExecuteCurrentAndStep()
     DoSqlExecute(CURRENT|STEP);
 }
 
+void CPLSWorksheetDoc::OnSqlExecuteFromCursor()
+{
+    DoSqlExecute(FROM_CURSOR);
+}
+
+void CPLSWorksheetDoc::OnSqlExecuteFromCursorHaltOnErrors()
+{
+    DoSqlExecute(FROM_CURSOR, true);
+}
+
 void CPLSWorksheetDoc::OnSqlExplainPlan()
 {
     try { EXCEPTION_FRAME;
@@ -616,8 +628,9 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode, bool bHaltOnErrors)
 				{
                     sel.start.line = m_pEditor->GetPosition().line;
 
-                    if (GetSQLToolsSettings().GetEmptyLineDelim() || 
-                        GetSQLToolsSettings().GetWhitespaceLineDelim())
+                    if ((GetSQLToolsSettings().GetEmptyLineDelim() || 
+                        GetSQLToolsSettings().GetWhitespaceLineDelim()) && 
+                        ! ((mode & STEP) || (mode & FROM_CURSOR)))
                     {
 					    const char *linePtr;
 					    int len;
@@ -641,14 +654,14 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode, bool bHaltOnErrors)
                 // to the bottom
                 sel.end.column = INT_MAX;
 
-                if (mode == ALL) // from the top
+                if ((mode == ALL) || (mode & FROM_CURSOR)) // from the top or current cursor position
 					sel.end.line   = INT_MAX;
                 else             // search from the current line to bottom for blank line
 				{
 					sel.end.line   = INT_MAX;
 
-                    if (GetSQLToolsSettings().GetEmptyLineDelim() || 
-                        GetSQLToolsSettings().GetWhitespaceLineDelim())
+                    if ((GetSQLToolsSettings().GetEmptyLineDelim() || 
+                        GetSQLToolsSettings().GetWhitespaceLineDelim()) && ! (mode & STEP))
                     {
                         sel.end.line = m_pEditor->GetPosition().line;
 
@@ -704,7 +717,7 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode, bool bHaltOnErrors)
                 
 				offset = 0;
 
-                if ((performer.GetStatementCount() && mode != ALL) || 
+                if ((performer.GetStatementCount() && mode != ALL && ! mode & FROM_CURSOR) || 
                     ((GetSQLToolsSettings().GetHaltOnErrors() || bHaltOnErrors) && performer.HasErrors()))
                     break;
             }
@@ -726,7 +739,7 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode, bool bHaltOnErrors)
 
             // reset modified flag for script which was made by DDL reverse eng
             // add an option to disable this behavior
-            if (mode == 0 && m_LoadedFromDB) // execute
+            if (((mode == ALL) || (mode & FROM_CURSOR)) && m_LoadedFromDB) // execute
                 SetModifiedFlag(FALSE);
 
             if (!performer.HasErrors() && mode & STEP) // step by step

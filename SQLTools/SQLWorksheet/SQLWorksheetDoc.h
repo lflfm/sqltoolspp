@@ -121,7 +121,7 @@ public:
 
     void Init ();
 
-    enum EExecutionMode { ALL = 0, CURRENT = 0x1, STEP = 0x2 };
+    enum EExecutionMode { ALL = 0, CURRENT = 0x1, STEP = 0x2, FROM_CURSOR = 0x4 };
     static void PrintExecTime (std::ostream& out, double seconds);
     void DoSqlExecute (int mode, bool bHaltOnErrors = false);
 
@@ -180,6 +180,8 @@ protected:
 	//{{AFX_MSG(CPLSWorksheetDoc)
 	afx_msg void OnSqlExecute();
     afx_msg void OnSqlExecuteHaltOnErrors();
+	afx_msg void OnSqlExecuteFromCursor();
+    afx_msg void OnSqlExecuteFromCursorHaltOnErrors();
 	afx_msg void OnSqlExecuteBelow();
 	afx_msg void OnSqlExecuteCurrent();
 	afx_msg void OnSqlExecuteCurrentAndStep();
