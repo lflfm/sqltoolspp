@@ -32,7 +32,7 @@ class ListCtrlDataProvider
 {
 public:
     static const int MIN_DEF_COL_WIDTH = 80;
-    static const int MAX_DEF_COL_WIDTH = 200;
+    static const int MAX_DEF_COL_WIDTH = 500;
 
     enum Type { String, Number, Date };
 
