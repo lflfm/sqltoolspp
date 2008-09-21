@@ -246,8 +246,8 @@ Section $(DESC_SectionMenuName) SecCreateMenuGroup
                    "$INSTDIR\SQLqkref.chm"
     WriteINIStr "$SMPROGRAMS\${DEST_NAME}\SQLTools Home Page.url" \
                 "InternetShortcut" "URL" "http://www.sqltools.net"
-    WriteINIStr "$SMPROGRAMS\${DEST_NAME}\SQLTools on the SourceForge.url" \
-                "InternetShortcut" "URL" "http://www.sourceforge.net/projects/sqlt"
+    WriteINIStr "$SMPROGRAMS\${DEST_NAME}\SQLTools++ on SourceForge.url" \
+                "InternetShortcut" "URL" "http://www.sourceforge.net/projects/sqlt-pp"
     WriteINIStr "$SMPROGRAMS\${DEST_NAME}\SQLTools++ Home Page.url" \
                 "InternetShortcut" "URL" "http://www.sqltools-plusplus.org:7676/"
     CreateShortCut "$SMPROGRAMS\${DEST_NAME}\ReadME.lnk" \
