@@ -59,6 +59,16 @@ void CPlusPlusPage::DoDataExchange(CDataExchange* pDX)
     DDX_Check(pDX, IDC_PROP_PLUS_ORDERBY_NAME,      m_Settings.m_ColumnOrderByName);
     DDX_Check(pDX, IDC_PROP_PLUS_ENHANCED_VISUALS,  m_Settings.m_EnhancedVisuals);
     DDX_Text(pDX,  IDC_PROP_PLUS_MAX_IDENT_LENGTH,  m_Settings.m_MaxIdentLength);
+    DDX_Check(pDX, IDC_PROP_PLUS_CACHE_OBJECTS,     m_Settings.m_CacheKnownDBObjects);
+}
+
+BOOL CPlusPlusPage::OnInitDialog()
+{
+    CPropertyPage::OnInitDialog();
+
+    OnBnClicked_EnhancedVisuals();
+
+    return TRUE;
 }
 
 BEGIN_MESSAGE_MAP(CPlusPlusPage, CPropertyPage)
@@ -66,10 +76,18 @@ BEGIN_MESSAGE_MAP(CPlusPlusPage, CPropertyPage)
 	//}}AFX_MSG_MAP
     ON_WM_CREATE()
     ON_COMMAND(IDC_PROP_PLUS_SELECT_DIR, OnSelectDir)
+    ON_BN_CLICKED(IDC_PROP_PLUS_ENHANCED_VISUALS, OnBnClicked_EnhancedVisuals)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CPlusPlusPage message handlers
+
+void CPlusPlusPage::OnBnClicked_EnhancedVisuals()
+{
+    BOOL enable = ::SendDlgItemMessage(m_hWnd, IDC_PROP_PLUS_ENHANCED_VISUALS, BM_GETCHECK, 0, 0) == BST_CHECKED;
+    ::EnableWindow(::GetDlgItem(m_hWnd, IDC_PROP_PLUS_MAX_IDENT_LENGTH), enable);
+    ::EnableWindow(::GetDlgItem(m_hWnd, IDC_PROP_PLUS_CACHE_OBJECTS), enable);
+}
 
 void CPlusPlusPage::OnSelectDir()
 {

@@ -38,6 +38,7 @@ public:
 	//{{AFX_VIRTUAL(CPlusPlusPage)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+    virtual BOOL OnInitDialog();
 	//}}AFX_VIRTUAL
 
 protected:
@@ -46,6 +47,9 @@ protected:
 	//}}AFX_MSG
 	afx_msg void OnSelectDir();
 	DECLARE_MESSAGE_MAP()
+
+public:
+    afx_msg void OnBnClicked_EnhancedVisuals();
 };
 
 //{{AFX_INSERT_LOCATION}}
