@@ -719,7 +719,8 @@ void CDbSourceWnd::OnRefreshAll ()
 {
     if (GetSQLToolsSettings().GetEnhancedVisuals())
     {
-        ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetObjectLookupCache().Init();
+        if (GetSQLToolsSettings().GetCacheKnownDBObjects())
+            ((CSQLToolsApp*)AfxGetApp())->GetConnect().GetObjectLookupCache().Init();
         COEDocument::GetSettingsManager().GetGlobalSettings()->NotifySettingsChanged();
     }
     
