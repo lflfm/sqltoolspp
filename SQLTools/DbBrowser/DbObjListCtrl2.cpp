@@ -283,7 +283,7 @@ DECL_DATA(Sequence) =
 
 DECL_COL_DATA(View) =
 {
-    { "object_name",   "Name",        320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "object_name",   "Name",        200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
     { "text_length",   "Text Length", 100, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
     { "created",       "Created",     100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
     { "last_ddl_time", "Modified",    100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
@@ -320,7 +320,7 @@ DECL_DATA(View) =
 
 DECL_COL_DATA(Function) =
 {
-    { "object_name",    "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "object_name",    "Name",     200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "created",        "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "last_ddl_time",  "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "status",         "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
@@ -348,7 +348,7 @@ DECL_DATA(Function) =
 
 DECL_COL_DATA(Procedure) =
 {
-    { "object_name",   "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "object_name",   "Name",     200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "created",       "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "last_ddl_time", "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "status",        "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
@@ -376,7 +376,7 @@ DECL_DATA(Procedure) =
 
 DECL_COL_DATA(Package) =
 {
-    { "object_name",   "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "object_name",   "Name",     200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "created",       "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "last_ddl_time", "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "status",        "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
@@ -404,7 +404,7 @@ DECL_DATA(Package) =
 
 DECL_COL_DATA(PackageBody) =
 {
-    { "object_name",   "Name",     320, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "object_name",   "Name",     200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "created",       "Created",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "last_ddl_time", "Modified", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "status",        "Status",    60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
@@ -432,7 +432,7 @@ DECL_DATA(PackageBody) =
 
 DECL_COL_DATA(Trigger) =
 {
-    { "object_name",     "Name",        275, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "object_name",     "Name",        200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "table_owner",     "Table Owner", 120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "table_name",      "Table",       120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "trigger_type",    "Type",        120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
@@ -479,9 +479,9 @@ DECL_DATA(Trigger) =
 
 DECL_COL_DATA(Synonym) =
 {
-    { "synonym_name", "Synonym", 300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "synonym_name", "Synonym", 200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "table_owner",  "Owner",   120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
-    { "table_name",   "Object",  300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "table_name",   "Object",  200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "db_link",      "DB Link", 120, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "status",       "Status",   60, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
 };
@@ -492,20 +492,27 @@ DECL_DATA(Synonym) =
     IDII_SYNONYM, // m_nIconId, m_nImageId
     "SYNONYM",        // m_szType
     "Synonyms",       // m_szTitle
-    " SELECT /*+RULE*/ s.*, 'VALID' status" // m_szSqlStatement
+    " SELECT /*RULE*/ s.*, 'VALID' status" // m_szSqlStatement
     " FROM (SELECT * FROM sys.all_synonyms WHERE owner = :p_owner) s, sys.all_objects o"
     " WHERE s.table_name  = o.object_name"
     " AND s.table_owner = o.owner"
+    " AND s.db_link is null"
+    " UNION"
+    " SELECT /*RULE*/ s.*, 'VALID' status" // m_szSqlStatement
+    " FROM (SELECT * FROM sys.all_synonyms WHERE owner = :p_owner) s"
+    " WHERE s.db_link is not null"
     " UNION"
     " ("
     " SELECT s.*, 'INVALID' status FROM"
     " ("
     " SELECT * FROM sys.all_synonyms WHERE owner = :p_owner"
+    " AND db_link is null"
     " MINUS"
     " SELECT s.*"
     " FROM (SELECT * FROM sys.all_synonyms WHERE owner = :p_owner) s, sys.all_objects o"
     " WHERE s.table_name  = o.object_name"
     " AND s.table_owner = o.owner"
+    " AND s.db_link is null"
     " ) s"
     " )",
     NULL,
@@ -611,7 +618,7 @@ DECL_DATA(DbLink) =
 
 DECL_COL_DATA(Snapshot) =
 {
-    { "name",           "Snapshot",     180, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
+    { "name",           "Snapshot",     200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "master_owner",   "Master Owner", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "master",         "Master Table", 100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
     { "master_link",    "Master Link",  100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String},
@@ -678,7 +685,7 @@ DECL_DATA(SnapshotLog) =
 
 DECL_COL_DATA(Type) =
 {
-    { "type_name",  "Name",      300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "type_name",  "Name",      200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
     { "typecode",   "Code",      100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
     { "attributes", "Attributes", 80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
     { "methods",    "Methods",    80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
@@ -708,7 +715,7 @@ DECL_DATA(Type) =
 
 DECL_COL_DATA(TypeBody) =
 {
-    { "type_name",  "Name",      300, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
+    { "type_name",  "Name",      200, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
     { "typecode",   "Code",      100, LVCFMT_LEFT , Common::ListCtrlDataProvider::String },
     { "attributes", "Attributes", 80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
     { "methods",    "Methods",    80, LVCFMT_RIGHT, Common::ListCtrlDataProvider::Number },
