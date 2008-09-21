@@ -156,6 +156,7 @@ public:
 	void CheckShadowSession(const bool bForceConnectShadow = false);
 	void SetSession();
 	void SetShadowSession();
+    bool IsClosing() { return m_IsClosing; }
 
     OraMetaDict::ObjectLookupCache & GetObjectLookupCache() {return m_ObjectLookupCache;};
 
@@ -225,7 +226,7 @@ private:
 #endif//XMLTYPE_SUPPORT
 
 
-    bool m_open, m_interrupted, m_openShadow, m_ext_auth;
+    bool m_open, m_interrupted, m_openShadow, m_ext_auth, m_IsClosing;
     string m_uid, m_password, m_alias;
     EConnectionMode m_mode;
     ESafety m_safety;

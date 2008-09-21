@@ -80,6 +80,10 @@ void Exception::CHECK (ConnectBase* conn, sword status)
         switch (errcode)
         {
         case 22: // invalid session ID
+            if (! bIsRemote && ! conn->IsClosing())
+                if (conn->IsOpen())
+                    conn->Close(true); // connect losed, not logged on
+            break;
         case 28: // your session has been killed
         case 41: // RESOURCE MANAGER: active time limit exceeded
         case 1012: // not logged on
@@ -201,6 +205,7 @@ ConnectBase::ConnectBase (unsigned mode)
     m_open  = false;
     m_openShadow = false;
     m_interrupted = false;
+    m_IsClosing = false;
 
     m_envhp = 0;
     m_srvhp = 0;
@@ -311,9 +316,6 @@ void ConnectBase::DoOpen()
     }
 	else
 		m_openShadow = false;
-
-    if (GetSQLToolsSettings().GetEnhancedVisuals())
-        m_ObjectLookupCache.Init();
 
 #ifdef XMLTYPE_SUPPORT
     if (IsXMLTypeSupported())
@@ -431,9 +433,6 @@ void ConnectBase::Close (bool purge)
 
     STACK_OVERFLOW_GUARD(3);
 
-    if (GetSQLToolsSettings().GetEnhancedVisuals())
-        m_ObjectLookupCache.Reset();
-
 	if (m_open)
     {
 #ifdef XMLTYPE_SUPPORT
@@ -451,16 +450,18 @@ void ConnectBase::Close (bool purge)
         while (i != m_dependencies.end())
             (*i++)->Close(purge);
 
-        try { CHECK(OCISessionEnd(m_svchp, m_errhp, m_authp, OCI_DEFAULT)); }
-        catch (const Exception&) { if (!purge) throw; }
+        m_IsClosing = true;
 		if (m_openShadow)
 		{
 			try { CHECK(OCISessionEnd(m_svchp, m_errhp, m_auth_shadowp, OCI_DEFAULT)); }
-			catch (const Exception&) { if (!purge) throw; }
+            catch (const Exception&) { if (!purge) { m_IsClosing = false; throw; } }
 			m_openShadow = false;
 	    }
+        try { CHECK(OCISessionEnd(m_svchp, m_errhp, m_authp, OCI_DEFAULT)); }
+        catch (const Exception&) { if (!purge) { m_IsClosing = false; throw; } }
         try { CHECK(OCIServerDetach(m_srvhp, m_errhp, OCI_DEFAULT)); }
-        catch (const Exception&) { if (!purge) throw; }
+        catch (const Exception&) { if (!purge) { m_IsClosing = false; throw; } }
+        m_IsClosing = false;
 
         OCIHandleFree(m_svchp, OCI_HTYPE_SVCCTX);
         OCIHandleFree(m_authp, OCI_HTYPE_SESSION);
@@ -635,7 +636,17 @@ void Connect::Open (const char* uid, const char* pswd, const char* alias, EConne
 
     ConnectBase::Open(uid, pswd, alias, mode, safety);
 
-    LoadSessionNlsParameters();
+    try
+    {
+        LoadSessionNlsParameters();
+    }
+    catch (const OciException& x)
+    {
+        if (x == 1219) // database not open
+            AfxMessageBox((string("Error querying NLS parameters: ") + string(x.what())).c_str(), MB_OK|MB_ICONSTOP);
+        else
+            throw;
+    }
     AlterSessionNlsParams();
     EnableOutput(m_OutputEnable, m_OutputSize, true);
 	GetSessionSid();
@@ -665,7 +676,17 @@ void Connect::Open (const char* uid, const char* pswd, const char* host, const c
     MakeTNSString(alias, host, port, sid, serviceInsteadOfSid);
     ConnectBase::Open(uid, pswd, alias.c_str(), mode, safety);
 
-    LoadSessionNlsParameters();
+    try
+    {
+        LoadSessionNlsParameters();
+    }
+    catch (const OciException& x)
+    {
+        if (x == 1219) // database not open
+            AfxMessageBox((string("Error querying NLS parameters: ") + string(x.what())).c_str(), MB_OK|MB_ICONSTOP);
+        else
+            throw;
+    }
     AlterSessionNlsParams();
     EnableOutput(m_OutputEnable, m_OutputSize, true);
 	GetSessionSid();
@@ -685,7 +706,17 @@ void Connect::Reconnect()
 
     ConnectBase::Reconnect();
 
-    LoadSessionNlsParameters();
+    try
+    {
+        LoadSessionNlsParameters();
+    }
+    catch (const OciException& x)
+    {
+        if (x == 1219) // database not open
+            AfxMessageBox((string("Error querying NLS parameters: ") + string(x.what())).c_str(), MB_OK|MB_ICONSTOP);
+        else
+            throw;
+    }
     AlterSessionNlsParams();
     EnableOutput(m_OutputEnable, m_OutputSize, true);
 	GetSessionSid();
