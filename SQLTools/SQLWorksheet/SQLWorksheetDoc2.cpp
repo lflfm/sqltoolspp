@@ -299,7 +299,7 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 
 	m_pXPlan->SetWindowText("");
 
-    try { EXCEPTION_FRAME;
+    //try { EXCEPTION_FRAME;
 
         int ver = (m_connect.GetVersion() < OCI8::esvServer80X) ? 0 : 1;
         srand((UINT)time(NULL));
@@ -462,6 +462,6 @@ void CPLSWorksheetDoc::DoSqlExplainPlan (const string& text)
 				m_pXPlan->ShowWindow(SW_SHOW);
 				// m_pXPlan->SetFocus();
 			}
-    } 
-    _DEFAULT_HANDLER_
+    //} 
+    //_DEFAULT_HANDLER_
 }
