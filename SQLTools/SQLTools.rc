@@ -316,7 +316,7 @@ BEGIN
                     NOT WS_VISIBLE | WS_TABSTOP,52,113,170,10
 END
 
-IDD_PROP_PLUSPLUS DIALOGEX 0, 0, 266, 205
+IDD_PROP_PLUSPLUS DIALOGEX 0, 0, 266, 215
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_CAPTION
 CAPTION "SQLTools::PlusPlus Settings"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
@@ -351,6 +351,8 @@ BEGIN
     EDITTEXT        IDC_PROP_PLUS_MAX_IDENT_LENGTH,170,184,22,12,
                     ES_AUTOHSCROLL | ES_NUMBER,WS_EX_LEFT
     LTEXT           "0 for unlimited",IDC_STATIC,195,186,60,10
+    CONTROL         "C&ache known db objects",IDC_PROP_PLUS_CACHE_OBJECTS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,95,198,100,12
 END
 
 IDD_DBS_PROP_TABLE DIALOGEX 0, 0, 266, 135
@@ -1483,6 +1485,8 @@ BEGIN
     BEGIN
         MENUITEM "&Execute",                    ID_SQL_EXECUTE
         MENUITEM "Execute (Halt &on Errors)",   ID_SQL_EXECUTE_HALT_ON_ERRORS
+        MENUITEM "Execute from &cursor position",ID_SQL_EXECUTE_FROM_CURSOR
+        MENUITEM "Execute from c&ursor position (Halt on Errors)",   ID_SQL_EXECUTE_FROM_CURSOR_HALT_ON_ERRORS
         MENUITEM "E&xecute Current",            ID_SQL_EXECUTE_CURRENT
         MENUITEM "Execute and &Step",           ID_SQL_EXECUTE_CURRENT_AND_STEP
         MENUITEM "Execute in external &tool",   ID_SQL_EXECUTE_EXTERNAL
@@ -1852,6 +1856,8 @@ BEGIN
     ID_SQL_DESCRIBE         "Find and describe database object\nFind object"
     ID_SQL_EXECUTE          "Execute the whole script\nExecute script"
     ID_SQL_EXECUTE_HALT_ON_ERRORS "Execute the whole script, halt on errors\nExecute script, halt on errors"
+    ID_SQL_EXECUTE_FROM_CURSOR "Execute the whole script from current cursor position\nExecute script from cursor"
+    ID_SQL_EXECUTE_FROM_CURSOR_HALT_ON_ERRORS "Execute the whole script from current position, halt on errors\nExecute script from cursor, halt on errors"
     ID_SQL_EXECUTE_BELOW    "Execute the script from the current line\nExecute below"
     ID_SQL_EXECUTE_CURRENT  "Execute the current sql statement\nExecute current"
     ID_SQL_EXECUTE_CURRENT_AND_STEP 
