@@ -203,6 +203,7 @@ bool MultilineQuotesScanner::ScanLine (const char* str, int len, int& state, int
                         quoteId = j;
                         closingFastChr = m_MultilineQuotes.at(quoteId).second.at(0);
                         quotesBalance++;
+                        i += it->first.length() - 1;
                         break;
                     }
             }
@@ -229,6 +230,7 @@ bool MultilineQuotesScanner::ScanLine (const char* str, int len, int& state, int
             {
                 state = 0;
                 quotesBalance--;
+                i += m_MultilineQuotes[quoteId].second.length() - 1;
             }
         }
 
