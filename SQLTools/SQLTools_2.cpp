@@ -198,6 +198,8 @@ void CSQLToolsApp::InitGUICommand ()
 //Script
     GUICommandDictionary::InsertCommand("Script.Execute",                  ID_SQL_EXECUTE);
     GUICommandDictionary::InsertCommand("Script.ExecuteHaltOnErrors",      ID_SQL_EXECUTE_HALT_ON_ERRORS);
+    GUICommandDictionary::InsertCommand("Script.ExecuteFromCursor",        ID_SQL_EXECUTE_FROM_CURSOR);
+    GUICommandDictionary::InsertCommand("Script.ExecuteFromCursorHaltOnErrors",ID_SQL_EXECUTE_FROM_CURSOR_HALT_ON_ERRORS);
     GUICommandDictionary::InsertCommand("Script.ExecuteBelow",             ID_SQL_EXECUTE_BELOW);
     GUICommandDictionary::InsertCommand("Script.ExecuteCurrent",           ID_SQL_EXECUTE_CURRENT);
     GUICommandDictionary::InsertCommand("Script.ExecuteCurrentAndStep",    ID_SQL_EXECUTE_CURRENT_AND_STEP);
