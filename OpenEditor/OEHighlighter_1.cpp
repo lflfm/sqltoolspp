@@ -141,6 +141,7 @@ void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
 
     string sKeyword;
     if (len > 0 && GetSQLToolsSettings().GetEnhancedVisuals() && 
+        GetSQLToolsSettings().GetCacheKnownDBObjects() && 
         (m_seqOf & ePlainGroup) && 
         (m_openBrace == 0) && 
         (! IsKeyword(str, len, sKeyword) || m_IsQuotedIdentifier))
@@ -150,6 +151,7 @@ void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
         if (m_ObjectLookupCache.Lookup(sLookup))
         {
             m_current = m_KnownObjectAttr;
+            m_isStartLine = false;
             return;
         }
     }
@@ -213,7 +215,7 @@ void PlSqlHighlighter::NextWord (const char* str, int len, int pos)
         if (GetSQLToolsSettings().GetEnhancedVisuals() && m_isStartLine && (CString(str, len).CompareNoCase("spool") == 0))
         {
             m_openBrace = 's';
-            return;
+            // return;
         }
     }
 
