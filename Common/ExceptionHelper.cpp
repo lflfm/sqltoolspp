@@ -36,11 +36,12 @@ static char THIS_FILE[] = __FILE__;
 #define VERBOSE_EXCEPTION_HANDLER
 
 static const char* REPORT_TITLE = 
-    "Please make a post about this problem in the forum:"
-    "\n\thttp://www.sqltools.net/cgi-bin/yabb2/YaBB.pl"
-    "\nIn addition mail this information to <errors@sqltools-plusplus.org>."
+    // "Please make a post about this problem in the forum:"
+    "Please submit a bug in the SQLTools++ bug tracker:"
+    "\nhttp://sourceforge.net/tracker/?func=add&group_id=220648&atid=1050077"
+    "\nYou could also mail this information to <errors@sqltools-plusplus.org>."
     "\nWe need the stack trace (see below) and short description"
-    "\nwhat were you doing when this problem occurred (optional).\n\n";
+    "\nwhat were you doing when this problem occurred.\n\n";
 
 namespace Common
 {
