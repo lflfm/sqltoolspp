@@ -576,12 +576,16 @@ void GridView::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
         pPopupMenu->EnableMenuItem(ID_GRID_POPUP,                MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_EDIT_COPY,                 MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_COPY_COL_HEADER,      MF_BYCOMMAND|MF_ENABLED);
-        pPopupMenu->EnableMenuItem(ID_GRID_COPY_HEADERS,         MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_COPY_ROW,             MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_COPY_ALL,             MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_OUTPUT_SAVE,          MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_OUTPUT_OPEN,          MF_BYCOMMAND|MF_ENABLED);
         pPopupMenu->EnableMenuItem(ID_GRID_OUTPUT_SAVE_AND_OPEN, MF_BYCOMMAND|MF_ENABLED);
+    }
+
+    if (GetGridSource())
+    {
+        pPopupMenu->EnableMenuItem(ID_GRID_COPY_HEADERS,         MF_BYCOMMAND|MF_ENABLED);
     }
 }
 
@@ -688,10 +692,11 @@ void GridView::OnEditCut ()
 
 void GridView::OnUpdateEditGroup(CCmdUI* pCmdUI)
 {
-    if (!IsEmpty()
+    if ((!IsEmpty()
     && GetGridSource()
     && GetGridSourceCount(edHorz) > 0
-    && GetGridSourceCount(edVert) > 0)
+    && GetGridSourceCount(edVert) > 0) || 
+    (GetGridSource() || pCmdUI->m_nID == ID_GRID_COPY_HEADERS))
         pCmdUI->Enable(TRUE);
     else
         pCmdUI->Enable(FALSE);
