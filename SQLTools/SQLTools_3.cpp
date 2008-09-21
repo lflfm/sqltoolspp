@@ -80,6 +80,9 @@ bool CSQLToolsApp::EvAfterOpenConnect (OciConnect&)
     if (GetSQLToolsSettings().GetEnhancedVisuals())
     {
         COEDocument::GetSettingsManager().GetGlobalSettings()->NotifySettingsChanged();
+        // GetSQLToolsSettingsForUpdate().NotifySettingsChanged();
+        if (GetSQLToolsSettings().GetCacheKnownDBObjects())
+            m_connect->GetObjectLookupCache().Init();
     }
 
     CDbSourceWnd::EvOnConnectAll();
@@ -207,6 +210,8 @@ bool CSQLToolsApp::EvAfterCloseConnect (OciConnect&)
     if (GetSQLToolsSettings().GetEnhancedVisuals())
     {
         COEDocument::GetSettingsManager().GetGlobalSettings()->NotifySettingsChanged();
+        if (GetSQLToolsSettings().GetCacheKnownDBObjects())
+            m_connect->GetObjectLookupCache().Reset();
     }
 
     return true;
