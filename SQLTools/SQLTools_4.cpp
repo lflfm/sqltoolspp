@@ -62,6 +62,7 @@ void CSQLToolsApp::OnSettingsChanged ()
             m_connect->GetObjectLookupCache().Init();
         else
             m_connect->GetObjectLookupCache().Reset();
+        COEDocument::GetSettingsManager().GetGlobalSettings()->NotifySettingsChanged();
     }
     _DEFAULT_HANDLER_
 
