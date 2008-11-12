@@ -115,7 +115,7 @@ void Loader::LoadSnapshots (const char* owner, const char* name, bool useLike)
     subst.AddPair("<EQUAL>", useLike ? "like" : "=");
     subst << csz_snp_sttm;
 
-    OciCursor cur(m_connect, subst.GetResult());
+    OciCursor cur(m_connect, subst.GetResult(), useLike ? 50 : 1, 64 * 1024U);
     
     cur.Bind(":owner", owner);
     cur.Bind(":name",  name);
