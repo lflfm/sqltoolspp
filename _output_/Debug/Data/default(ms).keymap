@@ -146,6 +146,8 @@ Session.DbmsXplanDisplayCursor
 #Script
 Script.Execute                F5
 Script.ExecuteHaltOnErrors    Ctrl+F5
+Script.ExecuteFromCursor      Ctrl+Alt+F5
+Script.ExecuteFromCursorHaltOnErrors Ctrl+Alt+Shift+F5
 Script.ExecuteCurrent         F10
 Script.ExecuteCurrent         Ctrl+Enter
 Script.ExecuteCurrentAndStep  F11
