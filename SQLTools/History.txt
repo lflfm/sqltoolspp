@@ -1,6 +1,92 @@
  History
 ~~~~~~~~~
 
+SQLTools++ Version 1.21RC3 (16-NOV-2008):
+The following features tracked on Sourceforge.net have been added:
+2094823   No connection to ASM instance possible
+          You can connect now to an ASM instance. Although depending on your current settings you get various error messages
+          the connection is no longer rejected but is successfully opened. The same should apply to RDBMS instances not opened. 
+1992460   Add "Execute script from cursor position" option
+          Two new options and keyboard shortcuts have been added to the "Script" menu:
+          - Execute from cursor position (Default shortcut Ctrl+Alt+F5)
+          - Execute from cursor position (Halt on errors) (Default shortcut Ctrl+Alt+Shift+F5)
+          These can be used to run a script from the current cursor position and halt on errors, optionally
+          Note that you need to add the following two lines to your "Custom" keymap ("custom.keymap" located in the "Data" subdirectory)
+          if you're using it because the installer never attempts to modify the "Custom" keymap if updating an existing installation:
+Script.ExecuteFromCursor      Ctrl+Alt+F5
+Script.ExecuteFromCursorHaltOnErrors Ctrl+Alt+Shift+F5
+1979440   Recognize DROP TYPE/CREATE TYPE operation
+          The type related SQL commands are now recognized and confirmed with appropriate messages (Type created/dropped)
+1919413   Add SQLTools++ on sourceforge link to menu/distribution
+          The installation script now adds a link to the SQLTools++ Sourceforge.net site
+1916777   (Optionally) do not populate Object List when connecting
+          For users that have to connect using a low bandwidth (e.g. WAN) connection two enhancements have been added:
+          1. If the schema browser is not visible it won't populate any lists initially (which was the case previously)
+          2. You can disable the "Known object cache" feature in the "PlusPlus" settings which will prevent this in-memory
+          cache from being populated when establishing a connection
+1914736   Consider "Load DDL" shortcut (Ctrl+F12) in Object List
+          This feature was already available with the "Development" intermediate build. You can press now the "Load DDL" keyboard
+          shortcut in the "Object List" (Schema Browser). This is the same as performing a double-click or selecting "Load DDL"
+          in the right-mouse button context menu
+1914185   Allow "Copy Query Columns" for empty result set
+          You can copy now the query columns even if the result set is empty
+
+The following bugs tracked on Sourceforge.net have been fixed:
+2270076   Snapshot DDL shows incomplete query for large query texts
+          The built-in snapshot DDL generation code is quite basic anyway but additionally showed incomplete query text if the
+          length of the query text was longer than 4000 chars. Now this has been extended to 64k which hopefully is sufficient
+          for most complex queries
+2166142   Known objects are not properly redrawn when settings change
+          If you change settings and the "Known object cache" is enabled then the cache contents are refreshed every time
+          you confirm the settings changes. This refresh was not properly reflected in the editor (Only when moving the cursor
+          the content was redrawn). This has been fixed 
+2062502   Change "Generic Exception" dialog to point to Sourceforge
+          The "Generic" exception dialog now points to the SQLTools++ Sourceforge.net site and bug tracker rather than to the
+          rather unmoderated original SQLTools forum 
+2062499   Stack Overflow in Connect.cpp (429) when connection is lost
+          When a background connection is established (e.g. with statistics or DBMS_XPLAN.DISPLAY_CURSOR enabled) and the connection
+          is lost a nasty "Generic" exception used to show up. This has been fixed and should work now even with these features enabled  
+2032463   Synonyms for remote objects are shown as "INVALID"
+          Synonyms for remote database objects used to be shown with status "INVALID". This has been fixed
+2032446   Known objects followed by a dblink - wrong highlighting
+          If a known object was followed by a dblink the highlighting was incorrect. This has been fixed
+2017327   Extract Schema DDL doesn't use "Use DBMS_METADATA" setting
+          The "Extract Schema DDL" didn't use the "Use DBMS_METADATA" setting of the corresponding setup dialog. This has been fixed
+1991909   Highlighting error in case of comment /* */ followed by *
+          A minor highlighting error when a comment was immediately followed by an asterisk has been fixed
+1988773   Incorrect representation of timestamp type in Object Viewer
+          The TIMESTAMP family related data types were not correctly represented in the Object Viewer window. This has been fixed.
+1988113   Run in external tool while disconnected
+          You get now an appropriate message instead of an screwed up external tool call if you're currenly not connected to a 
+          database 
+1949675   Doing describe (F12) with lost connection raises exception
+          Appropriate message shown instead of a "Generic" exception
+1942383   "Use DBMS_METADATA" not saved in Settings dialog
+          Handling of this setting is now similar to the other settings, it used to be inconsistent
+1942045   Editor's backup file error
+          If a backup file cannot be created the actual file save is no longer aborted and you should an explanation why the
+          backup file could not be created
+1941453   Opening *.txt files results in "Language 'NONE' not found"
+          This annoying error has been fixed
+1939328   Length of multibyte character columns incorrectly reported
+          If you have multibyte character columns, e.g. NVARCHARs or multibyte database character sets (e.g. UTF8) then the byte
+          size of the column was shown in the Object Viewer instead of the actual character size. This has been fixed
+1939306   Extended Block information is wrong for lines with TABs
+          TABs should be treated now correctly for the extended information shown when "Enhanced Visuals" is enabled
+1939241   Visual match braces does not work with TAB chars
+          TABs should be treated now correctly for the "match braces" functionality when "Enhanced Visuals" is enabled
+1938706   Object List using list representation - quick filter applied
+          The list representation mode was broken when a quick filter has been applied. The columns were resized to a minimum
+          size so that the content was unreadable
+1928265   Extract Schema DDL: "Type parsing error: invalid header!"
+          Incomplete type definitions lead to this error message sometimes. The handling of these incomplete types has been 
+          changed accordingly so that the message should no longer show up
+1927183   DDL generated for deferrable disabled constraint is wrong
+          The keywords for a deferrable disabled constraint used to be in the wrong order. This has been fixed
+1927173   Table Transformation Helper wrong GRANTS with DBMS_METADATA
+          When using the "DBMS_METADATA" package to generate the DDL the GRANTS generated were too many and about unrelated 
+          tables. This has been fixed.
+
 SQLTools++ Version 1.20RC3 (02-MAR-2008):
 
     - New major feature: Enhanced editor highlighting
