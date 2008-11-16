@@ -1,5 +1,5 @@
 You can find this information or place a bug report at:
-http://sourceforge.net/tracker/?group_id=125592&atid=703030
+http://sourceforge.net/tracker/?group_id=220648&atid=1050077
 
 You can also send an email to errors@sqltools-plusplus.org. 
 Please provide as much details as possible so that the error
