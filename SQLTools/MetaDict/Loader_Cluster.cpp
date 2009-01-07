@@ -166,7 +166,7 @@ void Loader::LoadClusters (const char* owner, const char* name, bool useLike)
     {
         Common::Substitutor subst;
         subst.AddPair("<EQUAL>", useLike  ? "like" : "=");
-        subst.AddPair("<V1_CHAR_COL_DECL_LENGTH>", (cur.GetConnect().GetVersion() > OCI8::esvServer73X) ? "t.char_col_decl_length" : "NULL");
+        subst.AddPair("<V1_CHAR_COL_DECL_LENGTH>", (cur.GetConnect().GetVersion() > OCI8::esvServer73X) ? "nvl(decode(t.char_length, 0, to_number(null), t.char_length),t.char_col_decl_length)" : "NULL");
         subst << sttm;
         cur.Prepare(subst.GetResult());
         cur.Bind(":owner", owner);

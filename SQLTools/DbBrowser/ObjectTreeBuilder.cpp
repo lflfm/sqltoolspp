@@ -410,7 +410,7 @@ int AddItemByDynamicDesc (OciConnect& connect,
             Common::Substitutor subst;
             subst.AddPair("<ORDERBY_COLUMN>", bOrderByName ? "column_name" : sOrderByDefault);
 
-            subst.AddPair("<V1_CHAR_COL_DECL_LENGTH>", (connect.GetVersion() > OCI8::esvServer73X) ? "t.char_col_decl_length" : "NULL");
+            subst.AddPair("<V1_CHAR_COL_DECL_LENGTH>", (connect.GetVersion() > OCI8::esvServer73X) ? "nvl(decode(t.char_length, 0, to_number(null), t.char_length),t.char_col_decl_length)" : "NULL");
 
             subst << descs.m_Data[i].m_SqlStatement;
 

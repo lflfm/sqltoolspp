@@ -280,7 +280,7 @@ void Loader::LoadTables (const char* owner, const char* name, bool useLike)
         subst.AddPair("<LOGGING>",   (servVer > OCI8::esvServer73X) ? "logging"   : "'YES'");
 
         subst.AddPair("<AND_IOT_NAME_IS_NULL>", (servVer > OCI8::esvServer73X) ?  "AND iot_name IS NULL " : "");
-        subst.AddPair("<V1_CHAR_COL_DECL_LENGTH>", (servVer > OCI8::esvServer73X) ?  "v1.char_col_decl_length" : "NULL");
+        subst.AddPair("<V1_CHAR_COL_DECL_LENGTH>", (servVer > OCI8::esvServer73X) ?  "nvl(decode(v1.char_length, 0, to_number(null), v1.char_length),v1.char_col_decl_length)" : "NULL");
 		// B#1407225, Skip objects from recyclebin showed in 'SYS.ALL_TAB_COMMENTS' (unfortunately we have only table_name!)
 		// If we want to do it 100% properly, we should MINUS with 'SELECT object_name FROM recyclebin WHERE type='TABLE'', 
 		// but I think that current solution is good enough.
