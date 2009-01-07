@@ -381,7 +381,7 @@ void COEditorView::OnPrint (CDC* pDC, CPrintInfo* pInfo)
                             int nMaxIdentLength = GetSQLToolsSettings().GetMaxIdentLength();
 
                             if ((nMaxIdentLength > 0) && 
-                                phighlighter->IsPlainText() && 
+                                phighlighter->IsIdentifier(str, len) &&
                                 phighlighter->GetActualTokenLength(str, len) > nMaxIdentLength)
                             {
                                 RECT rcToken;

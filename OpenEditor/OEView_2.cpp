@@ -443,7 +443,7 @@ void COEditorView::OnPaint ()
                                         int nMaxIdentLength = GetSQLToolsSettings().GetMaxIdentLength();
 
                                         if ((nMaxIdentLength > 0) && 
-                                            phighlighter->IsPlainText() && 
+                                            phighlighter->IsIdentifier(str, len) &&
                                             phighlighter->GetActualTokenLength(str, len) > nMaxIdentLength)
                                         {
                                             RECT rcToken;

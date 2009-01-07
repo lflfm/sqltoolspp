@@ -85,6 +85,7 @@ namespace OpenEditor
 
         // export some additional functionality
         virtual bool IsKeyword (const char* str, int len, string&) = 0;
+        virtual bool IsIdentifier (const char* str, int len) = 0;
         virtual bool IsPlainText () = 0;
         virtual int GetActualTokenLength(const char* , int len) = 0;
     protected:
@@ -117,6 +118,7 @@ namespace OpenEditor
 
         // export some additional functionality
         virtual bool IsKeyword (const char* str, int len, string&);
+        virtual bool IsIdentifier (const char* str, int len);
         virtual bool IsPlainText () { return m_seqOf & ePlainText? true : false; };
         virtual int GetActualTokenLength(const char* , int len) { return len; };
     protected:

@@ -363,6 +363,11 @@ bool CommonHighlighter::IsKeyword (const char* str, int len, string& keyword)
     return false;
 }
 
+bool CommonHighlighter::IsIdentifier (const char* str, int len)
+{
+    return IsPlainText() && (! isDigit(str, len));
+}
+
 bool CommonHighlighter::isKeyword (const char* str, int len)
 {
     string key(str, len);
