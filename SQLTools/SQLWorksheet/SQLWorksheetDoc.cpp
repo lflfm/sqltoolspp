@@ -717,7 +717,7 @@ void CPLSWorksheetDoc::DoSqlExecute (int mode, bool bHaltOnErrors)
                 
 				offset = 0;
 
-                if ((performer.GetStatementCount() && mode != ALL && ! mode & FROM_CURSOR) || 
+                if ((performer.GetStatementCount() && mode != ALL && (! (mode & FROM_CURSOR))) || 
                     ((GetSQLToolsSettings().GetHaltOnErrors() || bHaltOnErrors) && performer.HasErrors()))
                     break;
             }
